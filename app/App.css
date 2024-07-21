@@ -1,0 +1,272 @@
+@import url("./reset.css");
+
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 25px;
+}
+h4 {
+  font-size: 20px;
+}
+ul {
+  list-style-type: none;
+}
+
+.background-login {
+  background-color: #b1ad81;
+  border: 2px solid #b285ee;
+  border-radius: 10px;
+  height:fit-content;
+  padding: 10px;
+  /* width: 50%; */
+}
+
+/* .login {
+ 
+  background-color: rgba(255, 255, 255, 0.7); 
+  padding: 20px;
+  border-radius: 10px;
+} */
+
+input[type="text"],
+input[type="password"] {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.login h2 {
+  text-align: center;
+}
+
+button {
+  background-color: #f9e5e5;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 2px 10px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.app-container {
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  height: 80vh;
+  margin-top: 60px;
+}
+.app-container .active {
+  color: rgb(255, 81, 0);
+}
+
+.app-container button {
+  color: rgb(160, 105, 79);
+  border-radius: 1cqb;
+  width: fit-content;
+  font-size: 10px;
+}
+
+.main-container {
+  display: flex;
+  width: 80%;
+  gap: 0px;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.user-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 3px solid #ccc;
+  padding: 10px;
+  max-height: 100%;
+  overflow-y: auto;
+  background-color: #e8e8db;
+  width: 50%;
+  border-radius: 10px;
+  flex: 0 0 30%;
+}
+
+.button-link {
+  display: flex;
+  justify-content: space-between;
+}
+
+.icon-and-search {
+  display: flex;
+  gap: 10px;
+}
+
+.user-list-container .set {
+  border: 3px solid #ccc;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 10%;
+  
+}
+
+.profile-wrapper {
+  /* border: 1px solid #b36b6b; */
+  padding: 0px;
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-wrapper .search-bar {
+  border: 3px solid #ccc;
+  padding: 1px;
+  width: 80%;
+}
+
+.profile-wrapper .chat-with {
+  border: 3px solid #ccc;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding: 5px;
+  width: 100%;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: beige;
+  box-sizing: border-box;
+  display: flex;
+  gap: 10px;
+  border-radius: 10px;
+}
+
+.user-profile-container {
+  border: 3px solid #ccc;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgb(234, 229, 225);
+  box-sizing: border-box;
+  border-radius: 10px;
+  /* height: 100vh; */
+}
+.user-profile-container .messages-container {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+  height: 97%;
+  overflow-y: auto;
+}
+.messages-container .day-date {
+  text-align: center;
+}
+.user-profile-container .message {
+  border: 3px solid #ccc;
+  width: fit-content;
+  border-radius: 10%;
+  padding: 5px;
+  background-color: rgb(249, 243, 236);
+  max-width: 100%;
+}
+.user-profile-container .message-left {
+  align-self: flex-start;
+}
+
+.user-profile-container .message-right {
+  align-self: flex-end;
+}
+
+.user-profile-container .message-send {
+  display: flex;
+  justify-content: space-between;
+  /* margin-top: 10px; */
+}
+.user-profile-container .message-send input {
+  width: 70%;
+}
+
+.date {
+  color: gray;
+  font-size: 8px;
+  text-align: end;
+}
+
+.settings {
+  min-height: 100px;
+  width: fit-content;
+  border: 3px solid #ccc;
+  padding: 10px;
+  background-color: rgb(226, 214, 206);
+  border-radius: 10px;
+}
+.settings .wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.avatar {
+  width: 20px; 
+  height: 20px; 
+  border-radius: 50%; 
+  background-color: #5b53f0; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px; 
+  color: #fff; 
+}
+
+.message-send-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.enlarged-image {
+  width: 100%;
+  height: auto;
+}
