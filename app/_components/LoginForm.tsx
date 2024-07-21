@@ -1,27 +1,36 @@
-"use client";
+'use client';
 
+import { useState } from 'react';
 import { useDispatch } from "react-redux";
+import { setIsRegister } from "../../store/userSlice";
+import { useRouter } from 'next/navigation';
 
-export default function LoginForm() {
+interface LoginFormProps {
+  handleLogin: (formData: FormData) => Promise<{ success?: boolean; error?: string; redirectUrl?: string }>;
+}
+
+export default function LoginForm({ handleLogin }: LoginFormProps) {
   const dispatch = useDispatch();
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const handleLogin = (email: string, password: string) => {
-    // Implement your login logic here
-    console.log("Logging in:", email, password);
+  const onSubmit = async (formData: FormData) => {
+    try {
+      const result = await handleLogin(formData);
+      if (result.success && result.redirectUrl) {
+        router.push(result.redirectUrl);
+      } else if (result.error) {
+        setError(result.error);
+      }
+    } catch (error: any) {
+      setError("Error logging in user: " + error.message);
+    }
   };
 
   return (
     <div className="login">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target as HTMLFormElement);
-          const email = formData.get("email");
-          const password = formData.get("password");
-          if (typeof email === "string" && typeof password === "string")
-            handleLogin(email, password);
-        }}
-      >
+      <h2>Welcome to chatSPA</h2>
+      <form action={onSubmit}>
         <label>
           Email:
           <input type="text" name="email" required />
@@ -32,6 +41,17 @@ export default function LoginForm() {
         </label>
         <button type="submit">Login</button>
       </form>
+      {error && <p className="error">{error}</p>}
+      <br />
+      <br />
+      <br />
+      <p>
+        If you do not have an account, please:
+        <button onClick={() => dispatch(setIsRegister(true))}>
+          Register
+        </button>
+      </p>
     </div>
   );
 }
+
