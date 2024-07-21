@@ -1,24 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { useDispatch } from "react-redux";
-import { setIsRegister } from "../../store/userSlice";
 import { useRouter } from 'next/navigation';
 
 interface LoginFormProps {
-  handleLogin: (formData: FormData) => Promise<{ success?: boolean; error?: string; redirectUrl?: string }>;
+  handleLogin: (formData: FormData) => Promise<{ success: boolean; error?: string; redirectTo?: string }>;
 }
 
 export default function LoginForm({ handleLogin }: LoginFormProps) {
-  const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const onSubmit = async (formData: FormData) => {
     try {
       const result = await handleLogin(formData);
-      if (result.success && result.redirectUrl) {
-        router.push(result.redirectUrl);
+      if (result.success && result.redirectTo) {
+        router.push(result.redirectTo);
       } else if (result.error) {
         setError(result.error);
       }
@@ -42,16 +39,9 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
         <button type="submit">Login</button>
       </form>
       {error && <p className="error">{error}</p>}
-      <br />
-      <br />
-      <br />
       <p>
-        If you do not have an account, please:
-        <button onClick={() => dispatch(setIsRegister(true))}>
-          Register
-        </button>
+        Dont have an account? <a href="/register">Register</a>
       </p>
     </div>
   );
 }
-

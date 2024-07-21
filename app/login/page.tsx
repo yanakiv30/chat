@@ -1,6 +1,8 @@
+
 import LoginForm from "../_components/LoginForm";
 import { supabase } from "../_lib/supabase";
 import { signInUser } from "../_services/auth";
+import { cookies } from "next/headers";
 
 export default function Login() {
   async function handleLogin(formData: FormData) {
@@ -12,26 +14,25 @@ export default function Login() {
     try {
       const authResponse = await signInUser(email, password);
       if (authResponse.error) {
-        return { error: authResponse.error };
+        return { success: false, error: authResponse.error };
       }
       const { data, error } = await supabase
         .from("users")
         .select()
         .eq("id", authResponse.user_id);
       if (data && data[0]) {
-        // Encode user data to be passed in URL
-        const encodedUserData = encodeURIComponent(JSON.stringify(data[0]));
-        console.log("encodedUserData",encodedUserData)
-        // Return success status and redirect URL
-        return { success: true, redirectUrl: `/chatMembersList?user=${encodedUserData}` };
+        // Store user data in a cookie
+        cookies().set('user', JSON.stringify(data[0]), { httpOnly: true });
+        
+        // Return success status and redirect path
+        return { success: true, redirectTo: '/chatMembersList' };
       } else {
-        return { error: error || "Invalid credentials" };
+        return { success: false, error: error?.message || "Invalid credentials" };
       }
     } catch (error: any) {
-      return { error: "Error logging in user: " + error.message };
+      return { success: false, error: "Error logging in user: " + error.message };
     }
   }
 
   return <LoginForm handleLogin={handleLogin} />;
 }
-
