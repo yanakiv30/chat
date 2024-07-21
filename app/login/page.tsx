@@ -34,5 +34,15 @@ export default function Login() {
     }
   }
 
-  return <LoginForm handleLogin={handleLogin} />;
+  const userCookie = cookies().get('user');
+  let userData = null;
+  if (userCookie) {
+    try {
+      userData = JSON.parse(userCookie.value);
+    } catch (error) {
+      console.error('Error parsing user cookie:', error);
+    }
+  }
+
+  return <LoginForm handleLogin={handleLogin} userData={userData}/>;
 }

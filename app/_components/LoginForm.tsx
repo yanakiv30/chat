@@ -1,13 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
-  handleLogin: (formData: FormData) => Promise<{ success: boolean; error?: string; redirectTo?: string }>;
+  handleLogin: (
+    formData: FormData
+  ) => Promise<{ success: boolean; error?: string; redirectTo?: string }>;
+  userData: any | null;
 }
 
-export default function LoginForm({ handleLogin }: LoginFormProps) {
+export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -27,6 +30,9 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
   return (
     <div className="login">
       <h2>Welcome to chatSPA</h2>
+
+      {userData && <p>loggedInUserId={JSON.stringify(userData.id, null, 2)}</p>}
+
       <form action={onSubmit}>
         <label>
           Email:
