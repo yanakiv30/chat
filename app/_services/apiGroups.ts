@@ -1,6 +1,7 @@
 import { Message } from "../../store/groupSlice";
 import { getHourDayDate } from "../utils/messageUtils";
-import supabase from "./supabase";
+import { supabase } from "./supabase";
+
 
 export async function getUsers() {
   const { data, error } = await supabase
