@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { setLoggedInUser } from "@/store/userSlice";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "@/store/store";
 
 interface LoginFormProps {
   handleLogin: (
@@ -11,9 +14,10 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
+  const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
+  const { loggedInUser } = useAppSelector((store) => store.user);
   const onSubmit = async (formData: FormData) => {
     try {
       const result = await handleLogin(formData);
@@ -27,11 +31,18 @@ export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
     }
   };
 
+  if (userData) {
+    dispatch(setLoggedInUser(userData)); //user is a object
+  } else {
+    console.error(error);
+    alert("Invalid credentials");
+  }
+  console.log("loggedInUser",loggedInUser);
   return (
     <div className="login">
       <h2>Welcome to chatSPA</h2>
 
-      {userData && <p>loggedInUserId={JSON.stringify(userData.id, null, 2)}</p>}
+      {userData && <p>loggedInUser={JSON.stringify(userData, null, 2)}</p>}
 
       <form action={onSubmit}>
         <label>

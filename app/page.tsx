@@ -1,13 +1,65 @@
-// app/page.tsx
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "Home",
-  description: "Welcome to chatSPA",
+  title: "Login",
+  description: "Login to chat",
 };
-export default async function HomePage() {
-  return (
-    <div className="app-container" style={{ position: "relative" }}>
-      <h1>HomePage</h1>
-    </div>
-  );
+import LoginForm from "./_components/LoginForm";
+import { supabase } from "./_lib/supabase";
+import { signInUser } from "./_services/auth";
+import { cookies } from "next/headers";
+
+export default function Login() {
+  async function handleLogin(formData: FormData) {
+    'use server';
+
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    try {
+      const authResponse = await signInUser(email, password);
+      if (authResponse.error) {
+        return { success: false, error: authResponse.error };
+      }
+      const { data, error } = await supabase
+        .from("users")
+        .select()
+        .eq("id", authResponse.user_id);
+      if (data && data[0]) {
+        // Store user data in a cookie
+        cookies().set('user', JSON.stringify(data[0]), { httpOnly: true });
+        
+        // Return success status and redirect path
+        return { success: true, redirectTo: '/chatMembersList' };
+      } else {
+        return { success: false, error: error?.message || "Invalid credentials" };
+      }
+    } catch (error: any) {
+      return { success: false, error: "Error logging in user: " + error.message };
+    }
+  }
+
+  const userCookie = cookies().get('user');
+  let userData = null;
+  if (userCookie) {
+    try {
+      userData = JSON.parse(userCookie.value);
+    } catch (error) {
+      console.error('Error parsing user cookie:', error);
+    }
+  }
+
+  return <LoginForm handleLogin={handleLogin} userData={userData}/>;
 }
+
+// import { Metadata } from "next";
+// export const metadata: Metadata = {
+//   title: "Home",
+//   description: "Welcome to chatSPA",
+// };
+// export default async function HomePage() {
+//   return (
+//     <div className="app-container" style={{ position: "relative" }}>
+//       <h1>HomePage</h1>
+//     </div>
+//   );
+// }
