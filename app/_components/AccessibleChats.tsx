@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../store/store";
 import { useDispatch } from "react-redux";
 import Avatar from "./Avatar";
-import { getTeams } from "../services/apiGroups";
 import { setTeams } from "../../store/groupSlice";
-import { createTeamWithMembers } from "../services/createTeam";
+import { getTeams } from "../_services/apiGroups";
+import { createTeamWithMembers } from "./createTeam";
 
 function AccessibleChats() {
   const { searchQuery, users, loggedInUser } = useAppSelector(

@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../store/store";
 
 import { setIsLoading } from "../../store/userSlice";
-import { createTeamWithMembers } from "../services/createTeam";
-import supabase from "../services/supabase";
+import { createTeamWithMembers } from "./createTeam";
+
 
 function CheckboxList() {
   const dispatch = useDispatch();

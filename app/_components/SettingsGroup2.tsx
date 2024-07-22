@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
-import supabase from "../services/supabase";
+//import supabase from "../services/supabase";
 import { deleteTeamById } from "../../store/groupSlice";
+import { supabase } from "../_services/supabase";
 export default function SettingsGroup() {
   const params = useParams();
   const navigate = useNavigate();

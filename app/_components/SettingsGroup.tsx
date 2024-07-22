@@ -3,9 +3,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
-import supabase from "../services/supabase";
+//import supabase from "../services/supabase";
 import { setIsLoading } from "../../store/userSlice";
 import { useState } from "react";
+import { supabase } from "../_services/supabase";
 export default function SettingsGroup() {
   const params = useParams();
   const [updateName, setUpdateName] = useState("");

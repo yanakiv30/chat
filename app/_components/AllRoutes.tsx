@@ -1,12 +1,13 @@
 "use client"
 
 import { Route, Routes } from "react-router-dom";
-import CheckboxList from "./pages/CheckboxList";
-import SettingsGroup from "./pages/SettingsGroup";
-import SettingsGroup2 from "./pages/SettingsGroup2";
-import GroupMessages from "./pages/GroupMessages";
-import Empty from "./pages/Empty";
-import SignUp from "./pages/SignUp";
+import Empty from "./Empty";
+import GroupMessages from "./GroupMessages";
+import CheckboxList from "./CheckboxList";
+import SettingsGroup from "./SettingsGroup";
+import SettingsGroup2 from "./SettingsGroup";
+import SignUp from "../signUp/page";
+
 export default function AllRoutes() {
   return (
     <Routes>      

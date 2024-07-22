@@ -1,9 +1,12 @@
 "use client"
-import GroupList from "../Components/GroupList";
-import LogoLogout from "../Components/LogoLogout";
-import IconAndSearch from "../Components/IconAndSearch";
-import AccessibleChats from "../Components/AccessibleChats";
+
 import { useState } from "react";
+import LogoLogout from "./LogoLogout";
+import IconAndSearch from "./IconAndSearch";
+import AccessibleChats from "./AccessibleChats";
+import GroupList from "./GroupList";
+
+
 
 function ChatMembersList() {
   const [isNewChatOpen, setIsNewChatOpen] = useState(false);
