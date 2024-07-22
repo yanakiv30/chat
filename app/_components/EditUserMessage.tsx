@@ -1,3 +1,5 @@
+"use client"
+
 import { useDispatch } from "react-redux";
 import { setIsEdit, setIsLoading } from "../../store/userSlice";
 import { useAppSelector } from "../../store/store";

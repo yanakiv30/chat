@@ -1,3 +1,4 @@
+"use client"
 interface AvatarProps{name:string}
 
 function Avatar({ name }:AvatarProps) {

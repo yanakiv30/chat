@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 
 import { cookies } from "next/headers";
 import { signInUser } from "../_services/auth";
-import { supabase } from "../_lib/supabase";
+import { supabase } from "../_services/supabase";
 import LoginForm from "../_components/LoginForm";
 
 export default function Login() {

@@ -7,18 +7,17 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/store";
 import { setLoggedInUser, setUsers } from "@/store/userSlice";
 import { setTeams } from "@/store/groupSlice";
-import Spinner from "./Spinner";
-import ChatMembersList from "./ChatMembersList";
-import AllRoutes from "./AllRoutes";
-import Login from "../login/page";
-import SignUp from "../signUp/page";
-// import ChatMembersList from "./pages/ChatMembersList";
-// import AllRoutes from "./AllRoutes";
-// import Spinner from "./Components/Spinner";
-// import Login from "./pages/Login";
-// import SignUp from "./pages/SignUp";
+//import Login from "../login/page";
+import SignUp from "./signUp/page";
+import ChatMembersList from "./_components/ChatMembersList";
+import AllRoutes from "./_components/AllRoutes";
+import Spinner from "./_components/Spinner";
+import Login from "./login/page";
 
-function App({ serverData}) {
+
+function App({ serverData }: {
+  serverData: any;
+}): JSX.Element {
   const dispatch = useDispatch();
   const { loggedInUser, isLoading, isRegister } = useAppSelector((store) => store.user);
 

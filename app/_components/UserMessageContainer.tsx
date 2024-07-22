@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rightMessage } from "../utils/messageUtils";

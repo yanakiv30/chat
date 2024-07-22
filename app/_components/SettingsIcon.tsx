@@ -1,3 +1,4 @@
+"use client"
 
 import { FaCog } from 'react-icons/fa';
 const SettingsIcon = () => {

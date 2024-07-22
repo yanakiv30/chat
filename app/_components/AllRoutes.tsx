@@ -1,3 +1,5 @@
+"use client"
+
 import { Route, Routes } from "react-router-dom";
 import CheckboxList from "./pages/CheckboxList";
 import SettingsGroup from "./pages/SettingsGroup";

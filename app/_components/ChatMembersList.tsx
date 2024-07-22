@@ -1,3 +1,4 @@
+"use client"
 import GroupList from "../Components/GroupList";
 import LogoLogout from "../Components/LogoLogout";
 import IconAndSearch from "../Components/IconAndSearch";

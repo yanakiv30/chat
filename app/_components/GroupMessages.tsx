@@ -1,3 +1,6 @@
+"use client"
+
+
 // import { useState } from "react";
 // import { useNavigate, useParams } from "react-router-dom";
 // import SearchInMessage from "../features/users/SearchInMessage";

@@ -1,3 +1,5 @@
+"use client"
+
 import { NavLink } from "react-router-dom";
 import { setLoggedInUser } from "../../store/userSlice";
 import { useDispatch } from "react-redux";

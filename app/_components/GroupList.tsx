@@ -1,3 +1,5 @@
+"use client"
+
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaCog } from "react-icons/fa";
 import Avatar from "./Avatar";

@@ -1,4 +1,6 @@
-import supabase from "./supabase";
+"use client"
+
+import supabase from "../_services/supabase";
 
 async function createTeam(newTeam: { name: string }) {
   const { data, error } = await supabase.from("teams").insert(newTeam).select();

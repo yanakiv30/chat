@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers'
-import { getTeams, getUsers } from '../_services/apiGroups'
-
+import { getTeams, getUsers } from './_services/apiGroups';
 export async function AppServerComponent() {  
   const userCookie = cookies().get('user')
   
