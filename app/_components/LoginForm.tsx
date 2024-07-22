@@ -1,27 +1,50 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { setLoggedInUser } from "@/store/userSlice";
 import { useDispatch } from "react-redux";
+import { useAppSelector } from "@/store/store";
 
-export default function LoginForm() {
+interface LoginFormProps {
+  handleLogin: (
+    formData: FormData
+  ) => Promise<{ success: boolean; error?: string; redirectTo?: string }>;
+  userData: any | null;
+}
+
+export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
   const dispatch = useDispatch();
-
-  const handleLogin = (email: string, password: string) => {
-    // Implement your login logic here
-    console.log("Logging in:", email, password);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const { loggedInUser } = useAppSelector((store) => store.user);
+  const onSubmit = async (formData: FormData) => {
+    try {
+      const result = await handleLogin(formData);
+      if (result.success && result.redirectTo) {
+        router.push(result.redirectTo);
+      } else if (result.error) {
+        setError(result.error);
+      }
+    } catch (error: any) {
+      setError("Error logging in user: " + error.message);
+    }
   };
 
+  if (userData) {
+    dispatch(setLoggedInUser(userData)); //user is a object
+  } else {
+    console.error(error);
+    alert("Invalid credentials");
+  }
+  console.log("loggedInUser",loggedInUser);
   return (
     <div className="login">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target as HTMLFormElement);
-          const email = formData.get("email");
-          const password = formData.get("password");
-          if (typeof email === "string" && typeof password === "string")
-            handleLogin(email, password);
-        }}
-      >
+      <h2>Welcome to chatSPA</h2>
+
+      {userData && <p>loggedInUser={JSON.stringify(userData, null, 2)}</p>}
+
+      <form action={onSubmit}>
         <label>
           Email:
           <input type="text" name="email" required />
@@ -32,6 +55,10 @@ export default function LoginForm() {
         </label>
         <button type="submit">Login</button>
       </form>
+      {error && <p className="error">{error}</p>}
+      <p>
+        Dont have an account? <a href="/register">Register</a>
+      </p>
     </div>
   );
 }
