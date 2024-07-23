@@ -11,16 +11,14 @@ import LoginForm from "../_components/LoginForm";
 import { revalidatePath } from "next/cache";
 
 export default function Login() {
+
   async function handleLogin(formData: FormData) {
     'use server';
-
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
-
     try {
       cookies().delete('user');
       revalidatePath('/login');
-
       const authResponse = await signInUser(email, password);
       if (authResponse.error) {
         return { success: false, error: authResponse.error };
@@ -33,11 +31,38 @@ export default function Login() {
         // Store user data in a cookie
         console.log("data from server  ",data);
         cookies().set('user', JSON.stringify(data[0]), { httpOnly: true });
-        revalidatePath('/chatMembersList');
+        revalidatePath('/chatMembersList');        
+        return { success: true, redirectTo: '/chatMembersList' };       
+      } else {
+        return { success: false, error: error?.message || "Invalid credentials" };
+      }
+    } catch (error: any) {
+      return { success: false, error: "Error logging in user: " + error.message };
+    }
+  }
 
-        
-        return { success: true, redirectTo: '/chatMembersList' };
-       // return { success: true };
+  async function handleRegister(formData: FormData) {
+    'use server';
+    
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    try {
+      cookies().delete('user');
+      revalidatePath('/login');
+      const authResponse = await signInUser(email, password);
+      if (authResponse.error) {
+        return { success: false, error: authResponse.error };
+      }
+      const { data, error } = await supabase
+        .from("users")
+        .select()
+        .eq("id", authResponse.user_id);
+      if (data && data[0]) {
+        // Store user data in a cookie
+        console.log("data from server  ",data);
+        cookies().set('user', JSON.stringify(data[0]), { httpOnly: true });
+        revalidatePath('/chatMembersList');        
+        return { success: true, redirectTo: '/chatMembersList' };       
       } else {
         return { success: false, error: error?.message || "Invalid credentials" };
       }
