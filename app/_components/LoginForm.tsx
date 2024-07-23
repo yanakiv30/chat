@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { setLoggedInUser } from "@/store/userSlice";
+import { setIsRegister, setLoggedInUser } from "@/store/userSlice";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/store";
 
@@ -58,8 +58,13 @@ export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
       </form>
       {error && <p className="error">{error}</p>}
       <p>
-        Dont have an account? <a href="/register">Register</a>
-      </p>
+          If you dont have an account , please :
+          <button onClick={() => dispatch(setIsRegister(true))}>
+            Register
+          </button>
+        </p>
+
+        
     </div>
   );
 }
