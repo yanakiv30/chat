@@ -3,12 +3,14 @@
 import { useDispatch } from "react-redux";
 import { setIsRegister, setLoggedInUser } from "../../store/userSlice";
 import { signInUser } from "../_services/auth";
+//import supabase from "../_services/supabase";
+import { useAppSelector } from "@/store/store";
 import { supabase } from "../_services/supabase";
-//import { signInUser } from "../services/auth";
-//import supabase from "../services/supabase";
+
 
 function Login() {
   const dispatch = useDispatch();
+  let { users, loggedInUser } = useAppSelector((store) => store.user);
   async function handleLogin(email: string, password: string) {
     try {
       const authResponse = await signInUser(email, password);
@@ -32,7 +34,7 @@ function Login() {
       console.error(errorMessage);
     }
   }
-
+console.log("loggedInUser = ", loggedInUser);
   return (
     
       <div className="login">
