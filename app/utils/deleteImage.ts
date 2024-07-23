@@ -1,5 +1,6 @@
-// src/utils/deleteImage.ts
-import supabase from "../services/supabase";
+
+
+import { supabase } from "../_services/supabase";
 
 const deleteImage = async (filePath: string): Promise<boolean> => {
   const { error } = await supabase.storage

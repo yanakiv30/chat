@@ -17,8 +17,10 @@ export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
   const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { loggedInUser } = useAppSelector((store) => store.user);
+  const { loggedInUser, isRegister } = useAppSelector((store) => store.user);
   console.log("loggedInUser",loggedInUser);
+  console.log("isRegister= ", isRegister)
+
   const onSubmit = async (formData: FormData) => {
     try {
       const result = await handleLogin(formData);

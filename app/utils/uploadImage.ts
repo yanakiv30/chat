@@ -1,4 +1,6 @@
-import supabase from "../services/supabase";
+//import supabase from "../services/supabase";
+
+import { supabase } from "../_services/supabase";
 
 const uploadImage = async (file: File): Promise<string | undefined> => {
   const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
