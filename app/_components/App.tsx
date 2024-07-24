@@ -16,6 +16,7 @@ import { supabase } from "../_services/supabase";
 import AllRoutes from "./AllRoutes";
 import ChatMembersList from "./ChatMembersList";
 import Spinner from "./Spinner";
+import Empty from "./Empty";
 
 
 function App() {
@@ -158,8 +159,9 @@ function App() {
   return (
     <Router>
       <div className="app-container" style={{ position: "relative" }}>
-        {isLoading && <Spinner />}        
-          <div className="main-container">
+        {isLoading && <Spinner />}  
+        {loggedInUser ? 
+        <div className="main-container">            
             <ChatMembersList />
             <AllRoutes />
             <ToastContainer
@@ -173,7 +175,9 @@ function App() {
               draggable
               pauseOnHover
             />
-          </div>        
+          </div> :<Empty/> }
+
+                
       </div>
     </Router>
   );

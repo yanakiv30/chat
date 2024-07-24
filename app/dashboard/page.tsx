@@ -1,6 +1,7 @@
-import App from "../_components/App"
+
+import ConditionalComponent from "../_components/ConditionalComponent"
 
 function page() {
-    return <App/>
+    return <ConditionalComponent/>
 }
 export default page
