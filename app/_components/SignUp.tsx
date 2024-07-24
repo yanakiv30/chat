@@ -1,15 +1,15 @@
 "use client"
 
-
-import { faSortAmountAsc } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
-//import { signUpUser } from "../services/auth";
-//import supabase from "../services/supabase";
-import { setIsRegister } from "../../store/userSlice";
+import { setIsRegister, setLoggedInUser } from "../../store/userSlice";
 import { signUpUser } from "../_services/auth";
 import { supabase } from "../_services/supabase";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/store/store";
 
 export default function SignUp() {
+  const router=useRouter();
+  const {loggedInUser} = useAppSelector(store=> store.user);
   const dispatch = useDispatch();
   async function handleSignUp(
     newUsername: string,
@@ -35,21 +35,27 @@ export default function SignUp() {
         .from("users")
         .insert([newUser])
         .select();
-
+       
+       
       if (error) {
-        throw new Error(error.message);
+        throw new Error(error.message);        
       }
-
+      setLoggedInUser(data[0]);
       const usersAuthData = await supabase
         .from("users_auth")
         .insert([{ user_id: data[0].id, auth_id: authResponse.data.user!.id }])
         .select();
+
     } catch (error: any) {
       const errorMessage = "Error creating user: " + error.message;
       alert(errorMessage);
       console.error(errorMessage);
     }
-    dispatch(setIsRegister(false));
+
+    
+    console.log("Successfully SignUp");
+    
+    router.push('/dashboard');
   }
   return (
     <div className="login">

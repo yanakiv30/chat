@@ -1,7 +1,9 @@
+import SignUp from "../_components/SignUp"
+
 function page() {
     return (
-        <div>
-           <p>This is SignUp Page</p> 
+        <div className="background-login">
+           <SignUp/> 
         </div>
     )
 }
