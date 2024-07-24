@@ -70,7 +70,7 @@ export default function Login() {
       return { success: false, error: "Error logging in user: " + error.message };
     }
   }
-
+ 
   const userCookie = cookies().get('user');
   let userData = null;
   if (userCookie) {

@@ -24,8 +24,9 @@ export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
   const onSubmit = async (formData: FormData) => {
     try {
       const result = await handleLogin(formData);
+      console.log("result= ",result);
       if (result.success && result.redirectTo) {
-        router.push(result.redirectTo);
+        router.push(result.redirectTo); 
       } else if (result.error) {
         setError(result.error);
       }
@@ -42,10 +43,10 @@ export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
   }
  
   return (
-    <div className="login">
+    <div className="background-login">
       <h2>Welcome to chatSPA</h2>
 
-      {userData && <p>loggedInUser={JSON.stringify(userData, null, 2)}</p>}
+      {/* {userData && <p>loggedInUser={JSON.stringify(userData, null, 2)}</p>} */}
 
       <form action={onSubmit}>
         <label>
