@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useCallback, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -7,7 +7,11 @@ import "../App.css";
 import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 
-import { setIsDeleteTeam, setTeams, setTeamWithNewMessage } from "@/store/groupSlice";
+import {
+  setIsDeleteTeam,
+  setTeams,
+  setTeamWithNewMessage,
+} from "@/store/groupSlice";
 import { useAppSelector } from "@/store/store";
 import { setUsers } from "@/store/userSlice";
 import { toast, ToastContainer } from "react-toastify";
@@ -18,12 +22,11 @@ import ChatMembersList from "./ChatMembersList";
 import Spinner from "./Spinner";
 import Empty from "./Empty";
 
-
 function App() {
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const { localTeams } = useAppSelector((store) => store.group);
-  let { isLoading ,isRegister} = useAppSelector((store) => store.user);
+  let { isLoading, isRegister } = useAppSelector((store) => store.user);
   const loadStateFromBackend = useCallback(() => {
     if (!loggedInUser) return;
 
@@ -159,25 +162,23 @@ function App() {
   return (
     <Router>
       <div className="app-container" style={{ position: "relative" }}>
-        {isLoading && <Spinner />}  
-        {loggedInUser ? 
-        <div className="main-container">            
-            <ChatMembersList />
-            <AllRoutes />
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-            />
-          </div> :<Empty/> }
+        {isLoading && <Spinner />}
 
-                
+        <div className="main-container">
+          <ChatMembersList />
+          <AllRoutes />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </div>
       </div>
     </Router>
   );

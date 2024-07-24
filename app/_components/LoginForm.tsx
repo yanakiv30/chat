@@ -17,6 +17,7 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({ handleLogin}: LoginFormProps) {
+  
   const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function LoginForm({ handleLogin}: LoginFormProps) {
       {error && <p className="error">{error}</p>}
       <p>
           If you dont have an account , please :
-          <button onClick={() => dispatch(setIsRegister(true))}>
+          <button onClick={() => router.push('/signup')}>
             Register
           </button>
         </p>        
