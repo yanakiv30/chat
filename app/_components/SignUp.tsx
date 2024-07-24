@@ -1,11 +1,11 @@
 "use client"
 
+import { useAppSelector } from "@/store/store";
+import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { setIsRegister, setLoggedInUser } from "../../store/userSlice";
+import { setLoggedInUser } from "../../store/userSlice";
 import { signUpUser } from "../_services/auth";
 import { supabase } from "../_services/supabase";
-import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/store/store";
 
 export default function SignUp() {
   const router=useRouter();
@@ -34,13 +34,13 @@ export default function SignUp() {
       const { data, error } = await supabase
         .from("users")
         .insert([newUser])
-        .select();
-       
+        .select();       
        
       if (error) {
         throw new Error(error.message);        
       }
-      setLoggedInUser(data[0]);
+      console.log(data[0]);
+      dispatch(setLoggedInUser(data[0]));
       const usersAuthData = await supabase
         .from("users_auth")
         .insert([{ user_id: data[0].id, auth_id: authResponse.data.user!.id }])
@@ -50,14 +50,11 @@ export default function SignUp() {
       const errorMessage = "Error creating user: " + error.message;
       alert(errorMessage);
       console.error(errorMessage);
-    }
-
-    
-    console.log("Successfully SignUp");
-    
+    }    
     router.push('/dashboard');
   }
-  return (
+  if(loggedInUser) return null;
+  return (    
     <div className="login">
       <h2>Please Sign Up</h2>
       <form
