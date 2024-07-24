@@ -12,7 +12,6 @@ type HandleLoginFunction = (formData: FormData) => Promise<{
   redirectTo?: string;
   data?: any;
 }>;
-
 interface LoginFormProps {
   handleLogin: HandleLoginFunction;
 }
@@ -39,19 +38,10 @@ export default function LoginForm({ handleLogin}: LoginFormProps) {
       setError("Error logging in user: " + error.message);
     }
   };
-
-  // if (userData) {
-  //   dispatch(setLoggedInUser(userData)); //user is a object
-  // } else {
-  //   console.error(error);
-  //   alert("Invalid credentials");
-  // }
  
   return (
     <div className="background-login">
-      <h2>Welcome to chatSPA</h2>
-
-      {/* {userData && <p>loggedInUser={JSON.stringify(userData, null, 2)}</p>} */}
+      <h2>Welcome to chatSPA</h2>     
 
       <form action={onSubmit}>
         <label>
@@ -70,9 +60,7 @@ export default function LoginForm({ handleLogin}: LoginFormProps) {
           <button onClick={() => dispatch(setIsRegister(true))}>
             Register
           </button>
-        </p>
-
-        
+        </p>        
     </div>
   );
 }

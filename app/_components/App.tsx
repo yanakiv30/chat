@@ -4,20 +4,18 @@ import { useCallback, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "../App.css";
 
-import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
+import "react-toastify/dist/ReactToastify.css";
 
-import AllRoutes from "./AllRoutes";
-import { useAppSelector } from "@/store/store";
-import { getTeams, getUsers } from "../_services/apiGroups";
-import { setUsers } from "@/store/userSlice";
 import { setIsDeleteTeam, setTeams, setTeamWithNewMessage } from "@/store/groupSlice";
-import { supabase } from "../_services/supabase";
-import Spinner from "./Spinner";
-import ChatMembersList from "./ChatMembersList";
-import Login from "./Login";
-import SignUp from "./SignUp";
+import { useAppSelector } from "@/store/store";
+import { setUsers } from "@/store/userSlice";
 import { toast, ToastContainer } from "react-toastify";
+import { getTeams, getUsers } from "../_services/apiGroups";
+import { supabase } from "../_services/supabase";
+import AllRoutes from "./AllRoutes";
+import ChatMembersList from "./ChatMembersList";
+import Spinner from "./Spinner";
 
 
 function App() {

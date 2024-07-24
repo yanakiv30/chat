@@ -8,19 +8,13 @@ import { cookies } from "next/headers";
 import { signInUser } from "../_services/auth";
 import { supabase } from "../_services/supabase";
 import LoginForm from "../_components/LoginForm";
-import { revalidatePath } from "next/cache";
-
-
 
 export default function Login() {
-
   async function handleLogin(formData: FormData) {
     'use server';
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
-    try {
-      cookies().delete('user');
-      revalidatePath('/login');
+    try {      
       const authResponse = await signInUser(email, password);
       if (authResponse.error) {
         return { success: false, error: authResponse.error };
@@ -30,10 +24,9 @@ export default function Login() {
         .select()
         .eq("id", authResponse.user_id);
       if (data && data[0]) {
-        // Store user data in a cookie
+        
         console.log("data from server  ",data);
-        cookies().set('user', JSON.stringify(data[0]), { httpOnly: true });
-        revalidatePath('/dashboard');        
+        cookies().set('user', JSON.stringify(data[0]), { httpOnly: true });           
         return { success: true, redirectTo: '/dashboard',data:data[0]};       
       } else {
         return { success: false, error: error?.message || "Invalid credentials" };
@@ -42,17 +35,5 @@ export default function Login() {
       return { success: false, error: "Error logging in user: " + error.message };
     }
   }
-
-  
-  // const userCookie = cookies().get('user');
-  // let userData = null;
-  // if (userCookie) {
-  //   try {
-  //     userData = JSON.parse(userCookie.value);
-  //   } catch (error) {
-  //     console.error('Error parsing user cookie:', error);
-  //   }
-  // }
-
   return <LoginForm handleLogin={handleLogin}/>;
 }
