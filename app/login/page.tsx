@@ -10,6 +10,8 @@ import { supabase } from "../_services/supabase";
 import LoginForm from "../_components/LoginForm";
 import { revalidatePath } from "next/cache";
 
+
+
 export default function Login() {
 
   async function handleLogin(formData: FormData) {
@@ -32,7 +34,7 @@ export default function Login() {
         console.log("data from server  ",data);
         cookies().set('user', JSON.stringify(data[0]), { httpOnly: true });
         revalidatePath('/dashboard');        
-        return { success: true, redirectTo: '/dashboard' };       
+        return { success: true, redirectTo: '/dashboard',data:data[0]};       
       } else {
         return { success: false, error: error?.message || "Invalid credentials" };
       }
@@ -42,15 +44,15 @@ export default function Login() {
   }
 
   
-  const userCookie = cookies().get('user');
-  let userData = null;
-  if (userCookie) {
-    try {
-      userData = JSON.parse(userCookie.value);
-    } catch (error) {
-      console.error('Error parsing user cookie:', error);
-    }
-  }
+  // const userCookie = cookies().get('user');
+  // let userData = null;
+  // if (userCookie) {
+  //   try {
+  //     userData = JSON.parse(userCookie.value);
+  //   } catch (error) {
+  //     console.error('Error parsing user cookie:', error);
+  //   }
+  // }
 
-  return <LoginForm handleLogin={handleLogin} userData={userData}/>;
+  return <LoginForm handleLogin={handleLogin}/>;
 }

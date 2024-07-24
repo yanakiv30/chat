@@ -6,14 +6,18 @@ import { setIsRegister, setLoggedInUser } from "@/store/userSlice";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/store";
 
+type HandleLoginFunction = (formData: FormData) => Promise<{
+  success: boolean;
+  error?: string;
+  redirectTo?: string;
+  data?: any;
+}>;
+
 interface LoginFormProps {
-  handleLogin: (
-    formData: FormData
-  ) => Promise<{ success: boolean; error?: string; redirectTo?: string }>;
-  userData: any | null;
+  handleLogin: HandleLoginFunction;
 }
 
-export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
+export default function LoginForm({ handleLogin}: LoginFormProps) {
   const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -25,6 +29,7 @@ export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
     try {
       const result = await handleLogin(formData);
       console.log("result= ",result);
+      dispatch(setLoggedInUser(result.data));
       if (result.success && result.redirectTo) {
         router.push(result.redirectTo); 
       } else if (result.error) {
@@ -35,12 +40,12 @@ export default function LoginForm({ handleLogin, userData }: LoginFormProps) {
     }
   };
 
-  if (userData) {
-    dispatch(setLoggedInUser(userData)); //user is a object
-  } else {
-    console.error(error);
-    alert("Invalid credentials");
-  }
+  // if (userData) {
+  //   dispatch(setLoggedInUser(userData)); //user is a object
+  // } else {
+  //   console.error(error);
+  //   alert("Invalid credentials");
+  // }
  
   return (
     <div className="background-login">
