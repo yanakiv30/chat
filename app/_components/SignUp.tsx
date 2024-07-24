@@ -7,11 +7,10 @@ import { setLoggedInUser } from "../../store/userSlice";
 import { signUpUser } from "../_services/auth";
 import { supabase } from "../_services/supabase";
 
-export default function SignUp2() {
+export default function SignUp() {
   const router=useRouter();
   const {loggedInUser} = useAppSelector(store=> store.user);
   const dispatch = useDispatch();
-
   async function handleSignUp(
     newUsername: string,
     newPassword: string,
@@ -19,7 +18,7 @@ export default function SignUp2() {
     email: string,
     avatar: string,
     status: string
-   ) {
+  ) {
     try {
       const authResponse = await signUpUser(email, newPassword);
       if (authResponse.error) {
@@ -54,7 +53,6 @@ export default function SignUp2() {
     }    
     router.push('/dashboard');
   }
-
   if(loggedInUser) return null;
   return (    
     <div className="login">
