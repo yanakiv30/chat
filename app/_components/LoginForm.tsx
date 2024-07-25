@@ -16,7 +16,7 @@ interface LoginFormProps {
   handleLogin: HandleLoginFunction;
 }
 
-export default function LoginForm({ handleLogin}: LoginFormProps) {
+export default function LoginForm({ handleLogin}: LoginFormProps) { 
   
   const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);

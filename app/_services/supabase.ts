@@ -1,6 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
- const SUPABASE_URL = process.env.SUPABASE_URL;
- const SUPABASE_KEY = process.env.SUPABASE_KEY;
+//  const SUPABASE_URL = process.env.SUPABASE_URL;
+//  const SUPABASE_KEY = process.env.SUPABASE_KEY;
+
+ const SUPABASE_URL = "https://ptbuuhzrhneiksqzctbv.supabase.co";
+ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0YnV1aHpyaG5laWtzcXpjdGJ2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMTQ0ODMwMywiZXhwIjoyMDM3MDI0MzAzfQ.UiJIkm41vU2C9CGKo9JmN-UE0BQebPOOFmhbv0O7Wrs";
+
 console.log("sup-url = ",SUPABASE_URL," sup-key = ",SUPABASE_KEY)
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   throw new Error("Supabase URL and Key must be defined");
