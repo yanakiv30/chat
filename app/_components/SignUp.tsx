@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
 import { useAppSelector } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setLoggedInUser } from "../../store/userSlice";
-import { signUpUser } from "../_services/auth";
+import { signUpUser } from "../_services/supAuth";
 import { supabase } from "../_services/supabase";
 
 export default function SignUp() {
-  const router=useRouter();
-  const {loggedInUser} = useAppSelector(store=> store.user);
+  const router = useRouter();
+  const { loggedInUser } = useAppSelector((store) => store.user);
   const dispatch = useDispatch();
   async function handleSignUp(
     newUsername: string,
@@ -34,10 +34,10 @@ export default function SignUp() {
       const { data, error } = await supabase
         .from("users")
         .insert([newUser])
-        .select();       
-       
+        .select();
+
       if (error) {
-        throw new Error(error.message);        
+        throw new Error(error.message);
       }
       console.log(data[0]);
       dispatch(setLoggedInUser(data[0]));
@@ -45,16 +45,15 @@ export default function SignUp() {
         .from("users_auth")
         .insert([{ user_id: data[0].id, auth_id: authResponse.data.user!.id }])
         .select();
-
     } catch (error: any) {
       const errorMessage = "Error creating user: " + error.message;
       alert(errorMessage);
       console.error(errorMessage);
-    }    
-    router.push('/dashboard');
+    }
+    router.push("/dashboard");
   }
-  if(loggedInUser) return null;
-  return (    
+  if (loggedInUser) return null;
+  return (
     <div className="login">
       <h2>Please Sign Up</h2>
       <form
@@ -71,12 +70,19 @@ export default function SignUp() {
           if (
             typeof newUsername === "string" &&
             typeof newPassword === "string" &&
-            typeof full_name === "string"&&
-            typeof email === "string"&&
-            typeof avatar === "string"&&
+            typeof full_name === "string" &&
+            typeof email === "string" &&
+            typeof avatar === "string" &&
             typeof status === "string"
           )
-            handleSignUp(newUsername, newPassword,full_name,email,avatar,status);
+            handleSignUp(
+              newUsername,
+              newPassword,
+              full_name,
+              email,
+              avatar,
+              status
+            );
         }}
       >
         <label>
@@ -88,25 +94,24 @@ export default function SignUp() {
           <input type="password" name="newPassword" required />
         </label>
         <label>
-        Full Name:
+          Full Name:
           <input type="text" name="full_name" required />
         </label>
         <label>
-        Email:
+          Email:
           <input type="text" name="email" required />
         </label>
         <label>
-        Avatar:
+          Avatar:
           <input type="text" name="avatar" required />
         </label>
         <label>
-        Status:
+          Status:
           <input type="text" name="status" required />
         </label>
 
         <button type="submit">Sign Up</button>
       </form>
-      
     </div>
   );
 }
