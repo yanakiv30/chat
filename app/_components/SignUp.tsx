@@ -7,10 +7,15 @@ import { setLoggedInUser } from "../../store/userSlice";
 import { signUpUser } from "../_services/supAuth";
 import { supabase } from "../_services/supabase";
 
-export default function SignUp() {
+export default function SignUp(session:any) {
+  console.log("session from SignUP-client= ",session);
+
+
   const router = useRouter();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const dispatch = useDispatch();
+
+  
   async function handleSignUp(
     newUsername: string,
     newPassword: string,
