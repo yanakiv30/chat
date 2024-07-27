@@ -60,42 +60,46 @@ export default function SignUp(session:any) {
     router.push("/dashboard");
   }
 
-  async function handleSignUp2() {
-    try {
-      const newUser = {
-        username: session.session.user.name,
-        full_name: session.session.user.name,
-        avatar: "Google",
-        status: "new",
-        email:session.session.user.email,
-        password: "passwordn4"
-      };
-      const { data, error } = await supabase
-        .from("users")
-        .insert([newUser])
-        .select();
 
-      if (error) {
-        throw new Error(error.message);
-      }
-      console.log("data[0]= ",data[0]);
-      dispatch(setLoggedInUser(data[0]));
-     
-    } catch (error: any) {
-      const errorMessage = "Error creating user: " + error.message;
-      alert(errorMessage);
-      console.error(errorMessage);
-    }
-   // router.push("/dashboard");
-  }
   console.log("if(session)", session);
+
   useEffect(()=>{
-    if(session) {    
-      console.log("if session= ",session.session.user.name);
-      //handleSignUp2();   
-      return;
-    } 
-  })
+    async function handleSignUp2() {      
+      try {
+        const newUser = {
+          username: session.session.user.name,
+          full_name: session.session.user.name,
+          avatar: "Google",
+          status: "new",
+          email:session.session.user.email,
+          password: "passwordn4"
+        };
+        const { data, error } = await supabase
+          .from("users")
+          .insert([newUser])
+          .select();
+  
+        if (error) {
+          throw new Error(error.message);
+        }
+        console.log("data[0]= ",data[0]);
+        dispatch(setLoggedInUser(data[0]));
+       
+      } catch (error: any) {
+        const errorMessage = "Error creating user: " + error.message;
+        alert(errorMessage);
+        console.error(errorMessage);
+      }
+     // router.push("/dashboard");
+    }
+ if (session) handleSignUp2();
+
+    // if(session) {    
+    //   console.log("if session= ",session.session.user.name);
+    //   handleSignUp2();   
+    //   return;
+    // } 
+  },[session, dispatch])
  
 
   // if(sessionState) {
@@ -107,6 +111,7 @@ export default function SignUp(session:any) {
   // }
 
   if (loggedInUser) return null;
+  if (session) return;
   return (
     <div className="login">
       <h2>Please Sign Up</h2>
