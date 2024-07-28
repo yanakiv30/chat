@@ -8,8 +8,8 @@ import { signUpUser } from "../_services/supAuth";
 import { supabase } from "../_services/supabase";
 import { useEffect, useState } from "react";
 
-export default function SignUp(session: any) {
-  console.log("session from SignUP-client= ", session);
+export default function SignUp(incomingUser: any) {
+  console.log("Incoming user from server=  ", incomingUser);
 
   const router = useRouter();
   const { loggedInUser } = useAppSelector((store) => store.user);
@@ -22,7 +22,7 @@ export default function SignUp(session: any) {
     email: string,
     avatar: string,
     status: string
-  ) {
+   ) {
     try {
       const authResponse = await signUpUser(email, newPassword);
       if (authResponse.error) {
@@ -55,19 +55,19 @@ export default function SignUp(session: any) {
     router.push("/dashboard");
   }
 
-  console.log("if(session)", session);
+  
 
   useEffect(() => {
     async function handleSignUp2() {
-      dispatch(setLoggedInUser(session));
+      dispatch(setLoggedInUser(incomingUser));
+      router.push("/dashboard");
     }
-    if (session) handleSignUp2();   
-  }, [session, dispatch]);
-
-  
+    if (incomingUser) handleSignUp2();   
+  }, [incomingUser, dispatch, router]);  
 
   if (loggedInUser) return null;
-  if (session) return;
+  if (incomingUser) return;
+
   return (
     <div className="login">
       <h2>Please Sign Up</h2>
@@ -90,6 +90,7 @@ export default function SignUp(session: any) {
             typeof avatar === "string" &&
             typeof status === "string"
           )
+          
             handleSignUp(
               newUsername,
               newPassword,

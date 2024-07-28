@@ -17,13 +17,11 @@ if (fetchError && fetchError.code !== 'PGRST116') { // 'PGRST116' is the code fo
 }
 
 if (existingUser) {
-  console.log("User already exists: ", existingUser);
-  //dispatch(setLoggedInUser(existingUser));
+  console.log("User already exists: ", existingUser);  
   return (
     <div className="background-login">
-           <SignUp session={existingUser}/> 
-        </div>
-    
+           <SignUp incomingUser={existingUser}/> 
+        </div>    
   );
 }
 const newUser = {
@@ -32,7 +30,7 @@ const newUser = {
   avatar: "Google",
   status: "new",
   email:session?.user?.email,
-  password: "passwordn4"
+  password: session?.user?.email,
 };
   try {
     
@@ -45,7 +43,6 @@ const newUser = {
       throw new Error(error.message);
     }
     console.log("data[0]= ",data[0]);
-   // dispatch(setLoggedInUser(data[0]));
    
   } catch (error: any) {
     const errorMessage = "Error creating user: " + error.message;
@@ -55,9 +52,8 @@ const newUser = {
 
   return (
     <div className="background-login">
-           <SignUp session={newUser}/> 
-        </div>
-    
+           <SignUp incomingUser={newUser}/> 
+        </div>    
   );
 }
 export default page;
