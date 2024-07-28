@@ -8,18 +8,13 @@ import { signUpUser } from "../_services/supAuth";
 import { supabase } from "../_services/supabase";
 import { useEffect, useState } from "react";
 
-export default function SignUp(session:any) {
- // const [sessionState, setSessionState] = useState<any>(undefined);
-  console.log("session from SignUP-client= ",session);
-  
+export default function SignUp(session: any) {
+  console.log("session from SignUP-client= ", session);
+
   const router = useRouter();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const dispatch = useDispatch();
-  let counter=0;
-// useEffect(()=>{
-//   setSessionState(session);
-// },[session])
-  
+
   async function handleSignUp(
     newUsername: string,
     newPassword: string,
@@ -27,7 +22,7 @@ export default function SignUp(session:any) {
     email: string,
     avatar: string,
     status: string
-   ) {
+  ) {
     try {
       const authResponse = await signUpUser(email, newPassword);
       if (authResponse.error) {
@@ -60,55 +55,16 @@ export default function SignUp(session:any) {
     router.push("/dashboard");
   }
 
-
   console.log("if(session)", session);
 
-  useEffect(()=>{
-    async function handleSignUp2() {      
-      try {
-        const newUser = {
-          username: session.session.user.name,
-          full_name: session.session.user.name,
-          avatar: "Google",
-          status: "new",
-          email:session.session.user.email,
-          password: "passwordn4"
-        };
-        const { data, error } = await supabase
-          .from("users")
-          .insert([newUser])
-          .select();
-  
-        if (error) {
-          throw new Error(error.message);
-        }
-        console.log("data[0]= ",data[0]);
-        dispatch(setLoggedInUser(data[0]));
-       
-      } catch (error: any) {
-        const errorMessage = "Error creating user: " + error.message;
-        alert(errorMessage);
-        console.error(errorMessage);
-      }
-     // router.push("/dashboard");
+  useEffect(() => {
+    async function handleSignUp2() {
+      dispatch(setLoggedInUser(session));
     }
- if (session) handleSignUp2();
+    if (session) handleSignUp2();   
+  }, [session, dispatch]);
 
-    // if(session) {    
-    //   console.log("if session= ",session.session.user.name);
-    //   handleSignUp2();   
-    //   return;
-    // } 
-  },[session, dispatch])
- 
-
-  // if(sessionState) {
-  //   console.log("If-sessionState= ",sessionState);
-  //   console.log("If-sessionState.user= ",sessionState.session.user);
-  //   console.log("If-sessionState.user.name= ",sessionState.session.user.name);
-  //   //handleSignUp2();    
-  //   return;
-  // }
+  
 
   if (loggedInUser) return null;
   if (session) return;
