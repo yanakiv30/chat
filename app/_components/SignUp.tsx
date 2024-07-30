@@ -9,7 +9,7 @@ import { supabase } from "../_services/supabase";
 import { useEffect, useState } from "react";
 
 export default function SignUp(incomingUser: any) {
-  console.log("Incoming user from server=  ", incomingUser);
+  console.log("Incoming user from server=  ", incomingUser.incomingUser);
 
   const router = useRouter();
   const { loggedInUser } = useAppSelector((store) => store.user);
@@ -59,7 +59,8 @@ export default function SignUp(incomingUser: any) {
 
   useEffect(() => {
     async function handleSignUp2() {
-      dispatch(setLoggedInUser(incomingUser));
+      dispatch(setLoggedInUser(incomingUser.incomingUser));
+      console.log("Incoming.incoming user from server=  ", incomingUser.incomingUser);
       router.push("/dashboard");
     }
     if (incomingUser) handleSignUp2();   
