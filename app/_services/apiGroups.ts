@@ -15,6 +15,8 @@ export async function getUsers() {
 }
 
 export async function getTeams(loggedInUserId: number) {
+console.log("loggedInUserId from getTeams= ", loggedInUserId);
+
   const teamsIds = await getTeamsIds();
   const { data: teamsData, error } = await supabase
     .from("teams")
@@ -74,6 +76,9 @@ export async function getTeams(loggedInUserId: number) {
   }
 
   async function getTeamsIds() {
+    console.log("loggedInUserId from getTeamsIds= ", loggedInUserId);
+    
+
     const { data, error } = await supabase
       .from("teams_members")
       .select("team_id")

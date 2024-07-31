@@ -59,8 +59,7 @@ export default function SignUp(incomingUser: any) {
 
   useEffect(() => {
     async function handleSignUp2() {
-      dispatch(setLoggedInUser(incomingUser.incomingUser));
-      console.log("Incoming.incoming user from server=  ", incomingUser.incomingUser);
+      dispatch(setLoggedInUser(incomingUser.incomingUser));     
       router.push("/dashboard");
     }
     if (incomingUser) handleSignUp2();   

@@ -8,7 +8,6 @@ import { useAppSelector } from '@/store/store'
 const ConditionalComponent = () => {
   const router = useRouter()
   const { loggedInUser } = useAppSelector((store) => store.user);
-  console.log("loggedInUser from conditionalComponent",loggedInUser);
 
   useEffect(() => {
     if (loggedInUser === null) {
@@ -16,8 +15,7 @@ const ConditionalComponent = () => {
     }
   }, [loggedInUser, router])
 
-  if (loggedInUser) {
-    console.log("return App from ConditionalComponent");
+  if (loggedInUser) {    
     return <App />
   }else{console.log("return App from ConditionalComponent - else")}
 

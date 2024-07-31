@@ -22,13 +22,13 @@ export default function LoginForm({ handleLogin}: LoginFormProps) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { loggedInUser, isRegister } = useAppSelector((store) => store.user);
-  console.log("loggedInUser",loggedInUser);
+  console.log("loggedInUser from loginForm= ",loggedInUser);
   console.log("isRegister= ", isRegister)
 
   const onSubmit = async (formData: FormData) => {
     try {
       const result = await handleLogin(formData);
-      console.log("result= ",result);
+      console.log("result from onSubmit= ",result);
       dispatch(setLoggedInUser(result.data));
       if (result.success && result.redirectTo) {
         router.push(result.redirectTo); 
