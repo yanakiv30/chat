@@ -2,7 +2,6 @@ import { Message } from "../../store/groupSlice";
 import { getHourDayDate } from "../utils/messageUtils";
 import { supabase } from "./supabase";
 
-
 export async function getUsers() {
   const { data, error } = await supabase
     .from("users")
@@ -15,8 +14,6 @@ export async function getUsers() {
 }
 
 export async function getTeams(loggedInUserId: number) {
-console.log("loggedInUserId from getTeams= ", loggedInUserId);
-
   const teamsIds = await getTeamsIds();
   const { data: teamsData, error } = await supabase
     .from("teams")
@@ -76,9 +73,6 @@ console.log("loggedInUserId from getTeams= ", loggedInUserId);
   }
 
   async function getTeamsIds() {
-    console.log("loggedInUserId from getTeamsIds= ", loggedInUserId);
-    
-
     const { data, error } = await supabase
       .from("teams_members")
       .select("team_id")

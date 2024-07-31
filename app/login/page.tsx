@@ -14,7 +14,7 @@ export default function Login() {
     "use server";
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-
+    const hashedPassword = createHash('sha256').update(password).digest('hex');
     try {
      
 
@@ -22,7 +22,7 @@ export default function Login() {
         .from("users")
         .select()
         .eq("email", email)
-        .eq("password", password)
+        .eq("password", hashedPassword)
         .single();
 
       if (error) {

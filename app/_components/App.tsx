@@ -34,8 +34,6 @@ function App() {
       .then((data) => dispatch(setUsers(data)))
       .catch((error) => console.error("Error fetching users:", error));
 
-console.log("loggedInUser.id from App= ", loggedInUser.id);
-
     getTeams(+loggedInUser.id)
       .then((data) => dispatch(setTeams(data)))
       .catch((error) => console.error("Error fetching teams", error));
@@ -57,8 +55,7 @@ console.log("loggedInUser.id from App= ", loggedInUser.id);
       const team = localTeams.find((team) => team.id === id);
       const receivers = team?.members.filter(
         (member) => member.id !== senderId
-      );
-      console.log("receivers = ", receivers);
+      );      
       return receivers;
     }
 

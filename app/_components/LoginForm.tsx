@@ -16,22 +16,20 @@ interface LoginFormProps {
   handleLogin: HandleLoginFunction;
 }
 
-export default function LoginForm({ handleLogin}: LoginFormProps) { 
-  
+export default function LoginForm({ handleLogin }: LoginFormProps) {
   const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { loggedInUser, isRegister } = useAppSelector((store) => store.user);
-  console.log("loggedInUser from loginForm= ",loggedInUser);
-  console.log("isRegister= ", isRegister)
+  console.log("loggedInUser from loginForm= ", loggedInUser);
 
   const onSubmit = async (formData: FormData) => {
     try {
       const result = await handleLogin(formData);
-      console.log("result from onSubmit= ",result);
+      console.log("result from onSubmit= ", result);
       dispatch(setLoggedInUser(result.data));
       if (result.success && result.redirectTo) {
-        router.push(result.redirectTo); 
+        router.push(result.redirectTo);
       } else if (result.error) {
         setError(result.error);
       }
@@ -39,10 +37,10 @@ export default function LoginForm({ handleLogin}: LoginFormProps) {
       setError("Error logging in user: " + error.message);
     }
   };
- 
+
   return (
     <div className="background-login">
-      <h2>Welcome to chatSPA</h2>     
+      <h2>Welcome to chatSPA</h2>
 
       <form action={onSubmit}>
         <label>
@@ -57,11 +55,9 @@ export default function LoginForm({ handleLogin}: LoginFormProps) {
       </form>
       {error && <p className="error">{error}</p>}
       <p>
-          If you dont have an account , please :
-          <button onClick={() => router.push('/signup')}>
-            Register
-          </button>
-        </p>        
+        If you dont have an account , please :
+        <button onClick={() => router.push("/signup")}>Register</button>
+      </p>
     </div>
   );
 }
