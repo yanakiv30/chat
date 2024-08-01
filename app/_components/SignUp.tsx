@@ -7,6 +7,7 @@ import { setLoggedInUser } from "../../store/userSlice";
 import { signUpUser } from "../_services/supAuth";
 import { supabase } from "../_services/supabase";
 import { useEffect, useState } from "react";
+import { createHash } from "crypto";
 
 export default function SignUp(incomingUser: any) {
   console.log("Incoming user from server=  ", incomingUser.incomingUser);
@@ -14,7 +15,7 @@ export default function SignUp(incomingUser: any) {
   const router = useRouter();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const dispatch = useDispatch();
-
+ 
   async function handleSignUp(
     newUsername: string,
     newPassword: string,
@@ -23,6 +24,9 @@ export default function SignUp(incomingUser: any) {
     avatar: string,
     status: string
    ) {
+    const hashedPassword = createHash("sha256")
+      .update(newPassword)
+      .digest("hex");
     try {
       const authResponse = await signUpUser(email, newPassword);
       if (authResponse.error) {
@@ -33,6 +37,8 @@ export default function SignUp(incomingUser: any) {
         full_name: full_name,
         avatar: avatar,
         status: status,
+        email: email,
+        password: hashedPassword,
       };
       const { data, error } = await supabase
         .from("users")
