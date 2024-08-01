@@ -1,5 +1,5 @@
 "use client"
-interface AvatarProps{name:string}
+interface AvatarProps{name:string|undefined}
 
 function Avatar({ name }:AvatarProps) {
 const firstLetter = name ? name[0].toUpperCase():"Z" ;

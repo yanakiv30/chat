@@ -62,11 +62,11 @@ export default function SignUp(incomingUser: any) {
       dispatch(setLoggedInUser(incomingUser.incomingUser));     
       router.push("/dashboard");
     }
-    if (incomingUser) handleSignUp2();   
+    if (incomingUser.incomingUser) handleSignUp2();   
   }, [incomingUser, dispatch, router]);  
 
   if (loggedInUser) return null;
-  if (incomingUser) return;
+  if (incomingUser.incomingUser) return;
 
   return (
     <div className="login">
