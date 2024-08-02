@@ -41,11 +41,11 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
   return (
     <div className="background-login">
       <h2>Welcome to chatSPA</h2>
-
+      <br></br>
       <form action={onSubmit}>
         <label>
-          Email:
-          <input type="text" name="email" required />
+          Username:
+          <input type="text" name="username" required />
         </label>
         <label>
           Password:

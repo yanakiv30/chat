@@ -12,7 +12,7 @@ import { createHash } from 'crypto';
 export default function Login() {
   async function handleLogin(formData: FormData) {
     "use server";
-    const email = formData.get("email") as string;
+    const username = formData.get("username") as string;
     const password = formData.get("password") as string;
     const hashedPassword = createHash('sha256').update(password).digest('hex');
     try {
@@ -21,7 +21,7 @@ export default function Login() {
       const { data, error } = await supabase
         .from("users")
         .select()
-        .eq("email", email)
+        .eq("username", username)
         .eq("password", hashedPassword)
         .single();
 
