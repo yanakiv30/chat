@@ -11,7 +11,9 @@ import SignUp from "../signup/page";
 export default function AllRoutes() {
   return (
     <Routes>      
-      <Route path="/" element={<Empty />} />  
+      <Route path="/login" element={<Empty />} />  
+      <Route path="/account" element={<Empty />} /> 
+      <Route path="/" element={<Empty />} /> 
       <Route path="/signUp" element={<SignUp />} />    
       <Route path="/groups/:groupId" element={<GroupMessages />} />
       <Route path="/groups/createGroups" element={<CheckboxList />} />
