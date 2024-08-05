@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { use, useCallback, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "../App.css";
 
@@ -21,18 +21,27 @@ import AllRoutes from "./AllRoutes";
 import ChatMembersList from "./ChatMembersList";
 import Spinner from "./Spinner";
 import Empty from "./Empty";
-
-function App() {
+type UserInitialType = {
+  username: any;
+  id: any;
+  avatar: any;
+  status: any;
+};
+interface ConditionalComponentProps {
+  userInitial: UserInitialType[];
+}
+function App({ userInitial }: ConditionalComponentProps ) {
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const { localTeams } = useAppSelector((store) => store.group);
   let { isLoading, isRegister } = useAppSelector((store) => store.user);
   const loadStateFromBackend = useCallback(() => {
     if (!loggedInUser) return;
-
-    getUsers()
-      .then((data) => dispatch(setUsers(data)))
-      .catch((error) => console.error("Error fetching users:", error));
+  console.log("userInitial=   ", userInitial);
+    // getUsers()
+    //   .then((data) => dispatch(setUsers(data)))
+    //   .catch((error) => console.error("Error fetching users:", error));
+    dispatch(setUsers(userInitial));
 
     getTeams(+loggedInUser.id)
       .then((data) => dispatch(setTeams(data)))
