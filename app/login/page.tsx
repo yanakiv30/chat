@@ -6,6 +6,7 @@ export const metadata: Metadata = {
 import { supabase } from "../_services/supabase";
 import LoginForm from "../_components/LoginForm";
 import { createHash } from "crypto";
+import { cookies } from "next/headers";
 
 export default function Login() {
   async function handleLogin(formData: FormData) {
@@ -30,6 +31,7 @@ export default function Login() {
 
       if (data) {
         console.log("User found:", data);
+        cookies().set('user', JSON.stringify(data[0]), { httpOnly: true });
         return { success: true, redirectTo: "/dashboard", data: data };
       } else {
         return {
