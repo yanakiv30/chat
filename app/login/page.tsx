@@ -31,7 +31,7 @@ export default function Login() {
 
       if (data) {
         console.log("User found:", data);
-        cookies().set('user', JSON.stringify(data[0]), { httpOnly: true });
+        cookies().set('user', JSON.stringify(data), { httpOnly: true });
         return { success: true, redirectTo: "/dashboard", data: data };
       } else {
         return {
