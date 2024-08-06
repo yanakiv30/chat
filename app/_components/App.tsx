@@ -37,11 +37,12 @@ function App({ userInitial }: ConditionalComponentProps ) {
   let { isLoading, isRegister } = useAppSelector((store) => store.user);
   const loadStateFromBackend = useCallback(() => {
     if (!loggedInUser) return;
-    console.log("userInitial=   ", userInitial);
+   // console.log("userInitial=   ", userInitial);
     
     getUsers()
-      .then((data) => console.log("actualUsers= ",data));
-    dispatch(setUsers(userInitial));
+      .then((data) => dispatch(setUsers(data)))
+      .catch((error) => console.error("Error fetching users)", error));
+    //dispatch(setUsers(userInitial));
 
     getTeams(+loggedInUser.id)
       .then((data) => dispatch(setTeams(data)))

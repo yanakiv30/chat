@@ -1,4 +1,3 @@
-
 import { cookies } from "next/headers";
 import ConditionalComponent from "../_components/ConditionalComponent"
 import { getTeams, getUsers } from "../_services/apiGroups";

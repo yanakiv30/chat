@@ -43,7 +43,7 @@ export default function SignUp(incomingUser: any) {
       if (error) {
         throw new Error(error.message);
       }
-      console.log(data[0]);
+      console.log("Just registerd: ",data[0]);
       dispatch(setLoggedInUser(data[0]));
       
   
