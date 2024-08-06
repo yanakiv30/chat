@@ -20,17 +20,17 @@ import { supabase } from "../_services/supabase";
 import AllRoutes from "./AllRoutes";
 import ChatMembersList from "./ChatMembersList";
 import Spinner from "./Spinner";
-import Empty from "./Empty";
-type UserInitialType = {
-  username: any;
-  id: any;
-  avatar: any;
-  status: any;
-};
-interface ConditionalComponentProps {
-  userInitial: UserInitialType[];
-}
-function App({ userInitial }: ConditionalComponentProps ) {
+
+// type UserInitialType = {
+//   username: any;
+//   id: any;
+//   avatar: any;
+//   status: any;
+// };
+// interface ConditionalComponentProps {
+//   userInitial: UserInitialType[];
+// }
+function App() {
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const { localTeams } = useAppSelector((store) => store.group);

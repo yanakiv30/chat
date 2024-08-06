@@ -3,8 +3,8 @@ import ConditionalComponent from "../_components/ConditionalComponent"
 import { getTeams, getUsers } from "../_services/apiGroups";
 
 async function page() {
-     const userInitial = await getUsers();
-    console.log("userInitial", userInitial);
+    //  const userInitial = await getUsers();
+    // console.log("userInitial", userInitial);
 
     const userCookie = cookies().get('user');
   let userData = null;
@@ -17,9 +17,9 @@ async function page() {
   }
   console.log("userData from dashboard.id= ", userData.id);
 
-  const allowedTeams = await getTeams(+userData.id);
-  console.log("allowedTeams from dashboard.id= ", allowedTeams);
+  // const allowedTeams = await getTeams(+userData.id);
+  // console.log("allowedTeams from dashboard.id= ", allowedTeams);
 
-    return <ConditionalComponent userInitial={userInitial}/>
+    return <ConditionalComponent />
 }
 export default page

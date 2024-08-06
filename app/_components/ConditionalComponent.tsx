@@ -5,17 +5,17 @@ import { useRouter } from 'next/navigation'
 import App from './App'
 import { useAppSelector } from '@/store/store'
 
-type UserInitialType = {
-  username: any;
-  id: any;
-  avatar: any;
-  status: any;
-};
-interface ConditionalComponentProps {
-  userInitial: UserInitialType[];
-}
+// type UserInitialType = {
+//   username: any;
+//   id: any;
+//   avatar: any;
+//   status: any;
+// };
+// interface ConditionalComponentProps {
+//   userInitial: UserInitialType[];
+// }
 
-function ConditionalComponent ({ userInitial }: ConditionalComponentProps ) {
+function ConditionalComponent ( ) {
   const router = useRouter()
   const { loggedInUser } = useAppSelector((store) => store.user);
 
@@ -26,7 +26,7 @@ function ConditionalComponent ({ userInitial }: ConditionalComponentProps ) {
   }, [loggedInUser, router])
 
   if (loggedInUser) {    
-    return <App userInitial={userInitial}/>
+    return <App />
   }else{console.log("return App from ConditionalComponent - else")}
 
   // Return null or a loading indicator 
