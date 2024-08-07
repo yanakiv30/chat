@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { setIsRegister, setLoggedInUser } from "@/store/userSlice";
+import { setLoggedInUser } from "@/store/userSlice";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/store";
+import Link from "next/link";
+import Google from "next-auth/providers/google";
+import GoogleSignInButton from "./GoogleSignInButton";
 
 type HandleLoginFunction = (formData: FormData) => Promise<{
   success: boolean;
@@ -54,9 +57,13 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
         <button type="submit">Login</button>
       </form>
       {error && <p className="error">{error}</p>}
+      <br></br>
       <p>
-        If you dont have an account , please :
-        <button onClick={() => router.push("/signup")}>Register</button>
+        <Link href="/api/auth/signin" passHref>
+          <GoogleSignInButton />
+        </Link>
+        or
+        <button onClick={() => router.push("/signup")}>SignUP</button>
       </p>
     </div>
   );

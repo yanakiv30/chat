@@ -60,6 +60,7 @@
 
 import { Metadata } from "next";
 import Link from "next/link";
+import GoogleSignInButton from "./_components/GoogleSignInButton";
 export const metadata: Metadata = {
   title: "Home",
   description: "Welcome to chatSPA",
@@ -83,9 +84,7 @@ export default async function HomePage() {
             <button style={{ fontSize: "20px" }}>Go to Login</button>
           </Link>
           <span style={{ fontSize: "20px" }}> or </span>
-          <Link href="/api/auth/signin">
-            <button style={{ fontSize: "20px" }}>Sign with Google</button>
-          </Link>          
+          <GoogleSignInButton/>        
         </div>
       </div>
     </div>
