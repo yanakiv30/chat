@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "../App.css";
 
@@ -20,6 +20,7 @@ import { supabase } from "../_services/supabase";
 import AllRoutes from "./AllRoutes";
 import ChatMembersList from "./ChatMembersList";
 import Spinner from "./Spinner";
+import { redirect, useRouter } from "next/navigation";
 
 // type UserInitialType = {
 //   username: any;
@@ -30,15 +31,18 @@ import Spinner from "./Spinner";
 // interface ConditionalComponentProps {
 //   userInitial: UserInitialType[];
 // }
+
 function App() {
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user);
+
   const { localTeams } = useAppSelector((store) => store.group);
-  let { isLoading, isRegister } = useAppSelector((store) => store.user);
+  let { isLoading } = useAppSelector((store) => store.user);
+
   const loadStateFromBackend = useCallback(() => {
     if (!loggedInUser) return;
-   // console.log("userInitial=   ", userInitial);
-    
+    // console.log("userInitial=   ", userInitial);
+
     getUsers()
       .then((data) => dispatch(setUsers(data)))
       .catch((error) => console.error("Error fetching users)", error));
@@ -65,7 +69,7 @@ function App() {
       const team = localTeams.find((team) => team.id === id);
       const receivers = team?.members.filter(
         (member) => member.id !== senderId
-      );      
+      );
       return receivers;
     }
 
@@ -167,6 +171,10 @@ function App() {
       )
       .subscribe();
   }, [loadStateFromBackend, localTeams, loggedInUser, dispatch]);
+
+  if (!loggedInUser) {
+    redirect("/login");
+  }
 
   return (
     <Router>

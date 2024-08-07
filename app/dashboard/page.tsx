@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
-import ConditionalComponent from "../_components/ConditionalComponent"
 import { getTeams, getUsers } from "../_services/apiGroups";
+import App from "../_components/App";
 
 async function page() {
     //  const userInitial = await getUsers();
@@ -20,6 +20,6 @@ async function page() {
   // const allowedTeams = await getTeams(+userData.id);
   // console.log("allowedTeams from dashboard.id= ", allowedTeams);
 
-    return <ConditionalComponent />
+    return <App />
 }
 export default page
