@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
-function GoogleSignInButton () {
+const GoogleSignInButton = ({ px }: { px: number }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -15,15 +14,13 @@ function GoogleSignInButton () {
   };
 
   return (
-    <Link href="/api/auth/signin" passHref>
-      <button
-        style={{ fontSize: "20px" }}
-        onClick={handleClick}
-        disabled={isLoading}
-      >
-        {isLoading ? 'Loading...' : 'Sign with Google'}
-      </button>
-    </Link>
+    <button
+      style={{ fontSize: `${px}px` }}
+      onClick={handleClick}
+      disabled={isLoading}
+    >
+      {isLoading ? 'Loading...' : 'Sign with Google'}
+    </button>
   );
 };
 

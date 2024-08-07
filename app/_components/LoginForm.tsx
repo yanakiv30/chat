@@ -60,7 +60,7 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
       <br></br>
       <p>
         <Link href="/api/auth/signin" passHref>
-          <GoogleSignInButton />
+          <GoogleSignInButton px={14}/>
         </Link>
         or
         <button onClick={() => router.push("/signup")}>SignUP</button>
