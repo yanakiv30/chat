@@ -6,7 +6,7 @@ import GroupMessages from "./GroupMessages";
 import CheckboxList from "./CheckboxList";
 import SettingsGroup from "./SettingsGroup";
 import SettingsGroup2 from "./SettingsGroup";
-import SignUp from "./SignUp";
+//import SignUp from "./SignUp";
 //import SignUp from "../signup/page";
 
 export default function AllRoutes() {
@@ -15,7 +15,7 @@ export default function AllRoutes() {
       <Route path="/login" element={<Empty />} />  
       <Route path="/account" element={<Empty />} /> 
       <Route path="/" element={<Empty />} /> 
-      <Route path="/signUp" element={<SignUp />} />    
+      <Route path="/signUp" element={<Empty/>} />    
       <Route path="/groups/:groupId" element={<GroupMessages />} />
       <Route path="/groups/createGroups" element={<CheckboxList />} />
       <Route path="/settingsGroup/:groupId" element={<SettingsGroup />} />
