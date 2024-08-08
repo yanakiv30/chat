@@ -7,10 +7,11 @@ import { useAppSelector } from "../../store/store";
 import { setIsLoading } from "../../store/userSlice";
 import { useState } from "react";
 import { supabase } from "../_services/supabase";
+import { useRouter } from "next/navigation";
 export default function SettingsGroup() {
   const params = useParams();
   const [updateName, setUpdateName] = useState("");
-  const navigate = useNavigate();
+ const router = useRouter();
   const dispatch = useDispatch();
   const { localTeams } = useAppSelector((store) => store.group);
   const { loggedInUser } = useAppSelector((store) => store.user);
@@ -52,7 +53,7 @@ export default function SettingsGroup() {
     } finally {
       dispatch(setIsLoading(false));
     }
-    navigate("/");
+    router.push("/");
   }
 
   return (
@@ -60,7 +61,7 @@ export default function SettingsGroup() {
       <div style={{ backgroundColor: "beige", borderRadius: "7px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           Team: {teamToSet?.name}
-          <button onClick={() => navigate("/")}>X</button>
+          <button onClick={() => router.push("/")}>X</button>
         </div>
         <p> members: {membersArr.join(", ")}</p>
       </div>

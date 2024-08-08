@@ -8,11 +8,12 @@ import { useAppSelector } from "../../store/store";
 
 import { setIsLoading } from "../../store/userSlice";
 import { createTeamWithMembers } from "./createTeam";
+import { useRouter } from "next/navigation";
 
 
 function CheckboxList() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   let { users, loggedInUser } = useAppSelector((store) => store.user);
   const [groupName, setGroupName] = useState("");
@@ -30,7 +31,7 @@ function CheckboxList() {
 
     try {
       await createTeamWithMembers(groupName, checkedIds);
-      navigate("/");
+      router.push("/");
     } catch (error) {
       console.error("Error creating new group:", error);
     } finally {
@@ -62,7 +63,7 @@ function CheckboxList() {
       >
         <p style={{ display: "flex", justifyContent: "space-between" }}>
           <span>Create Group </span>
-          <button onClick={() => navigate("/")}>X</button>
+          <button onClick={() => router.push("/")}>X</button>
         </p>
         <input
           style={{ width: "fit-content" }}

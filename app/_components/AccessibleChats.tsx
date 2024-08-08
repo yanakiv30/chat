@@ -6,13 +6,16 @@ import Avatar from "./Avatar";
 import { setTeams } from "../../store/groupSlice";
 import { getTeams } from "../_services/apiGroups";
 import { createTeamWithMembers } from "./createTeam";
+import { useRouter } from "next/navigation";
+
+
 
 function AccessibleChats() {
   const { searchQuery, users, loggedInUser } = useAppSelector(
     (store) => store.user
   );
   const { localTeams } = useAppSelector((store) => store.group);
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
   const searchedUsers =
     searchQuery.length > 0
@@ -31,7 +34,7 @@ function AccessibleChats() {
       (team) =>
         team.name === "" && team.members.some((user) => user.id === userId)
     );
-    if (doubleViewGroup) navigate(`/messages/${doubleViewGroup.id}`);
+    if (doubleViewGroup) router.push(`/messages/${doubleViewGroup.id}`);
     else {
       const doubleViewGroupId = await createTeamWithMembers("", [
         loggedInUser!.id,
@@ -40,7 +43,7 @@ function AccessibleChats() {
       getTeams(+loggedInUser!.id)
         .then((data) => {
           dispatch(setTeams(data));
-          navigate(`/messages/${doubleViewGroupId}`);
+          router.push(`/messages/${doubleViewGroupId}`);
         })
         .catch((error) => console.error("Error fetching teams", error));
     }

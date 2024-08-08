@@ -1,8 +1,10 @@
 "use client";
-import store from "@/store/store";
+
 import { Provider } from "react-redux";
+import store from "@/store/store";
+import { ToastContainer } from 'react-toastify';
 import "./App.css";
-import Head from "next/head";
+import ChatMembersList from "./_components/ChatMembersList";
 
 export default function RootLayout({
   children,
@@ -11,12 +13,29 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Head>
+      <head>
         <link rel="icon" href="/web_5215661.png" />
-      </Head>
-
+      </head>
       <body>
-        <Provider store={store}>{children}</Provider>
+        <Provider store={store}>
+          <div className="app-container" style={{ position: "relative" }}>
+            <div className="main-container">
+              <ChatMembersList />
+              {children}
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+            </div>
+          </div>
+        </Provider>
       </body>
     </html>
   );

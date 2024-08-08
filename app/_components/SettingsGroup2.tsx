@@ -7,9 +7,10 @@ import { useAppSelector } from "../../store/store";
 //import supabase from "../services/supabase";
 import { deleteTeamById } from "../../store/groupSlice";
 import { supabase } from "../_services/supabase";
+import { useRouter } from "next/navigation";
 export default function SettingsGroup() {
   const params = useParams();
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
   const { localTeams } = useAppSelector((store) => store.group);
   const { loggedInUser } = useAppSelector((store) => store.user);
@@ -24,14 +25,14 @@ export default function SettingsGroup() {
       .eq("team_id", teamId)
       .eq("user_id", userId);
     dispatch(deleteTeamById(teamId));
-    navigate("/");
+    router.push("/");
   }
   return (
     <div className="settings">
       <div style={{ backgroundColor: "beige", borderRadius: "7px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           Team: {teamToSet?.name}
-          <button onClick={() => navigate("/")}>X</button>
+          <button onClick={() => router.push("/")}>X</button>
         </div>
         <p> members: {membersArr.join(", ")}</p>
       </div>

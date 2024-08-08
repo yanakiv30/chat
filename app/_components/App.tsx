@@ -32,17 +32,19 @@ import { redirect, useRouter } from "next/navigation";
 //   userInitial: UserInitialType[];
 // }
 
+
 function App() {
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user);
-
+ 
   const { localTeams } = useAppSelector((store) => store.group);
   let { isLoading } = useAppSelector((store) => store.user);
+  
 
   const loadStateFromBackend = useCallback(() => {
     if (!loggedInUser) return;
-    // console.log("userInitial=   ", userInitial);
-
+   // console.log("userInitial=   ", userInitial);
+    
     getUsers()
       .then((data) => dispatch(setUsers(data)))
       .catch((error) => console.error("Error fetching users)", error));
@@ -69,7 +71,7 @@ function App() {
       const team = localTeams.find((team) => team.id === id);
       const receivers = team?.members.filter(
         (member) => member.id !== senderId
-      );
+      );      
       return receivers;
     }
 
@@ -172,10 +174,13 @@ function App() {
       .subscribe();
   }, [loadStateFromBackend, localTeams, loggedInUser, dispatch]);
 
-  if (!loggedInUser) {
-    redirect("/login");
-  }
+const router = useRouter()
 
+    if (!loggedInUser) {
+      redirect('/login');      
+    }
+
+ 
   return (
     <Router>
       <div className="app-container" style={{ position: "relative" }}>

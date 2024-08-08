@@ -6,8 +6,7 @@ import GroupMessages from "./GroupMessages";
 import CheckboxList from "./CheckboxList";
 import SettingsGroup from "./SettingsGroup";
 import SettingsGroup2 from "./SettingsGroup";
-//import SignUp from "./SignUp";
-//import SignUp from "../signup/page";
+
 
 export default function AllRoutes() {
   return (
