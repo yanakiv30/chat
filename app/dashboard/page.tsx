@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { getTeams, getUsers } from "../_services/apiGroups";
 //import App from "../_components/App";
 import Empty from "../_components/Empty";
+import App from "../_components/App";
 
 async function page() {
     //  const userInitial = await getUsers();
@@ -21,6 +22,6 @@ async function page() {
   // const allowedTeams = await getTeams(+userData.id);
   // console.log("allowedTeams from dashboard.id= ", allowedTeams);
 
-    return <Empty />
+    return <App />
 }
 export default page
