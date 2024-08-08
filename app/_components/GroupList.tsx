@@ -1,6 +1,6 @@
 "use client"
 
-import { NavLink, useNavigate } from "react-router-dom";
+//import { NavLink, useNavigate } from "react-router-dom";
 import { FaCog } from "react-icons/fa";
 import Avatar from "./Avatar";
 import { useAppSelector } from "../../store/store";
@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { setIsDeleteTeam, Team } from "../../store/groupSlice";
 import FlashingDot from "./FlashingDots";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function GroupList() {
   const router = useRouter();
@@ -83,17 +84,17 @@ export default function GroupList() {
                   : team.name}
               </button>
               {team.members[0]!.id === loggedInUser!.id ? (
-                <NavLink to={`/settingsGroup/${team.id}`}>
+                <Link href ={`/settingsGroup/${team.id}`}>
                   <span style={{ fontSize: "8px" }}>
                     <FaCog />
                   </span>
-                </NavLink>
+                </Link>
               ) : (
-                <NavLink to={`/settingsGroup2/${team.id}`}>
+                <Link href={`/settingsGroup2/${team.id}`}>
                   <span style={{ fontSize: "8px" }}>
                     <FaCog />
                   </span>
-                </NavLink>
+                </Link>
               )}
               {Object.keys(flashedTeamsIdsLog).includes("" + team.id) && (
                 <FlashingDot />

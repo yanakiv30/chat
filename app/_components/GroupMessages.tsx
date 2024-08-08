@@ -1,8 +1,7 @@
-"use client"
-
+"use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+//import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
 import { searchedGroupMessagesFunc } from "../utils/messageUtils";
@@ -14,6 +13,7 @@ import SearchInMessage from "./SearchInMessage";
 import UserMessagesContainer from "./UserMessageContainer";
 import SendUserMessage from "./SendUserMessage";
 import EditUserMessage from "./EditUserMessage";
+import { useParams } from "next/navigation";
 
 export default function GroupMessages() {
   const { loggedInUser, searchMessage, isEdit } = useAppSelector(
@@ -21,8 +21,8 @@ export default function GroupMessages() {
   );
   const { localTeams } = useAppSelector((store) => store.group);
   const [newGroupMessage, setNewGroupMessage] = useState("");
-  const params = useParams();
-  const groupInListId = +params.groupId!;
+  const { groupId } = useParams();
+  const groupInListId = +groupId!;
   const dispatch = useDispatch();
   const team = localTeams.find((x) => x.id === groupInListId);
   if (!team) return <Empty />;

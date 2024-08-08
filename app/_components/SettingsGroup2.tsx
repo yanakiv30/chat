@@ -1,13 +1,13 @@
 "use client"
 
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+//import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
 //import supabase from "../services/supabase";
 import { deleteTeamById } from "../../store/groupSlice";
 import { supabase } from "../_services/supabase";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 export default function SettingsGroup() {
   const params = useParams();
   const router = useRouter();

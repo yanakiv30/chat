@@ -1,6 +1,8 @@
 "use client"
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from 'next/navigation';
+
+//import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
 //import supabase from "../services/supabase";
@@ -8,14 +10,17 @@ import { setIsLoading } from "../../store/userSlice";
 import { useState } from "react";
 import { supabase } from "../_services/supabase";
 import { useRouter } from "next/navigation";
+
 export default function SettingsGroup() {
-  const params = useParams();
+  const router = useRouter();
+  const { groupId } = useParams();   
+  const idSettings = +groupId!; 
   const [updateName, setUpdateName] = useState("");
- const router = useRouter();
+ 
   const dispatch = useDispatch();
   const { localTeams } = useAppSelector((store) => store.group);
   const { loggedInUser } = useAppSelector((store) => store.user);
-  const idSettings = +params.groupId!;
+  
   const teamToSet = localTeams.find((team) => team.id === idSettings)!;
   let membersArr: any = [];
   teamToSet?.members.map((member) => membersArr.push(member.username));

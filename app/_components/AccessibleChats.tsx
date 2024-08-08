@@ -1,5 +1,5 @@
 "use client"
-import { useNavigate } from "react-router-dom";
+
 import { useAppSelector } from "../../store/store";
 import { useDispatch } from "react-redux";
 import Avatar from "./Avatar";
