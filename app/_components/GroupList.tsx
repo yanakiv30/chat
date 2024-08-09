@@ -8,13 +8,14 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setIsDeleteTeam, Team } from "../../store/groupSlice";
 import FlashingDot from "./FlashingDots";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function GroupList() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { loggedInUser, searchQuery } = useAppSelector((store) => store.user);
+  
   const { localTeams, teamWithNewMessage, isDeleteTeam } = useAppSelector(
     (store) => store.group
   );
@@ -22,7 +23,7 @@ export default function GroupList() {
   const [flashedTeamsIdsLog, setFlashedTeamsIdsLog] = useState(
     {} as { [key: number]: number }
   );
-
+  if(!loggedInUser) return null;
   const searchedTeams =
     searchQuery.length > 0
       ? localTeams.filter(

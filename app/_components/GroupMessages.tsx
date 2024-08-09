@@ -13,12 +13,15 @@ import SearchInMessage from "./SearchInMessage";
 import UserMessagesContainer from "./UserMessageContainer";
 import SendUserMessage from "./SendUserMessage";
 import EditUserMessage from "./EditUserMessage";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
+import Login from "../login/page";
 
 export default function GroupMessages() {
   const { loggedInUser, searchMessage, isEdit } = useAppSelector(
     (store) => store.user
   );
+
+  
   const { localTeams } = useAppSelector((store) => store.group);
   const [newGroupMessage, setNewGroupMessage] = useState("");
   const { groupId } = useParams();
@@ -26,10 +29,11 @@ export default function GroupMessages() {
   const dispatch = useDispatch();
   const team = localTeams.find((x) => x.id === groupInListId);
   if (!team) return <Empty />;
+  if(!loggedInUser) redirect('/');
   const hiddenName = team.members.find(
     (member) => member.id !== loggedInUser!.id
   )?.username;
-
+  
   async function handleSendGroupMessage(message: string, imagePath?: string) {
     if (message.trim() !== "" || imagePath) {
       const newGroupMessageObject = {

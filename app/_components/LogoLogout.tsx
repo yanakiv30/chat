@@ -16,7 +16,7 @@ export default function LogoLogout() {
         Create new group
       </Link>
       <button
-        onClick={() => dispatch(setLoggedInUser(null))}
+        onClick={() => dispatch(setLoggedInUser(undefined))}
         style={{ border: "1px solid #ccc", borderRadius: "7px" }}
       >
         Logout
