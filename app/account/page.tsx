@@ -2,7 +2,7 @@
 import { auth } from "../_services/auth";
 import { supabase } from "../_services/supabase";
 import { createHash } from 'crypto';
-import SignUp from "../signup/page";
+import SignUp from "@/app/signup/page";
 
 async function page() {
   const session = await auth();
