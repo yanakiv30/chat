@@ -40,7 +40,8 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
       setError("Error logging in user: " + error.message);
     }
   };
-
+  if (loggedInUser)  return null;
+  
   return (
     <div className="background-login">
       <h2>Welcome to chatSPA</h2>
@@ -60,7 +61,7 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
       <br></br>
       <p>
         <Link href="/api/auth/signin" passHref>
-          <GoogleSignInButton px={14}/>
+          <GoogleSignInButton px={14} />
         </Link>
         or
         <button onClick={() => router.push("/signup")}>SignUP</button>

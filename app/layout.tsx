@@ -1,10 +1,35 @@
 "use client";
 
 import { Provider } from "react-redux";
-import store from "@/store/store";
-import { ToastContainer } from 'react-toastify';
+import store, { useAppSelector } from "@/store/store";
+import { ToastContainer } from "react-toastify";
 import "./App.css";
 import ChatMembersList from "./_components/ChatMembersList";
+import { useEffect, useState } from "react";
+
+function AppContent({ children }: { children: React.ReactNode }) {
+  const { loggedInUser } = useAppSelector((store) => store.user);
+ 
+  return (
+    <div className="app-container" style={{ position: "relative" }}>
+      <div className="main-container">        
+        {loggedInUser && <ChatMembersList />}
+        {children}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function RootLayout({
   children,
@@ -18,23 +43,7 @@ export default function RootLayout({
       </head>
       <body>
         <Provider store={store}>
-          <div className="app-container" style={{ position: "relative" }}>
-            <div className="main-container">
-              <ChatMembersList />
-              {children}
-              <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-              />
-            </div>
-          </div>
+          <AppContent>{children}</AppContent>
         </Provider>
       </body>
     </html>
