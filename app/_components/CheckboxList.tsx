@@ -27,6 +27,10 @@ function CheckboxList() {
   const [checkedItems, setCheckedItems] = useState({} as CheckedItems);
 
   async function handleSetGroups() {
+    if (!loggedInUser || !groupName) {
+      console.error("Missing necessary data for group creation.");
+      return;
+  }
     dispatch(setIsLoading(true));
 
     try {
@@ -46,11 +50,13 @@ function CheckboxList() {
     }));
   }
   const checkedIds = [
-    +loggedInUser!.id,
+    loggedInUser?.id,
     ...Object.keys(checkedItems)
       .filter((key: string) => checkedItems[key] === true)
       .map((key) => +key),
-  ];
+  ].filter((id): id is number => id !== undefined);
+  
+
 
   return (
     <div
