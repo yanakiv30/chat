@@ -1,7 +1,8 @@
-import SignUp from "../_components/SignUp";
+
 import { auth } from "../_services/auth";
 import { supabase } from "../_services/supabase";
 import { createHash } from 'crypto';
+import SignUp from "../signup/page";
 
 async function page() {
   const session = await auth();

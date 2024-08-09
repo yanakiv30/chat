@@ -1,12 +1,9 @@
 "use client";
 
 import { useCallback, useEffect } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
 import "../App.css";
-
 import { useDispatch } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-
 import {
   setIsDeleteTeam,
   setTeams,
@@ -17,9 +14,6 @@ import { setUsers } from "@/store/userSlice";
 import { toast, ToastContainer } from "react-toastify";
 import { getTeams, getUsers } from "../_services/apiGroups";
 import { supabase } from "../_services/supabase";
-//import AllRoutes from "./AllRoutes";
-import ChatMembersList from "./ChatMembersList";
-import Spinner from "./Spinner";
 import { redirect, useRouter } from "next/navigation";
 import Empty from "./Empty";
 
@@ -36,20 +30,15 @@ import Empty from "./Empty";
 
 function App() {
   const dispatch = useDispatch();
-  const { loggedInUser } = useAppSelector((store) => store.user);
- 
-  const { localTeams } = useAppSelector((store) => store.group);
-  let { isLoading } = useAppSelector((store) => store.user);
-  
+  const { loggedInUser } = useAppSelector((store) => store.user); 
+  const { localTeams } = useAppSelector((store) => store.group);  
 
   const loadStateFromBackend = useCallback(() => {
-    if (!loggedInUser) return;
-   // console.log("userInitial=   ", userInitial);
+    if (!loggedInUser) return;   
     
     getUsers()
       .then((data) => dispatch(setUsers(data)))
-      .catch((error) => console.error("Error fetching users)", error));
-    //dispatch(setUsers(userInitial));
+      .catch((error) => console.error("Error fetching users)", error));    
 
     getTeams(+loggedInUser.id)
       .then((data) => dispatch(setTeams(data)))
@@ -175,13 +164,10 @@ function App() {
       .subscribe();
   }, [loadStateFromBackend, localTeams, loggedInUser, dispatch]);
 
-const router = useRouter()
 
     if (!loggedInUser) {
       redirect('/login');      
-    }
-
- 
+    } 
   return <Empty />
 }
 export default App;
