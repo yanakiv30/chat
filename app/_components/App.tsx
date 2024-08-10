@@ -11,41 +11,38 @@ import {
 } from "@/store/groupSlice";
 import { useAppSelector } from "@/store/store";
 import { setUsers } from "@/store/userSlice";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { getTeams, getUsers } from "../_services/apiGroups";
 import { supabase } from "../_services/supabase";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import Empty from "./Empty";
-
-// type UserInitialType = {
-//   username: any;
-//   id: any;
-//   avatar: any;
-//   status: any;
-// };
-// interface ConditionalComponentProps {
-//   userInitial: UserInitialType[];
-// }
-
-
-function App() {
+type UserSup = {
+  username: string;
+  id: number;
+  avatar: string;
+  status: string;
+  created_at: string;
+};
+interface AppProps {
+  initialUsers: UserSup[];
+}
+function App({initialUsers}: AppProps) {
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user); 
   const { localTeams } = useAppSelector((store) => store.group);  
 
-  const loadStateFromBackend = useCallback(() => {
-    if (!loggedInUser) return;   
-    
-    getUsers()
-      .then((data) => dispatch(setUsers(data)))
-      .catch((error) => console.error("Error fetching users)", error));    
+  const loadTeams = useCallback(() => {
+    if (!loggedInUser) return;        
 
     getTeams(+loggedInUser.id)
       .then((data) => dispatch(setTeams(data)))
       .catch((error) => console.error("Error fetching teams", error));
   }, [dispatch, loggedInUser]);
 
-  useEffect(loadStateFromBackend, [loadStateFromBackend]);
+  useEffect(()=>{
+    dispatch(setUsers(initialUsers));
+    loadTeams();
+  },[initialUsers, dispatch, loadTeams]);
 
   useEffect(() => {
     const findTeamNameById = (id: number, senderId: number) => {
@@ -87,21 +84,21 @@ function App() {
           )
             dispatch(setIsDeleteTeam(false));
           dispatch(setTeamWithNewMessage(payload.new));
-          loadStateFromBackend();
+          loadTeams();
         }
       )
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "messages" },
         (payload) => {
-          loadStateFromBackend();
+          loadTeams();
         }
       )
       .on(
         "postgres_changes",
         { event: "DELETE", schema: "public", table: "messages" },
         (payload) => {
-          loadStateFromBackend();
+          loadTeams();
         }
       )
       .subscribe();
@@ -111,17 +108,17 @@ function App() {
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "users" },
-        loadStateFromBackend
+        loadTeams
       )
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "users" },
-        loadStateFromBackend
+        loadTeams
       )
       .on(
         "postgres_changes",
         { event: "DELETE", schema: "public", table: "users" },
-        loadStateFromBackend
+        loadTeams
       )
       .subscribe();
 
@@ -130,17 +127,17 @@ function App() {
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "teams" },
-        loadStateFromBackend
+        loadTeams
       )
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "teams" },
-        loadStateFromBackend
+        loadTeams
       )
       .on(
         "postgres_changes",
         { event: "DELETE", schema: "public", table: "teams" },
-        loadStateFromBackend
+        loadTeams
       )
       .subscribe();
 
@@ -149,20 +146,20 @@ function App() {
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "teams_members" },
-        loadStateFromBackend
+        loadTeams
       )
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "teams_members" },
-        loadStateFromBackend
+        loadTeams
       )
       .on(
         "postgres_changes",
         { event: "DELETE", schema: "public", table: "teams_members" },
-        loadStateFromBackend
+        loadTeams
       )
       .subscribe();
-  }, [loadStateFromBackend, localTeams, loggedInUser, dispatch]);
+  }, [loadTeams, localTeams, loggedInUser, dispatch]);
 
 
     if (!loggedInUser) {
