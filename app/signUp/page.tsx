@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setLoggedInUser } from "../../store/userSlice";
 import { supabase } from "../_services/supabase";
-import { useEffect, useState } from "react";
+
 import { createHash } from "crypto";
+import { useEffect } from "react";
 
 export default function SignUp(incomingUser: any) {
   console.log("Incoming user from server=  ", incomingUser.incomingUser);
-
+  
   const router = useRouter();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const dispatch = useDispatch();
@@ -21,30 +22,58 @@ export default function SignUp(incomingUser: any) {
     full_name: string,
     avatar: string,
     status: string
-  ) {
-    const hashedPassword = createHash("sha256")
-      .update(newPassword)
-      .digest("hex");
-
-    const newUser = {
-      username: newUsername,
-      full_name: full_name,
-      avatar: avatar,
-      status: status,
-      password: hashedPassword,
-    };
-
-    const { data, error } = await supabase
-      .from("users")
-      .insert([newUser])
-      .select();
-    if (error) {
-      throw new Error(error.message);
+   ) {
+    try {
+      // First, check if the username already exists
+      const { data: existingUser, error: checkError } = await supabase
+        .from("users")
+        .select("username")
+        .eq("username", newUsername)        
+   
+      if (checkError ) {        
+        throw new Error("Error checking username: " + checkError.message);
+      }
+  
+      if (existingUser&& existingUser.length > 0) {
+        alert("Username already exists, please choose another one");              
+        return ;
+      }
+  
+      // If we've reached this point, the username is available
+      const hashedPassword = createHash("sha256")
+        .update(newPassword)
+        .digest("hex");
+  
+      const newUser = {
+        username: newUsername,
+        full_name: full_name,
+        avatar: avatar,
+        status: status,
+        password: hashedPassword,
+      };
+  
+      const { data, error } = await supabase
+        .from("users")
+        .insert([newUser])
+        .select();
+  
+      if (error) {
+        throw new Error(error.message);
+      }
+      if (data && data.length > 0) {
+      console.log("Just registered: ", data[0]);
+      dispatch(setLoggedInUser(data[0]));  
+      router.push("/dashboard");
+      }else {
+        throw new Error("User creation failed");
+      }
+    } catch (error: unknown) {
+      let message = "An unknown error occurred";
+      if (error instanceof Error) {
+        message = error.message;
+      }
+      alert(message);
     }
-    console.log("Just registered: ", data[0]);
-    dispatch(setLoggedInUser(data[0]));
-
-    router.push("/dashboard");
   }
 
   useEffect(() => {
