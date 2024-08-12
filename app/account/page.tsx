@@ -48,7 +48,7 @@ if (existingUser&&existingUser.length>0) {
 const newUser = {
   username: userFromGoogle,
   full_name: userFromGoogle,
-  avatar: "Google",
+  avatar: sessionImage,
   status: "new",
   email: emailFromGoogle,
   password: hashedPassword,

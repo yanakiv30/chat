@@ -8,6 +8,7 @@ import Avatar from "./Avatar";
 function IconAndSearch() {
   const dispatch = useDispatch();
   const { searchQuery, loggedInUser } = useAppSelector((store) => store.user);
+  
   return (
     <div className="icon-and-search">
       <div style={{ display: "flex" }}>
