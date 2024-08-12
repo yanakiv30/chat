@@ -3,12 +3,16 @@ import { auth } from "../_services/auth";
 import { supabase } from "../_services/supabase";
 import { createHash } from 'crypto';
 import SignUp from "@/app/signup/page";
+import Avatar from "../_components/Avatar";
 
 async function page() {
   const session = await auth();
+  
+  const sessionImage = session?.user?.image;
+  console.log("session.user.image= ", session?.user?.image);
   const userFromGoogle = session?.user?.name;
   const emailFromGoogle = session?.user?.email;
-  console.log("emailFromGoogle= ", emailFromGoogle);
+  
   let userWithId={};
 
   if (!emailFromGoogle) {
@@ -32,10 +36,12 @@ if (fetchError && fetchError.code !== 'PGRST116') { // 'PGRST116' is the code fo
 }
 
 if (existingUser&&existingUser.length>0) {
-  console.log("User already exists: ", existingUser);  
+  console.log("User already exists: ", existingUser); 
+  console.log("Ifffsession= ", session);
   return (
     <div className="background-login">
-           <SignUp incomingUser={existingUser[0]}/> 
+           <SignUp incomingUser={existingUser[0]} sessionImage={sessionImage}/> 
+           
         </div>    
   );
 }
@@ -68,7 +74,7 @@ const newUser = {
 
   return (
     <div className="background-login">
-           <SignUp incomingUser={userWithId}/> 
+           <SignUp incomingUser={userWithId} sessionImage={sessionImage}/> 
         </div>    
   );
 }

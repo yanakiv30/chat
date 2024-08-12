@@ -9,9 +9,9 @@ import { supabase } from "../_services/supabase";
 import { createHash } from "crypto";
 import { useEffect } from "react";
 
-export default function SignUp(incomingUser: any) {
-  console.log("Incoming user from server=  ", incomingUser.incomingUser);
-  
+export default function SignUp({ incomingUser, sessionImage }: { incomingUser: any, sessionImage: any }) {
+  console.log("sessionImage= ", sessionImage);
+  console.log("incomingUser= ", incomingUser);  
   const router = useRouter();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const dispatch = useDispatch();
@@ -35,6 +35,7 @@ export default function SignUp(incomingUser: any) {
       }
   
       if (existingUser&& existingUser.length > 0) {
+        console.log("User  exists: ", existingUser);
         alert("Username already exists, please choose another one");              
         return ;
       }
@@ -78,14 +79,14 @@ export default function SignUp(incomingUser: any) {
 
   useEffect(() => {
     async function handleSignUp2() {
-      dispatch(setLoggedInUser(incomingUser.incomingUser));
+      dispatch(setLoggedInUser(incomingUser));
       router.push("/dashboard");
     }
-    if (incomingUser.incomingUser) handleSignUp2();
+    if (incomingUser) handleSignUp2();
   }, [incomingUser, dispatch, router]);
 
   if (loggedInUser) return null;
-  if (incomingUser.incomingUser) return;
+  if (incomingUser) return;
 
   return (
     <div className="background-login">
