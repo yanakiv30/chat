@@ -2,12 +2,12 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
 
-console.log('Supabase URL:', supabaseUrl);
+//console.log('Supabase URL:', supabaseUrl);
 
 let supabase: SupabaseClient;
 
 if (typeof window === 'undefined') {
-  // Server
+  // Server components
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   console.log('Service Role Key:', supabaseServiceRoleKey ? 'Set' : 'Not set');
   if (!supabaseUrl || !supabaseServiceRoleKey) {
@@ -15,9 +15,9 @@ if (typeof window === 'undefined') {
   }
   supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 } else {
-  // Client
+  // Client components
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  console.log('Anon Key:', supabaseAnonKey ? 'Set' : 'Not set');
+//  console.log('Anon Key:', supabaseAnonKey ? 'Set' : 'Not set');
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('Missing Supabase URL or anon key');
   }

@@ -10,11 +10,13 @@ import { setIsDeleteTeam, Team } from "../../store/groupSlice";
 import FlashingDot from "./FlashingDots";
 import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
+import { setIsLoading } from "@/store/userSlice";
+import Spinner from "./Spinner";
 
 export default function GroupList() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { loggedInUser, searchQuery } = useAppSelector((store) => store.user);
+  const { loggedInUser, searchQuery,isLoading } = useAppSelector((store) => store.user);
   
   const { localTeams, teamWithNewMessage, isDeleteTeam } = useAppSelector(
     (store) => store.group
@@ -53,6 +55,8 @@ export default function GroupList() {
   });
 
   function onTeamClicked(team: Team) {
+    
+    
     dispatch(setIsDeleteTeam(true));
     const newFlashedTeamsIdsLog = { ...flashedTeamsIdsLog };
     delete newFlashedTeamsIdsLog[team.id];
@@ -60,10 +64,12 @@ export default function GroupList() {
     team.name
       ? router.push(`/groups/${team.id}`)
       : router.push(`/messages/${team.id}`);
+      
   }
 
   return (
     <div>
+      {isLoading && <Spinner />}
       <ul>
         {searchedTeams.map((team) => (
           <li key={team.id}>

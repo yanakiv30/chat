@@ -15,9 +15,12 @@ import SendUserMessage from "./SendUserMessage";
 import EditUserMessage from "./EditUserMessage";
 import { redirect, useParams } from "next/navigation";
 import Login from "../login/page";
+import Spinner from "./Spinner";
 
 export default function GroupMessages() {
-  const { loggedInUser, searchMessage, isEdit } = useAppSelector(
+  const dispatch = useDispatch();
+  
+  const { loggedInUser, searchMessage, isEdit ,isLoading} = useAppSelector(
     (store) => store.user
   );
 
@@ -26,8 +29,9 @@ export default function GroupMessages() {
   const [newGroupMessage, setNewGroupMessage] = useState("");
   const { groupId } = useParams();
   const groupInListId = +groupId!;
-  const dispatch = useDispatch();
+  
   const team = localTeams.find((x) => x.id === groupInListId);
+ 
   if (!team) return <Empty />;
   if(!loggedInUser) redirect('/');
   const hiddenName = team.members.find(
@@ -43,6 +47,7 @@ export default function GroupMessages() {
         message: message,
         image_path: imagePath || null,
       };
+      dispatch(setIsLoading(true));
       try {
         const { data, error } = await supabase
           .from("messages")
@@ -56,7 +61,7 @@ export default function GroupMessages() {
         console.error(errorMessage);
         alert(errorMessage);
       } finally {
-        // dispatch(setIsLoading(false));
+        dispatch(setIsLoading(false));
       }
       setNewGroupMessage("");
     }
@@ -87,6 +92,7 @@ export default function GroupMessages() {
 
   return (
     <div className="profile-wrapper">
+       {isLoading && <Spinner />}
       <div className="user-profile-container">
         <div className="chat-with">
           <div>

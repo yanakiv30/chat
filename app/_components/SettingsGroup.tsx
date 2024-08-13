@@ -10,6 +10,7 @@ import { setIsLoading } from "../../store/userSlice";
 import { useState } from "react";
 import { supabase } from "../_services/supabase";
 import { useRouter } from "next/navigation";
+import Spinner from './Spinner';
 
 export default function SettingsGroup() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function SettingsGroup() {
  
   const dispatch = useDispatch();
   const { localTeams } = useAppSelector((store) => store.group);
-  const { loggedInUser } = useAppSelector((store) => store.user);
+  const { isLoading } = useAppSelector((store) => store.user);
   
   const teamToSet = localTeams.find((team) => team.id === idSettings)!;
   let membersArr: any = [];
@@ -63,6 +64,7 @@ export default function SettingsGroup() {
 
   return (
     <div className="settings">
+      {isLoading && <Spinner />}
       <div style={{ backgroundColor: "beige", borderRadius: "7px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           Team: {teamToSet?.name}

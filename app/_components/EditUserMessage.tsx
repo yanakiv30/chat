@@ -5,10 +5,11 @@ import { setIsEdit, setIsLoading } from "../../store/userSlice";
 import { useAppSelector } from "../../store/store";
 import { useState } from "react";
 import { supabase } from "../_services/supabase";
+import Spinner from "./Spinner";
 
 export default function EditUserMessage() {
   const dispatch = useDispatch();
-  const { messageId, mesContent } = useAppSelector((store) => store.user);
+  const { messageId, mesContent,isLoading } = useAppSelector((store) => store.user);
 
   const [updateContent, setUpdateContent] = useState("");
 
@@ -39,6 +40,7 @@ export default function EditUserMessage() {
 
   return (
     <div className="message-send">
+       {isLoading && <Spinner />}
       <input
         type="text"
         value={updateContent || mesContent || ""}

@@ -9,13 +9,14 @@ import { useAppSelector } from "../../store/store";
 import { setIsLoading } from "../../store/userSlice";
 import { createTeamWithMembers } from "./createTeam";
 import { useRouter } from "next/navigation";
+import Spinner from "./Spinner";
 
 
 function CheckboxList() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  let { users, loggedInUser } = useAppSelector((store) => store.user);
+  let { users, loggedInUser,isLoading } = useAppSelector((store) => store.user);
   const [groupName, setGroupName] = useState("");
   const usersWithoutLoggedIn = users.filter(
     (user) => user.id !== loggedInUser?.id
@@ -63,6 +64,7 @@ function CheckboxList() {
       style={{ backgroundColor: " rgb(234, 229, 225)", height: "fit-content" }}
       className="wrapper"
     >
+      {isLoading && <Spinner />}
       <div
         className="set"
         style={{ border: "1px solid #ccc", borderRadius: "7px" }}

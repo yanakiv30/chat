@@ -18,6 +18,7 @@ export default function SettingsGroup() {
   const teamToSet = localTeams.find((team) => team.id === idSettings)!;
   let membersArr: any = [];
   teamToSet?.members.map((member) => membersArr.push(member.username));
+
   async function removeMe(teamId: number, userId: number) {
     const { error } = await supabase
       .from("teams_members")
@@ -25,7 +26,7 @@ export default function SettingsGroup() {
       .eq("team_id", teamId)
       .eq("user_id", userId);
     dispatch(deleteTeamById(teamId));
-    router.push("/");
+    router.push("/dashboard");
   }
   return (
     <div className="settings">
