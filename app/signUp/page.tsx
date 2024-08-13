@@ -1,32 +1,29 @@
 "use client";
-
 import { useAppSelector } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setLoggedInUser } from "../../store/userSlice";
-
+import { supabase } from "../_services/supabase";
 
 import { createHash } from "crypto";
 import { useEffect } from "react";
-import { supabase } from "../_services/supabaseClient";
-
 
 export default function SignUp({ incomingUser, sessionImage }: { incomingUser: any, sessionImage: any }) {
-  console.log("sessionImage= ", sessionImage);
+  console.log("sessionImage= ", sessionImage);    
+   
   console.log("incomingUser= ", incomingUser);  
   const router = useRouter();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const dispatch = useDispatch();
-
   async function handleSignUp(
     newUsername: string,
     newPassword: string,
     full_name: string,
-    avatarFile: File | null,
+    avatar: string,
     status: string
    ) {
     try {
-      // First, check if the username already exists
+            // First, check if the username already exists
       const { data: existingUser, error: checkError } = await supabase
         .from("users")
         .select("username")
@@ -41,37 +38,19 @@ export default function SignUp({ incomingUser, sessionImage }: { incomingUser: a
         alert("Username already exists, please choose another one");              
         return ;
       }
-  
+
       // If we've reached this point, the username is available
-
-      let avatarUrl = "";
-
-      if (avatarFile) {
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("avatars")
-          .upload(`public/${Date.now()}_${avatarFile.name}`, avatarFile);
-
-        if (uploadError) {
-          throw new Error("Failed to upload avatar: " + uploadError.message);
-        }
-
-        if (uploadData) {
-          avatarUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/buckets/avatars/public/${uploadData.path}`;
-        }
-      }
-
       const hashedPassword = createHash("sha256")
         .update(newPassword)
         .digest("hex");
-  
+
       const newUser = {
         username: newUsername,
         full_name: full_name,
-        avatar: avatarUrl,
+        avatar: avatar,
         status: status,
         password: hashedPassword,
-      };
-  
+      };  
       const { data, error } = await supabase
         .from("users")
         .insert([newUser])
@@ -95,7 +74,6 @@ export default function SignUp({ incomingUser, sessionImage }: { incomingUser: a
       alert(message);
     }
   }
-
   useEffect(() => {
     async function handleSignUp2() {
       dispatch(setLoggedInUser(incomingUser));
@@ -103,10 +81,8 @@ export default function SignUp({ incomingUser, sessionImage }: { incomingUser: a
     }
     if (incomingUser) handleSignUp2();
   }, [incomingUser, dispatch, router]);
-
   if (loggedInUser) return null;
   if (incomingUser) return;
-
   return (
     <div className="background-login">
       <div className="login">
@@ -119,20 +95,21 @@ export default function SignUp({ incomingUser, sessionImage }: { incomingUser: a
             const newPassword = formData.get("newPassword");
             const full_name = formData.get("full_name");
 
-            const avatarFile = formData.get("avatar") as File | null;
+            const avatar = formData.get("avatar");
             const status = formData.get("status");
 
             if (
               typeof newUsername === "string" &&
               typeof newPassword === "string" &&
               typeof full_name === "string" &&
-               avatarFile instanceof File &&
+              typeof avatar === "string" &&
               typeof status === "string"
             )
-              handleSignUp(newUsername, newPassword, full_name, avatarFile, status);
+              handleSignUp(newUsername, newPassword, full_name, avatar, status);
           }}
         >
           <label>
+  
             New Username:
             <input type="text" name="newUsername" required />
           </label>
@@ -147,13 +124,12 @@ export default function SignUp({ incomingUser, sessionImage }: { incomingUser: a
 
           <label>
             Avatar:
-            <input type="file" name="avatar" accept="image/*" required />
+            <input type="text" name="avatar" required />
           </label>
           <label>
-            Status:
+            Status:  
             <input type="text" name="status" required />
           </label>
-
           <button type="submit">Sign Up</button>
         </form>
       </div>
