@@ -7,7 +7,7 @@ console.log('Supabase URL:', supabaseUrl);
 let supabase: SupabaseClient;
 
 if (typeof window === 'undefined') {
-  // Server-side
+  // Server
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   console.log('Service Role Key:', supabaseServiceRoleKey ? 'Set' : 'Not set');
   if (!supabaseUrl || !supabaseServiceRoleKey) {
@@ -15,7 +15,7 @@ if (typeof window === 'undefined') {
   }
   supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 } else {
-  // Client-side
+  // Client
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   console.log('Anon Key:', supabaseAnonKey ? 'Set' : 'Not set');
   if (!supabaseUrl || !supabaseAnonKey) {

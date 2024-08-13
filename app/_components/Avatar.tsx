@@ -24,7 +24,7 @@ function Avatar({ name }: AvatarProps) {
           style={{ width: "8%", height: "8%", borderRadius: "50%" }}
         />
       ) : (
-        ""
+        <div className="avatar">{firstLetter}</div>
       )}
     </>
   );

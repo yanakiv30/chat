@@ -9,8 +9,7 @@ const authConfig={
         })
     ],
     callbacks: {
-      async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
-        // Пренасочване към /account след успешна автентикация
+      async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {        
         return `${baseUrl}/account`
       },
     },
