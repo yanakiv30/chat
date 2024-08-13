@@ -61,7 +61,7 @@ function AccessibleChats() {
           .map((user) => (
             <li key={user.id}>
               <div style={{ display: "flex", gap: "5px" }}>
-                <Avatar name={user.username} />
+                <Avatar name={user.avatar} />
                 <button onClick={() => handleUserClicked(user.id)}>
                   {user.username}
                 </button>

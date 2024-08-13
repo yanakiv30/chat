@@ -12,13 +12,15 @@ const initialState = {
   loggedInUser: null as User | null,
   // messages: [] as Message[],
   searchQuery: "",
-  searchMessage: "",
+  searchMessage: "",  
+  
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    
     setIsLoading(state, action) {
       state.isLoading = action.payload;
     },

@@ -12,7 +12,7 @@ function IconAndSearch() {
   return (
     <div className="icon-and-search">
       <div style={{ display: "flex" }}>
-        {loggedInUser && <Avatar name={loggedInUser.username} />}
+        {loggedInUser && <Avatar name={loggedInUser.avatar} />}
         <p>{loggedInUser && loggedInUser.username}</p>
       </div>
       <input

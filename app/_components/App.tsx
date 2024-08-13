@@ -30,6 +30,7 @@ function App({initialUsers}: AppProps) {
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user); 
   const { localTeams } = useAppSelector((store) => store.group);  
+  
 
   const loadTeams = useCallback(() => {
     if (!loggedInUser) return;        
