@@ -35,7 +35,7 @@ function CheckboxList() {
 
     try {
       await createTeamWithMembers(groupName, checkedIds);
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error creating new group:", error);
     } finally {

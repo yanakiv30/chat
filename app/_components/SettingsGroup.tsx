@@ -58,7 +58,7 @@ export default function SettingsGroup() {
     } finally {
       dispatch(setIsLoading(false));
     }
-    router.push("/");
+    router.push("/dashboard");
   }
 
   return (
