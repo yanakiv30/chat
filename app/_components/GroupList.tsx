@@ -79,7 +79,7 @@ export default function GroupList() {
                   team.name === ""
                     ? team.members.find(
                         (member) => +member.id !== loggedInUser?.id
-                      )?.username
+                      )?.avatar
                     : team.name
                 }
               />

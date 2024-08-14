@@ -31,12 +31,13 @@ export default function GroupMessages() {
   const groupInListId = +groupId!;
   
   const team = localTeams.find((x) => x.id === groupInListId);
+  
  
   if (!team) return <Empty />;
   if(!loggedInUser) redirect('/');
-  const hiddenName = team.members.find(
+  const otherMember = team.members.find(
     (member) => member.id !== loggedInUser!.id
-  )?.username;
+  );
   
   async function handleSendGroupMessage(message: string, imagePath?: string) {
     if (message.trim() !== "" || imagePath) {
@@ -92,14 +93,15 @@ export default function GroupMessages() {
 
   return (
     <div className="profile-wrapper">
-       {isLoading && <Spinner />}
+       {isLoading && <Spinner />}       
       <div className="user-profile-container">
-        <div className="chat-with">
+        <div className="chat-with">          
           <div>
             <div style={{ display: "flex", gap: "5px" }}>
+            {team.name === ""&&<Avatar name={otherMember?.avatar} />}
               {team.name !== "" && <Avatar name={team.name || ""} />}
               <h4>
-                {team.name === "" ? `Chat with ${hiddenName}` : team.name}{" "}
+                {team.name === "" ? `Chat with  ${otherMember?.username}` : team.name}{" "}
               </h4>
             </div>
             {team.name !== "" && (
