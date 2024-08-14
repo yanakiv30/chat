@@ -2,7 +2,7 @@
 import { auth } from "../_services/auth";
 import { supabase } from "../_services/supabase";
 import { createHash } from 'crypto';
-import SignUp from "@/app/signup/page";
+import SignUp from '../../app/signup/page'
 import Avatar from "../_components/Avatar";
 
 async function page() {
