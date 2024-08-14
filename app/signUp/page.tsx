@@ -8,7 +8,21 @@ import { supabase } from "../_services/supabase";
 import { createHash } from "crypto";
 import { useEffect } from "react";
 
-export default function SignUp({ incomingUser, sessionImage }: { incomingUser: any, sessionImage: any }) {
+export default function SignUp({ 
+  incomingUser, 
+  sessionImage 
+}: { 
+  incomingUser?: { 
+    username: string; 
+    full_name: string; 
+    avatar: string; 
+    status: string; 
+  }, 
+  sessionImage?: { 
+    url: string; 
+    alt: string; 
+  } 
+})  {
   console.log("sessionImage= ", sessionImage);    
    
   console.log("incomingUser= ", incomingUser);  
