@@ -40,7 +40,7 @@ if (existingUser&&existingUser.length>0) {
   console.log("Ifffsession= ", session);
   return (
     <div className="background-login">
-           <SignUp incomingUser={existingUser[0]} sessionImage={sessionImage}/> 
+           <SignUp incomingUser={existingUser[0]} /> 
            
         </div>    
   );
@@ -74,7 +74,7 @@ const newUser = {
 
   return (
     <div className="background-login">
-           <SignUp incomingUser={userWithId} sessionImage={sessionImage}/> 
+           <SignUp incomingUser={userWithId} /> 
         </div>    
   );
 }
