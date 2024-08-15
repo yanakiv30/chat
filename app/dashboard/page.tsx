@@ -23,8 +23,9 @@ export const revalidate = 0;
 async function Page() {
   const { users } = await getData();
   console.log("users=", users);
-
-  return <App initialUsers={users} />;
+  
+  const now = Date.now();
+  return <App key={now} initialUsers={users} />;
 }
 
 export default Page;

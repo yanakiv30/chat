@@ -13,23 +13,21 @@ const authConfig={
         return `${baseUrl}/account`
       },
     },
-    debug: process.env.NODE_ENV === "development", // Enable debug mode in development
+    debug: process.env.NODE_ENV === "development", 
 
-  secret: process.env.NEXTAUTH_SECRET, // Secret for signing JWT or encryption
-
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "jwt" as const, // Specify the exact allowed type
+    strategy: "jwt" as const, 
   },
 
   events: {
-    // Sign-in event handler
+    
     async signIn({ user, account, profile, email, credentials }: any) {
-      console.log("User signed in:", { user, account, profile, email, credentials });
+      //console.log("User signed in:", { user, account, profile, email, credentials });
     },
-
-    // Error event handler
+    
     async error({ error }: { error: Error }) {
-      console.error("An error occurred:", error);
+      //console.error("An error occurred:", error);
     },
   },
 };

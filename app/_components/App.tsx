@@ -33,17 +33,25 @@ function App({initialUsers}: AppProps) {
   
 
   const loadTeams = useCallback(() => {
-    if (!loggedInUser) return;        
+    if (!loggedInUser) return;           
 
     getTeams(+loggedInUser.id)
       .then((data) => dispatch(setTeams(data)))
       .catch((error) => console.error("Error fetching teams", error));
   }, [dispatch, loggedInUser]);
 
-  useEffect(()=>{
+  const loadUsers = useCallback(() => {
+    getUsers()
+      .then((data) => {        
+        dispatch(setUsers(data));
+      })
+      .catch((error) => console.error("Error fetching users", error));
+  }, [dispatch]);
+
+  useEffect(() => {
     dispatch(setUsers(initialUsers));
     loadTeams();
-  },[initialUsers, dispatch, loadTeams]);
+  }, [initialUsers, dispatch, loadTeams]);
 
   useEffect(() => {
     const findTeamNameById = (id: number, senderId: number) => {
@@ -105,62 +113,40 @@ function App({initialUsers}: AppProps) {
       .subscribe();
 
     const userSubscription = supabase
-      .channel("users")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "users" },
-        loadTeams
-      )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "users" },
-        loadTeams
-      )
-      .on(
-        "postgres_changes",
-        { event: "DELETE", schema: "public", table: "users" },
-        loadTeams
-      )
-      .subscribe();
+    .channel("users")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "users" },
+      (payload) => {
+        try {
+          loadUsers();
+          loadTeams();
+        } catch (error) {
+          console.error("Error updating users or teams", error);
+        }
+      }
+    )
+    .subscribe();
 
     const teamsSubscription = supabase
-      .channel("teams")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "teams" },
-        loadTeams
-      )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "teams" },
-        loadTeams
-      )
-      .on(
-        "postgres_changes",
-        { event: "DELETE", schema: "public", table: "teams" },
-        loadTeams
-      )
-      .subscribe();
+  .channel("teams")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "teams" },
+    loadTeams
+  )
+  .subscribe();
 
-    const teamsMembersSubscription = supabase
-      .channel("teams_members")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "teams_members" },
-        loadTeams
-      )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "teams_members" },
-        loadTeams
-      )
-      .on(
-        "postgres_changes",
-        { event: "DELETE", schema: "public", table: "teams_members" },
-        loadTeams
-      )
-      .subscribe();
-  }, [loadTeams, localTeams, loggedInUser, dispatch]);
+  const teamsMembersSubscription = supabase
+  .channel("teams_members")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "teams_members" },
+    loadTeams
+  )
+  .subscribe();
+ 
+  }, [dispatch, loadTeams, loadUsers, localTeams, loggedInUser]);
 
 
     if (!loggedInUser) {

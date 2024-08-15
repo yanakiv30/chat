@@ -18,7 +18,9 @@ export default function UserMessagesContainer({
   const dispatch = useDispatch();
   const { messageId, users } = useAppSelector((store) => store.user);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
+  console.log("users from UserMessageContainer= ", users);
+ 
+  
   useEffect(() => {
     const messageContent = searchedMessages.filter(
       (message: any) => message.id === messageId
@@ -62,6 +64,7 @@ export default function UserMessagesContainer({
     <div className="messages-container">
       <ul className="messages-container">
         {searchedMessages.map((message: Message, index) => {
+           {console.log("message.senderId= ", message.senderId)}
           return (
             <div
               className={`${
@@ -105,9 +108,9 @@ export default function UserMessagesContainer({
                   }}
                 >
                   <p style={{ color: "blue" }}>
-                    {
-                      users.filter((user) => user.id === message.senderId)[0]
-                        .username
+                   
+                    {                      
+                      users.filter((user) => user.id === message.senderId)[0]?.username
                     }
                     :
                   </p>
