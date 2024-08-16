@@ -29,7 +29,7 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
   const onSubmit = async (formData: FormData) => {
     try {
       const result = await handleLogin(formData);
-      console.log("result from onSubmit= ", result);
+     // console.log("result from onSubmit= ", result);
       dispatch(setLoggedInUser(result.data));
       if (result.success && result.redirectTo) {
         router.push(result.redirectTo);

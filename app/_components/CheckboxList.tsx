@@ -13,11 +13,17 @@ import Spinner from "./Spinner";
 
 
 function CheckboxList() {
+  const [groupName, setGroupName] = useState("");
+  const [checkedItems, setCheckedItems] = useState({} as CheckedItems);
   const dispatch = useDispatch();
   const router = useRouter();
-
   let { users, loggedInUser,isLoading } = useAppSelector((store) => store.user);
-  const [groupName, setGroupName] = useState("");
+  if(!loggedInUser)router.push("/");
+  
+
+  
+
+ 
   const usersWithoutLoggedIn = users.filter(
     (user) => user.id !== loggedInUser?.id
   );
@@ -25,7 +31,7 @@ function CheckboxList() {
   type CheckedItems = {
     [key: string]: boolean;
   };
-  const [checkedItems, setCheckedItems] = useState({} as CheckedItems);
+ 
 
   async function handleSetGroups() {
     if (!loggedInUser || !groupName) {
@@ -71,7 +77,7 @@ function CheckboxList() {
       >
         <p style={{ display: "flex", justifyContent: "space-between" }}>
           <span>Create Group </span>
-          <button onClick={() => router.push("/")}>X</button>
+          <button onClick={() => router.push("/dashboard")}>X</button>
         </p>
         <input
           style={{ width: "fit-content" }}

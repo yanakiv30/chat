@@ -21,7 +21,8 @@ export default function SettingsGroup() {
   const dispatch = useDispatch();
   const { localTeams } = useAppSelector((store) => store.group);
   const { isLoading } = useAppSelector((store) => store.user);
-  
+  const { loggedInUser } = useAppSelector((store) => store.user);
+  if(!loggedInUser)router.push("/");
   const teamToSet = localTeams.find((team) => team.id === idSettings)!;
   let membersArr: any = [];
   teamToSet?.members.map((member) => membersArr.push(member.username));
@@ -68,7 +69,7 @@ export default function SettingsGroup() {
       <div style={{ backgroundColor: "beige", borderRadius: "7px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           Team: {teamToSet?.name}
-          <button onClick={() => router.push("/")}>X</button>
+          <button onClick={() => router.push("/dashboard")}>X</button>
         </div>
         <p> members: {membersArr.join(", ")}</p>
       </div>
