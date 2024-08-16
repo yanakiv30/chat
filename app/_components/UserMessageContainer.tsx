@@ -18,7 +18,7 @@ export default function UserMessagesContainer({
   const dispatch = useDispatch();
   const { messageId, users } = useAppSelector((store) => store.user);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  console.log("users from UserMessageContainer= ", users);
+ // console.log("users from UserMessageContainer= ", users);
  
   
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function UserMessagesContainer({
     <div className="messages-container">
       <ul className="messages-container">
         {searchedMessages.map((message: Message, index) => {
-           {console.log("message.senderId= ", message.senderId)}
+         //  {console.log("message.senderId= ", message.senderId)}
           return (
             <div
               className={`${

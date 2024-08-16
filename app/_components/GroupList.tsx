@@ -1,6 +1,4 @@
-"use client"
-
-//import { NavLink, useNavigate } from "react-router-dom"; 
+"use client";
 
 import { FaCog } from "react-icons/fa";
 import Avatar from "./Avatar";
@@ -14,14 +12,14 @@ import Link from "next/link";
 import Spinner from "./Spinner";
 
 export default function GroupList() {
-  
   const { groupId } = useParams();
   const actualGroupId = groupId as string;
-  console.log("groupId from params = ", groupId);
   const router = useRouter();
   const dispatch = useDispatch();
-  const { loggedInUser, searchQuery,isLoading } = useAppSelector((store) => store.user);
-  
+  const { loggedInUser, searchQuery, isLoading } = useAppSelector(
+    (store) => store.user
+  );
+
   const { localTeams, teamWithNewMessage, isDeleteTeam } = useAppSelector(
     (store) => store.group
   );
@@ -29,16 +27,8 @@ export default function GroupList() {
   const [flashedTeamsIdsLog, setFlashedTeamsIdsLog] = useState(
     {} as { [key: number]: number }
   );
-  useEffect(() => {
-    if (actualGroupId && actualGroupId in flashedTeamsIdsLog) {
-      const newFlashedTeamsIdsLog = { ...flashedTeamsIdsLog };
-      delete newFlashedTeamsIdsLog[+actualGroupId];
-      setFlashedTeamsIdsLog(newFlashedTeamsIdsLog);
-    }
-  }, [actualGroupId, flashedTeamsIdsLog]); 
 
-  console.log("flashedTeamsIdsLog = ", flashedTeamsIdsLog);
-  if(!loggedInUser) return null;
+  if (!loggedInUser) return null;
   const searchedTeams =
     searchQuery.length > 0
       ? localTeams.filter(
@@ -50,34 +40,30 @@ export default function GroupList() {
     setFlashedTeamsIdsLog((prev) => ({ ...prev, [teamId]: senderId }));
   };
 
- 
-
   searchedTeams.map((team) => {
     const isNewMessage = team.id === teamWithNewMessage.team_id;
 
     const isTeamId = !Object.keys(flashedTeamsIdsLog).find(
       (id) => +id === team.id
     );
-    
+
     teamWithNewMessage.sender_id !== loggedInUser!.id &&
       isTeamId &&
       isNewMessage &&
       !isDeleteTeam &&
+      +actualGroupId !== team.id &&
       updateFlashedTeamsIdsLog(team.id, teamWithNewMessage.sender_id);
-
     return null;
   });
 
   function onTeamClicked(team: Team) {
-    
-    
     dispatch(setIsDeleteTeam(true));
     const newFlashedTeamsIdsLog = { ...flashedTeamsIdsLog };
     delete newFlashedTeamsIdsLog[team.id];
     setFlashedTeamsIdsLog(newFlashedTeamsIdsLog);
     team.name
       ? router.push(`/groups/${team.id}`)
-      : router.push(`/messages/${team.id}`);      
+      : router.push(`/messages/${team.id}`);
   }
 
   return (
@@ -104,7 +90,7 @@ export default function GroupList() {
                   : team.name}
               </button>
               {team.members[0]!.id === loggedInUser!.id ? (
-                <Link href ={`/settingsGroup/${team.id}`}>
+                <Link href={`/settingsGroup/${team.id}`}>
                   <span style={{ fontSize: "8px" }}>
                     <FaCog />
                   </span>
@@ -116,9 +102,9 @@ export default function GroupList() {
                   </span>
                 </Link>
               )}
-              {Object.keys(flashedTeamsIdsLog).includes("" + team.id)  && !Object.keys(flashedTeamsIdsLog).includes(actualGroupId)  &&
-                (<FlashingDot />)
-              }
+              {Object.keys(flashedTeamsIdsLog).includes("" + team.id) && (
+                <FlashingDot />
+              )}
             </div>
           </li>
         ))}
