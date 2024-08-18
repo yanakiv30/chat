@@ -56,8 +56,7 @@
 import { Metadata } from "next";
 import { supabase } from "../_services/supabase";
 import LoginForm from "../_components/LoginForm";
-import { createHash } from "crypto";
-import { cookies } from "next/headers";
+
 
 export const metadata: Metadata = {
   title: "Login",
@@ -75,13 +74,12 @@ export default function Login({
     "use server";
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
-    const hashedPassword = createHash("sha256").update(password).digest("hex");
+    const bcrypt = await import('bcrypt');
     try {
       const { data, error } = await supabase
         .from("users")
         .select()
         .eq("username", username)
-        .eq("password", hashedPassword)
         .single();
 
       if (error) {
@@ -92,13 +90,22 @@ export default function Login({
       }
 
       if (data) {
-        console.log("User found:", data);
-        cookies().set('user', JSON.stringify(data), { httpOnly: true });
-        return { success: true, redirectTo: "/dashboard", data: data };
+        // Compare the provided password with the stored hash
+        const passwordMatch = await bcrypt.compare(password, data.password);
+
+        if (passwordMatch) {
+          console.log("User found:", data);          
+          return { success: true, redirectTo: "/dashboard", data: data };
+        } else {
+          return {
+            success: false,
+            error: "Invalid credentials",
+          };
+        }
       } else {
         return {
           success: false,
-          error: "Invalid credentials",
+          error: "User not found",
         };
       }
     } catch (error: any) {
@@ -109,9 +116,10 @@ export default function Login({
     }
   }
 
+
   return (
     <div>
-      {message && <p style={{ color: 'blue' ,fontSize:"50px"}}>{decodeURIComponent(message)}</p>}
+      {message && <p style={{ color: 'blue' ,fontSize:"30px"}}>{decodeURIComponent(message)}</p>}
       <br></br><br></br>
       <LoginForm handleLogin={handleLogin} />
     </div>
