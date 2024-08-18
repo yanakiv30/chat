@@ -1,4 +1,4 @@
- 'use server';
+"use server";
 
 import { supabase } from "../_services/supabase";
 
@@ -11,22 +11,40 @@ export async function handleSignUp(formData: FormData) {
   const email = formData.get("email") as string;
 
   try {
-    // First, check if the username already exists
     const { data: existingUser, error: checkError } = await supabase
       .from("users")
       .select("username")
-      .eq("username", newUsername)        
- 
-    if (checkError) {        
+      .eq("username", newUsername);
+
+    if (checkError) {
       throw new Error("Error checking username: " + checkError.message);
     }
 
     if (existingUser && existingUser.length > 0) {
-      return { success: false, error: "Username already exists, please choose another one" };
+      return {
+        success: false,
+        error: "Username already exists, please choose another one",
+      };
     }
 
-    // If we've reached this point, the username is available
-    const bcrypt = await import('bcrypt');
+    const { data: existingEmail, error: emailCheckError } = await supabase
+      .from("users")
+      .select("email")
+      .eq("email", email)
+      .single();
+
+    if (emailCheckError && emailCheckError.code !== "PGRST116") {
+      throw new Error("Error checking email: " + emailCheckError.message);
+    }
+
+    if (existingEmail) {
+      return {
+        success: false,
+        error: "Email already exists, please use another email or log in",
+      };
+    }
+
+    const bcrypt = await import("bcrypt");
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
@@ -37,7 +55,7 @@ export async function handleSignUp(formData: FormData) {
       status: status,
       password: hashedPassword,
       email: email,
-    };  
+    };
     const { data, error } = await supabase
       .from("users")
       .insert([newUser])
