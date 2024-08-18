@@ -21,7 +21,8 @@ export default function SignUp(incomingUserProp:any)  {
     newPassword: string,
     full_name: string,
     avatar: string,
-    status: string
+    status: string,
+    email: string
    ) {
     try {
             // First, check if the username already exists
@@ -51,6 +52,7 @@ export default function SignUp(incomingUserProp:any)  {
         avatar: avatar,
         status: status,
         password: hashedPassword,
+        email: email,
       };  
       const { data, error } = await supabase
         .from("users")
@@ -98,15 +100,17 @@ export default function SignUp(incomingUserProp:any)  {
 
             const avatar = formData.get("avatar");
             const status = formData.get("status");
-
+            const email = formData.get("email");
             if (
               typeof newUsername === "string" &&
               typeof newPassword === "string" &&
               typeof full_name === "string" &&
               typeof avatar === "string" &&
-              typeof status === "string"
+              typeof status === "string"&&
+              typeof email === "string"
+
             )
-              handleSignUp(newUsername, newPassword, full_name, avatar, status);
+              handleSignUp(newUsername, newPassword, full_name, avatar, status,email);
           }}
         >
           <label>
@@ -130,6 +134,10 @@ export default function SignUp(incomingUserProp:any)  {
           <label>
             Status:  
             <input type="text" name="status" required />
+          </label>
+          <label>
+            Email:  
+            <input type="email" name="email" required />
           </label>
           <button type="submit">Sign Up</button>
         </form>
