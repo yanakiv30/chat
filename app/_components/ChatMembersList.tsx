@@ -20,7 +20,7 @@ function ChatMembersList() {
         onClick={() => setIsNewChatOpen(!isNewChatOpen)}
         style={{ background: "purple", color: "white" }}
       >
-        New Chats
+        Available Chats
       </button>
       {isNewChatOpen && <AccessibleChats />}
       <br></br>
