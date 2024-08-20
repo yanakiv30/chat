@@ -151,7 +151,7 @@ import { useAppSelector } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setLoggedInUser } from "../../store/userSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { handleSignUp } from './signupActions';
 
 export default function SignUp(incomingUserProp: any) {
@@ -161,6 +161,7 @@ export default function SignUp(incomingUserProp: any) {
   const router = useRouter();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const dispatch = useDispatch();
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     async function handleSignUp2() {
@@ -177,14 +178,16 @@ export default function SignUp(incomingUserProp: any) {
     <div className="background-login">
       <div className="login">
         <h2>Please Sign Up</h2>
+        {message && <p>{message}</p>}
         <form
           action={async (formData) => {
             const result = await handleSignUp(formData);
+
             if (result.success) {
-              dispatch(setLoggedInUser(result.user));
-              router.push("/dashboard");
+              setMessage(result.message || 'Signup successful. Please check your email to verify your account.');
+              // Don't dispatch or redirect immediately
             } else {
-              alert(result.error);
+              setMessage(result.error || 'An error occurred during signup.');
             }
           }}
         >

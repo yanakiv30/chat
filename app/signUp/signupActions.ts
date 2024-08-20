@@ -1,6 +1,8 @@
 "use server";
 
 import { supabase } from "../_services/supabase";
+import { sendVerificationEmail } from "../_services/emailService";
+import crypto from 'crypto';
 
 export async function handleSignUp(formData: FormData) {
   const newUsername = formData.get("newUsername") as string;
@@ -48,6 +50,8 @@ export async function handleSignUp(formData: FormData) {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+
     const newUser = {
       username: newUsername,
       full_name: full_name,
@@ -55,6 +59,7 @@ export async function handleSignUp(formData: FormData) {
       status: status,
       password: hashedPassword,
       email: email,
+      is_verified: false,      
     };
     const { data, error } = await supabase
       .from("users")
@@ -66,7 +71,8 @@ export async function handleSignUp(formData: FormData) {
     }
     if (data && data.length > 0) {
       console.log("Just registered: ", data[0]);
-      return { success: true, user: data[0] };
+      await sendVerificationEmail(email, verificationToken);
+      return { success: true, user: data[0], message: "Please check your email to verify your account." };
     } else {
       throw new Error("User creation failed");
     }
