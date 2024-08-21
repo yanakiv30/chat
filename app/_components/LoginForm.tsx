@@ -46,8 +46,8 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
 
       if (!result.success) {
         setError(result.error || "An error occurred during login");
-        if (result.redirectTo) {
-          router.push(result.redirectTo);
+        if (result.error === "Please verify your email before logging in.") {
+          // Add a resend verification email option here if needed
         }
       } else {
         dispatch(setLoggedInUser(result.data));
@@ -90,3 +90,4 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
     </div>
   );
 }
+

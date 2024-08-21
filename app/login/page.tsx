@@ -76,45 +76,35 @@ export default function Login({
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
     const bcrypt = await import('bcrypt');
-
-    // const isVerified = await checkVerification(username);
-    let isVerified = false; 
-    const { data, error } = await supabase
-    .from("users")
-    .select()
-    .eq("is_verified", true)
-    .single();
-  if (data) {        
-     isVerified = data;
-  }
- 
-
-    if (!isVerified) {      
-      return { 
-          success: false, 
-          error: "Please verify your email before login.", 
-          redirectTo: "/login" 
-      };
-  }
+  
     try {
       const { data, error } = await supabase
         .from("users")
         .select()
         .eq("username", username)
         .single();
-
+  
       if (error) {
         return {
           success: false,
           error: "Error querying the database: " + error.message,
         };
       }
-
-      if (data) {        
+  
+      if (data) {
+        // Check if the user's email is verified
+        if (!data.is_verified) {
+          return {
+            success: false,
+            error: "Please verify your email before logging in.",
+          };
+        }
+  
+        // Compare the provided password with the stored hash
         const passwordMatch = await bcrypt.compare(password, data.password);
-
+  
         if (passwordMatch) {
-          console.log("User found:", data);          
+          console.log("User found:", data);
           return { success: true, redirectTo: "/dashboard", data: data };
         } else {
           return {
