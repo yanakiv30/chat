@@ -56,6 +56,7 @@
 import { Metadata } from "next";
 import { supabase } from "../_services/supabase";
 import LoginForm from "../_components/LoginForm";
+import { redirect } from "next/navigation";
 
 
 export const metadata: Metadata = {
@@ -75,6 +76,16 @@ export default function Login({
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
     const bcrypt = await import('bcrypt');
+
+    // const isVerified = await checkVerification(username);
+    const isVerified = false
+    if (!isVerified) {      
+      return { 
+          success: false, 
+          error: "Please verify your email before login.", 
+          redirectTo: "/login" 
+      };
+  }
     try {
       const { data, error } = await supabase
         .from("users")
@@ -89,8 +100,7 @@ export default function Login({
         };
       }
 
-      if (data) {
-        // Compare the provided password with the stored hash
+      if (data) {        
         const passwordMatch = await bcrypt.compare(password, data.password);
 
         if (passwordMatch) {

@@ -31,10 +31,18 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
       const result = await handleLogin(formData);
      // console.log("result from onSubmit= ", result);
       dispatch(setLoggedInUser(result.data));
-      if (result.success && result.redirectTo) {
-        router.push(result.redirectTo);
-      } else if (result.error) {
-        setError(result.error);
+     
+      if (!result.success) {        
+        setError(result.error || "An error occurred during login");        
+         //alert(result.error);        
+        if (result.redirectTo) {
+          router.push(result.redirectTo);
+        }
+      } else {      
+        dispatch(setLoggedInUser(result.data));
+        if (result.redirectTo) {
+          router.push(result.redirectTo);
+        }
       }
     } catch (error: any) {
       setError("Error logging in user: " + error.message);
