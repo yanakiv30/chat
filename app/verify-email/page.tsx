@@ -1,30 +1,27 @@
 import { supabase } from "../_services/supabase";
+import { redirect } from 'next/navigation';
 
 export default async function VerifyEmail({ searchParams }: { searchParams: { token: string } }) {
   const { token } = searchParams;
 
   if (!token) {
-    return <div>Invalid verification link.</div>;
+    redirect('/login?error=Invalid verification link');
   }
 
-  try {
-    const { data, error } = await supabase
-      .from('users')
-      .update({ is_verified: true, verification_token: null })
-      .match({ verification_token: token })
-      .select();
+  const { data, error } = await supabase
+    .from('users')
+    .update({ is_verified: true, verification_token: null })
+    .match({ verification_token: token })
+    .select();
 
-    if (error) {
-      throw error;
-    }
-
-    if (data && data.length > 0) {
-      return <div>Your email has been verified. You can now log in.</div>;
-    } else {
-      return <div>Invalid or expired verification link.</div>;
-    }
-  } catch (error) {
+  if (error) {
     console.error('Error verifying email:', error);
-    return <div>An error occurred while verifying your email. Please try again later.</div>;
+    redirect('/login?error=An error occurred while verifying your email. Please try again later.');
+  }
+
+  if (data && data.length > 0) {
+    redirect('/login?success=Your email has been verified. You can now log in.');
+  } else {
+    redirect('/login?error=Invalid or expired verification link');
   }
 }

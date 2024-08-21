@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { setLoggedInUser } from "@/store/userSlice";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/store";
 import Link from "next/link";
-import Google from "next-auth/providers/google";
 import GoogleSignInButton from "./GoogleSignInButton";
 
 type HandleLoginFunction = (formData: FormData) => Promise<{
@@ -15,6 +14,7 @@ type HandleLoginFunction = (formData: FormData) => Promise<{
   redirectTo?: string;
   data?: any;
 }>;
+
 interface LoginFormProps {
   handleLogin: HandleLoginFunction;
 }
@@ -22,23 +22,34 @@ interface LoginFormProps {
 export default function LoginForm({ handleLogin }: LoginFormProps) {
   const dispatch = useDispatch();
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { loggedInUser } = useAppSelector((store) => store.user);
-  console.log("loggedInUser from loginForm= ", loggedInUser);
+
+  useEffect(() => {
+    const errorMessage = searchParams.get('error');
+    const success = searchParams.get('success');
+    
+    if (errorMessage) {
+      setError(errorMessage);
+      router.replace('/login');
+    } else if (success) {
+      setSuccessMessage(success);
+      router.replace('/login');
+    }
+  }, [searchParams, router]);
 
   const onSubmit = async (formData: FormData) => {
     try {
       const result = await handleLogin(formData);
-     // console.log("result from onSubmit= ", result);
-      dispatch(setLoggedInUser(result.data));
-     
-      if (!result.success) {        
-        setError(result.error || "An error occurred during login");        
-         //alert(result.error);        
+
+      if (!result.success) {
+        setError(result.error || "An error occurred during login");
         if (result.redirectTo) {
           router.push(result.redirectTo);
         }
-      } else {      
+      } else {
         dispatch(setLoggedInUser(result.data));
         if (result.redirectTo) {
           router.push(result.redirectTo);
@@ -48,12 +59,15 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
       setError("Error logging in user: " + error.message);
     }
   };
-  if (loggedInUser)  return null;
-  
+
+  if (loggedInUser) return null;
+
   return (
     <div className="background-login">
       <h2>Welcome to chatSPA</h2>
-      <br></br>
+      {successMessage && <p className="success">{successMessage}</p>}
+      {error && <p className="error">{error}</p>}
+      <br />
       <form action={onSubmit}>
         <label>
           Username:
@@ -65,8 +79,7 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
         </label>
         <button type="submit">Login</button>
       </form>
-      {error && <p className="error">{error}</p>}
-      <br></br>
+      <br />
       <p>
         <Link href="/api/auth/signin" passHref>
           <GoogleSignInButton px={14} />
