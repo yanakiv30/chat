@@ -59,7 +59,8 @@ export async function handleSignUp(formData: FormData) {
       status: status,
       password: hashedPassword,
       email: email,
-      is_verified: false,      
+      is_verified: false, 
+      verification_token: verificationToken,   
     };
     const { data, error } = await supabase
       .from("users")
@@ -71,6 +72,7 @@ export async function handleSignUp(formData: FormData) {
     }
     if (data && data.length > 0) {
       console.log("Just registered: ", data[0]);
+      
       await sendVerificationEmail(email, verificationToken);
       return { success: true, user: data[0], message: "Please check your email to verify your account." };
     } else {

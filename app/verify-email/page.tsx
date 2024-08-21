@@ -1,18 +1,17 @@
 import { supabase } from "../_services/supabase";
 
-export default async function VerifyEmail({ searchParams }: { searchParams: { email: string } }) {
-  const { email } = searchParams;
+export default async function VerifyEmail({ searchParams }: { searchParams: { token: string } }) {
+  const { token } = searchParams;
 
-
-  if (!email) {
+  if (!token) {
     return <div>Invalid verification link.</div>;
   }
 
   try {
     const { data, error } = await supabase
       .from('users')
-      .update({ is_verified: true })
-      .match({ email: email })
+      .update({ is_verified: true, verification_token: null })
+      .match({ verification_token: token })
       .select();
 
     if (error) {

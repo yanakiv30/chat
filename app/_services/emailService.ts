@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function sendVerificationEmail(to: string, token: string) {
-  const verificationLink = `${process.env.NEXTAUTH_URL}/verify-email?email=${encodeURIComponent(to)}`;
+  const verificationLink = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}`;
 
   const mailOptions = {
     from: process.env.GMAIL_USER,
@@ -30,3 +30,4 @@ export async function sendVerificationEmail(to: string, token: string) {
     throw error;
   }
 }
+
