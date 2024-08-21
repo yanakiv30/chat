@@ -78,7 +78,17 @@ export default function Login({
     const bcrypt = await import('bcrypt');
 
     // const isVerified = await checkVerification(username);
-    const isVerified = false
+    let isVerified = false; 
+    const { data, error } = await supabase
+    .from("users")
+    .select()
+    .eq("is_verified", true)
+    .single();
+  if (data) {        
+     isVerified = data;
+  }
+ 
+
     if (!isVerified) {      
       return { 
           success: false, 
