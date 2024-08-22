@@ -27,6 +27,10 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
   const searchParams = useSearchParams();
   const { loggedInUser } = useAppSelector((store) => store.user);
 
+  const handleForgotPassword = () => {
+    router.push('/forgot-password');
+  };
+
   useEffect(() => {
     const errorMessage = searchParams.get('error');
     const success = searchParams.get('success');
@@ -79,6 +83,7 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
         </label>
         <button type="submit">Login</button>
       </form>
+      <button onClick={handleForgotPassword}>Forgot Password?</button>
       <br />
       <p>
         <Link href="/api/auth/signin" passHref>
