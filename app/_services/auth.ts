@@ -1,12 +1,19 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 
+const googleClientId = process.env.AUTH_GOOGLE_ID;
+const googleClientSecret = process.env.AUTH_GOOGLE_SECRET;
+
+if (!googleClientId || !googleClientSecret) {
+  throw new Error("Missing Google OAuth credentials. Please set AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET.");
+}
+
 const authConfig = {
   providers: [
     Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET
-    })
+      clientId: googleClientId,
+      clientSecret: googleClientSecret,
+    }),
   ],
   callbacks: {
     async jwt({ token, account }: { token: any; account: any }) {
