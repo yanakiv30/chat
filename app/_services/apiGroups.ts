@@ -5,7 +5,7 @@ import { supabase } from "./supabase";
 export async function getUsers() {
   const { data, error } = await supabase
     .from("users")
-    .select("username,id,avatar,status,created_at"); //
+    .select("username,id,avatar,status,created_at"); 
   if (error) {
     console.error(error);
     throw new Error("Users could not be loaded");
