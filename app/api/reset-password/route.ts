@@ -187,15 +187,7 @@ export async function POST(request: Request) {
       .delete()
       .eq('id', resetToken.id);
 
-    // Log the password change
-    await supabase
-      .from('user_activity_logs')
-      .insert({
-        user_id: resetToken.user_id,
-        activity_type: 'password_reset',
-        timestamp: new Date().toISOString()
-      });
-
+    
     return NextResponse.json({ message: 'Password reset successfully' });
   } catch (error) {
     console.error('Error in reset password:', error);

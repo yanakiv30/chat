@@ -12,10 +12,11 @@ import {
 import { useAppSelector } from "@/store/store";
 import { setUsers } from "@/store/userSlice";
 import { toast } from "react-toastify";
-import { getTeams, getUsers } from "../_services/apiGroups";
+import { getTeams } from "../_services/apiGroups";
 import { supabase } from "../_services/supabase";
 import { redirect } from "next/navigation";
 import Empty from "./Empty";
+import { fetchUsers } from "@/utils/api";
 type UserSup = {
   username: string;
   id: number;
@@ -41,7 +42,7 @@ function App({initialUsers}: AppProps) {
   }, [dispatch, loggedInUser]);
 
   const loadUsers = useCallback(() => {
-    getUsers()
+    fetchUsers()
       .then((data) => {        
         dispatch(setUsers(data));
       })
