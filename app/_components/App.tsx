@@ -17,6 +17,7 @@ import { supabase } from "../_services/supabase";
 import { redirect } from "next/navigation";
 import Empty from "./Empty";
 import { fetchUsers } from "@/utils/apiUsers";
+import { fetchTeams } from "@/utils/apiTems";
 type UserSup = {
   username: string;
   id: number;
@@ -35,8 +36,7 @@ function App({initialUsers}: AppProps) {
 
   const loadTeams = useCallback(() => {
     if (!loggedInUser) return;           
-
-    getTeams(+loggedInUser.id)
+    fetchTeams(+loggedInUser.id)    
       .then((data) => dispatch(setTeams(data)))
       .catch((error) => console.error("Error fetching teams", error));
   }, [dispatch, loggedInUser]);

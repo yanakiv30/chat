@@ -1,0 +1,91 @@
+import { NextResponse } from 'next/server';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import type { Database } from '@/types/supabase';
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const loggedInUserId = searchParams.get('userId');
+
+  if (!loggedInUserId) {
+    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+  }
+
+  const supabase = createRouteHandlerClient<Database>({ cookies });
+
+  try {
+    // Helper functions
+    const getTeamsIds = async () => {
+      const { data, error } = await supabase
+        .from("teams_members")
+        .select("team_id")
+        .eq("user_id", loggedInUserId);
+      if (error) throw new Error("teams_members could not be loaded");
+      return data.map((x) => x.team_id);
+    };
+
+    const getMembersInTeams = async () => {
+      const { data, error } = await supabase.from("teams_members").select();
+      if (error) throw new Error("Team Members could not be loaded");
+      return data;
+    };
+
+    const getMessagesInTeams = async () => {
+      const { data, error } = await supabase
+        .from("messages")
+        .select()
+        .order("created_at", { ascending: true });
+      if (error) throw new Error("Team Messages could not be loaded");
+      return data;
+    };
+
+    const getUsers = async () => {
+      const { data, error } = await supabase
+        .from("users")
+        .select("username,id,avatar,status,created_at");
+      if (error) throw new Error("Users could not be loaded");
+      return data;
+    };
+
+    // Helper function
+    const getHourDayDate = (date: Date) => ({
+      hour: date.getHours(),
+      day: date.getDate(),
+      date: date.toISOString(),
+    });
+
+    // Main logic
+    const teamsIds = await getTeamsIds();
+    const { data: teamsData, error } = await supabase
+      .from("teams")
+      .select("*")
+      .in("id", teamsIds);
+
+    if (error) throw new Error("Teams could not be loaded");
+
+    const membersInTeams = await getMembersInTeams();
+    const messagesInTeams = await getMessagesInTeams();
+    const users = await getUsers();
+
+    const teamsWithMembers = teamsData.map((team) => ({
+      ...team,
+      members: membersInTeams
+        .filter((tm) => tm.team_id === team.id)
+        .map((tm) => users.find((user) => user.id === tm.user_id)!),
+      messages: messagesInTeams
+        .filter((row) => row.team_id === team.id)
+        .map((row) => ({
+          id: row.id!,
+          senderId: row.sender_id!,
+          content: row.message!,
+          image_path: row.image_path!,
+          ...getHourDayDate(new Date(row.created_at!)),
+        })),
+    }));
+
+    return NextResponse.json(teamsWithMembers);
+  } catch (error) {
+    console.error('Error in getTeams:', error);
+    return NextResponse.json({ error: "An error occurred" }, { status: 500 });
+  }
+}
