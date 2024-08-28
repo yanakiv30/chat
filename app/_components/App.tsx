@@ -16,7 +16,7 @@ import { getTeams } from "../_services/apiGroups";
 import { supabase } from "../_services/supabase";
 import { redirect } from "next/navigation";
 import Empty from "./Empty";
-import { fetchUsers } from "@/utils/api";
+import { fetchUsers } from "@/utils/apiUsers";
 type UserSup = {
   username: string;
   id: number;
