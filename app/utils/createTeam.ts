@@ -1,19 +1,16 @@
-"use client"
+"use client";
 
-import { supabase } from "../_services/supabase";
-
-
-
-async function createTeam(newTeam: { name: string }) {
-  const { data, error } = await supabase.from("teams").insert(newTeam).select();
-  if (error) {
-    const errorMessage = "New group could not be loaded: " + error.message;
-    alert(errorMessage);
-    console.error(errorMessage);
-    throw new Error(errorMessage);
-  }
-  return data[0];
-}
+import { createTeam } from "@/apiUtils/apiTeams";
+// async function createTeam(newTeam: { name: string }) {
+//   const { data, error } = await supabase.from("teams").insert(newTeam).select();
+//   if (error) {
+//     const errorMessage = "New group could not be loaded: " + error.message;
+//     alert(errorMessage);
+//     console.error(errorMessage);
+//     throw new Error(errorMessage);
+//   }
+//   return data[0];
+// }
 
 // export async function connectTeamWithUsers(
 //   teamId: number,
@@ -33,11 +30,14 @@ async function createTeam(newTeam: { name: string }) {
 //   }
 // }
 
-export async function connectTeamWithUsers(teamId: number, membersIds: number[]) {
-  const response = await fetch('/api/teams_members', {
-    method: 'POST',
+export async function connectTeamWithUsers(
+  teamId: number,
+  membersIds: number[]
+) {
+  const response = await fetch("/api/teams_members", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ teamId, membersIds }),
   });

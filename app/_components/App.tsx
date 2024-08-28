@@ -15,8 +15,8 @@ import { toast } from "react-toastify";
 import { supabase } from "../_services/supabase";
 import { redirect } from "next/navigation";
 import Empty from "./Empty";
-import { fetchUsers } from "@/utils/apiUsers";
-import { fetchTeams } from "@/utils/apiTems";
+import { fetchUsers } from "@/apiUtils/apiUsers";
+import { fetchTeams } from "@/apiUtils/apiTeams";
 type UserSup = {
   username: string;
   id: number;
@@ -27,22 +27,21 @@ type UserSup = {
 interface AppProps {
   initialUsers: UserSup[];
 }
-function App({initialUsers}: AppProps) {
+function App({ initialUsers }: AppProps) {
   const dispatch = useDispatch();
-  const { loggedInUser } = useAppSelector((store) => store.user); 
-  const { localTeams } = useAppSelector((store) => store.group);  
-  
+  const { loggedInUser } = useAppSelector((store) => store.user);
+  const { localTeams } = useAppSelector((store) => store.group);
 
   const loadTeams = useCallback(() => {
-    if (!loggedInUser) return;           
-    fetchTeams(+loggedInUser.id)    
+    if (!loggedInUser) return;
+    fetchTeams(+loggedInUser.id)
       .then((data) => dispatch(setTeams(data)))
       .catch((error) => console.error("Error fetching teams", error));
   }, [dispatch, loggedInUser]);
 
   const loadUsers = useCallback(() => {
     fetchUsers()
-      .then((data) => {        
+      .then((data) => {
         dispatch(setUsers(data));
       })
       .catch((error) => console.error("Error fetching users", error));
@@ -67,7 +66,7 @@ function App({initialUsers}: AppProps) {
       const team = localTeams.find((team) => team.id === id);
       const receivers = team?.members.filter(
         (member) => member.id !== senderId
-      );      
+      );
       return receivers;
     }
 
@@ -113,45 +112,43 @@ function App({initialUsers}: AppProps) {
       .subscribe();
 
     const userSubscription = supabase
-    .channel("users")
-    .on(
-      "postgres_changes",
-      { event: "*", schema: "public", table: "users" },
-      (payload) => {
-        try {
-          loadUsers();
-          loadTeams();
-        } catch (error) {
-          console.error("Error updating users or teams", error);
+      .channel("users")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "users" },
+        (payload) => {
+          try {
+            loadUsers();
+            loadTeams();
+          } catch (error) {
+            console.error("Error updating users or teams", error);
+          }
         }
-      }
-    )
-    .subscribe();
+      )
+      .subscribe();
 
     const teamsSubscription = supabase
-  .channel("teams")
-  .on(
-    "postgres_changes",
-    { event: "*", schema: "public", table: "teams" },
-    loadTeams
-  )
-  .subscribe();
+      .channel("teams")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "teams" },
+        loadTeams
+      )
+      .subscribe();
 
-  const teamsMembersSubscription = supabase
-  .channel("teams_members")
-  .on(
-    "postgres_changes",
-    { event: "*", schema: "public", table: "teams_members" },
-    loadTeams
-  )
-  .subscribe();
- 
+    const teamsMembersSubscription = supabase
+      .channel("teams_members")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "teams_members" },
+        loadTeams
+      )
+      .subscribe();
   }, [dispatch, loadTeams, loadUsers, localTeams, loggedInUser]);
 
-
-    if (!loggedInUser) {
-      redirect('/login');      
-    } 
-  return <Empty />
+  if (!loggedInUser) {
+    redirect("/login");
+  }
+  return <Empty />;
 }
 export default App;

@@ -6,13 +6,10 @@ import type { Database } from '@/types/supabase';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const loggedInUserId = searchParams.get('userId');
-
   if (!loggedInUserId) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
-
   const supabase = createRouteHandlerClient<Database>({ cookies });
-
   try {
     // Helper functions
     const getTeamsIds = async () => {
@@ -23,13 +20,11 @@ export async function GET(request: Request) {
       if (error) throw new Error("teams_members could not be loaded");
       return data.map((x) => x.team_id);
     };
-
     const getMembersInTeams = async () => {
       const { data, error } = await supabase.from("teams_members").select();
       if (error) throw new Error("Team Members could not be loaded");
       return data;
     };
-
     const getMessagesInTeams = async () => {
       const { data, error } = await supabase
         .from("messages")
@@ -38,7 +33,6 @@ export async function GET(request: Request) {
       if (error) throw new Error("Team Messages could not be loaded");
       return data;
     };
-
     const getUsers = async () => {
       const { data, error } = await supabase
         .from("users")
@@ -46,27 +40,22 @@ export async function GET(request: Request) {
       if (error) throw new Error("Users could not be loaded");
       return data;
     };
-
     // Helper function
     const getHourDayDate = (date: Date) => ({
       hour: date.getHours(),
       day: date.getDate(),
       date: date.toISOString(),
     });
-
     // Main logic
     const teamsIds = await getTeamsIds();
     const { data: teamsData, error } = await supabase
       .from("teams")
       .select("*")
       .in("id", teamsIds);
-
     if (error) throw new Error("Teams could not be loaded");
-
     const membersInTeams = await getMembersInTeams();
     const messagesInTeams = await getMessagesInTeams();
     const users = await getUsers();
-
     const teamsWithMembers = teamsData.map((team) => ({
       ...team,
       members: membersInTeams
@@ -82,10 +71,59 @@ export async function GET(request: Request) {
           ...getHourDayDate(new Date(row.created_at!)),
         })),
     }));
-
     return NextResponse.json(teamsWithMembers);
   } catch (error) {
     console.error('Error in getTeams:', error);
+    return NextResponse.json({ error: "An error occurred" }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  const supabase = createRouteHandlerClient<Database>({ cookies });
+  try {
+    const newTeam = await request.json();
+    const { data, error } = await supabase.from("teams").insert(newTeam).select();
+
+    if (error) {
+      return NextResponse.json({ error: "New group could not be created: " + error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json({ error: "An error occurred" }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  const supabase = createRouteHandlerClient<Database>({ cookies });
+
+  try {
+    const { id, ...updateData } = await request.json();
+    const { data, error } = await supabase.from("teams").update(updateData).eq('id', id).select();
+
+    if (error) {
+      return NextResponse.json({ error: "Team could not be updated: " + error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json({ error: "An error occurred" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  const supabase = createRouteHandlerClient<Database>({ cookies });
+
+  try {
+    const { id } = await request.json();
+    const { error } = await supabase.from("teams").delete().eq('id', id);
+
+    if (error) {
+      return NextResponse.json({ error: "Team could not be deleted: " + error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ message: "Team deleted successfully" });
+  } catch (error) {
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
   }
 }
