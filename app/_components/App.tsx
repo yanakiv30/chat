@@ -12,7 +12,6 @@ import {
 import { useAppSelector } from "@/store/store";
 import { setUsers } from "@/store/userSlice";
 import { toast } from "react-toastify";
-import { getTeams } from "../_services/apiGroups";
 import { supabase } from "../_services/supabase";
 import { redirect } from "next/navigation";
 import Empty from "./Empty";

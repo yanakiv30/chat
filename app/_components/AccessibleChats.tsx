@@ -1,14 +1,12 @@
-"use client"
+"use client";
 
 import { useAppSelector } from "../../store/store";
 import { useDispatch } from "react-redux";
 import Avatar from "./Avatar";
 import { setTeams } from "../../store/groupSlice";
 import { getTeams } from "../_services/apiGroups";
-import { createTeamWithMembers } from "./createTeam";
+import { createTeamWithMembers } from "../utils/createTeam";
 import { useRouter } from "next/navigation";
-
-
 
 function AccessibleChats() {
   const { searchQuery, users, loggedInUser } = useAppSelector(

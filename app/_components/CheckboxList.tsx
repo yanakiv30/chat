@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -7,23 +7,20 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
 
 import { setIsLoading } from "../../store/userSlice";
-import { createTeamWithMembers } from "./createTeam";
+import { createTeamWithMembers } from "../utils/createTeam";
 import { useRouter } from "next/navigation";
 import Spinner from "./Spinner";
-
 
 function CheckboxList() {
   const [groupName, setGroupName] = useState("");
   const [checkedItems, setCheckedItems] = useState({} as CheckedItems);
   const dispatch = useDispatch();
   const router = useRouter();
-  let { users, loggedInUser,isLoading } = useAppSelector((store) => store.user);
-  if(!loggedInUser)router.push("/");
-  
+  let { users, loggedInUser, isLoading } = useAppSelector(
+    (store) => store.user
+  );
+  if (!loggedInUser) router.push("/");
 
-  
-
- 
   const usersWithoutLoggedIn = users.filter(
     (user) => user.id !== loggedInUser?.id
   );
@@ -31,13 +28,12 @@ function CheckboxList() {
   type CheckedItems = {
     [key: string]: boolean;
   };
- 
 
   async function handleSetGroups() {
     if (!loggedInUser || !groupName) {
       console.error("Missing necessary data for group creation.");
       return;
-  }
+    }
     dispatch(setIsLoading(true));
 
     try {
@@ -62,8 +58,6 @@ function CheckboxList() {
       .filter((key: string) => checkedItems[key] === true)
       .map((key) => +key),
   ].filter((id): id is number => id !== undefined);
-  
-
 
   return (
     <div
