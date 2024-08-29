@@ -36,7 +36,7 @@ export async function getMessages() {
     return response.json();
   }
   
-  export async function deleteMessage(idForDelete: number) {
+  export async function deleteMessage(idForDelete: string) {
     const response = await fetch('/api/messages', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },

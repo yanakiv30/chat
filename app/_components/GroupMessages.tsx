@@ -1,21 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-//import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
 import { searchedGroupMessagesFunc } from "../utils/messageUtils";
 import { setIsLoading } from "../../store/userSlice";
 import Empty from "./Empty";
-import { supabase } from "../_services/supabase";
 import Avatar from "./Avatar";
 import SearchInMessage from "./SearchInMessage";
 import UserMessagesContainer from "./UserMessageContainer";
 import SendUserMessage from "./SendUserMessage";
 import EditUserMessage from "./EditUserMessage";
 import { redirect, useParams } from "next/navigation";
-import Login from "../login/page";
 import Spinner from "./Spinner";
+import { createMessage, deleteMessage } from "@/apiUtils/apiMessages";
 
 export default function GroupMessages() {
   const dispatch = useDispatch();
@@ -23,15 +21,11 @@ export default function GroupMessages() {
   const { loggedInUser, searchMessage, isEdit ,isLoading} = useAppSelector(
     (store) => store.user
   );
-
-  
   const { localTeams } = useAppSelector((store) => store.group);
   const [newGroupMessage, setNewGroupMessage] = useState("");
   const { groupId } = useParams();
   const groupInListId = +groupId!;
-  
   const team = localTeams.find((x) => x.id === groupInListId);
-  
  
   if (!team) return <Empty />;
   if(!loggedInUser) redirect('/');
@@ -50,13 +44,7 @@ export default function GroupMessages() {
       };
       dispatch(setIsLoading(true));
       try {
-        const { data, error } = await supabase
-          .from("messages")
-          .insert(newGroupMessageObject)
-          .select();
-        if (error) {
-          throw new Error(error.message);
-        }
+       await createMessage(newGroupMessageObject)
       } catch (error) {
         const errorMessage = "Error creating Group message: " + error;
         console.error(errorMessage);
@@ -71,14 +59,7 @@ export default function GroupMessages() {
   async function handleDeleteGroupMessages(idForDelete: string) {
     dispatch(setIsLoading(true));
     try {
-      const { error } = await supabase
-        .from("messages")
-        .delete()
-        .eq("id", idForDelete);
-      if (error) {
-        console.error(error);
-        throw new Error("Group Messages could not be deleted");
-      }
+      await deleteMessage(idForDelete)
     } catch (error) {
       console.error("Error deleting group message:", error);
     } finally {

@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { setIsEdit, setIsLoading } from "../../store/userSlice";
 import { useAppSelector } from "../../store/store";
 import { useState } from "react";
-import { supabase } from "../_services/supabase";
 import Spinner from "./Spinner";
 import { updateMessage } from "@/apiUtils/apiMessages";
 
