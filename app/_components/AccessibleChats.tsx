@@ -4,9 +4,9 @@ import { useAppSelector } from "../../store/store";
 import { useDispatch } from "react-redux";
 import Avatar from "./Avatar";
 import { setTeams } from "../../store/groupSlice";
-import { getTeams } from "../_services/apiGroups";
 import { createTeamWithMembers } from "../utils/createTeam";
 import { useRouter } from "next/navigation";
+import { fetchTeams } from "@/apiUtils/apiTeams";
 
 function AccessibleChats() {
   const { searchQuery, users, loggedInUser } = useAppSelector(
@@ -38,7 +38,7 @@ function AccessibleChats() {
         loggedInUser!.id,
         userId,
       ]);
-      getTeams(+loggedInUser!.id)
+      fetchTeams(+loggedInUser!.id)
         .then((data) => {
           dispatch(setTeams(data));
           router.push(`/messages/${doubleViewGroupId}`);
