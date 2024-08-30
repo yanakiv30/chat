@@ -102,7 +102,8 @@ export default function LoginForm() {
 
   return (
     <div className="background-login">
-      <h2>Welcome to chatSPA</h2>      
+       <p style={{ fontSize: "60px" }}>Return to Chat</p> 
+       
         <Link href="/api/auth/signin" passHref>
           <GoogleSignInButton px={14} />
         </Link>

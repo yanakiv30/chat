@@ -11,6 +11,7 @@ import { useState } from "react";
 import { supabase } from "../_services/supabase";
 import { useRouter } from "next/navigation";
 import Spinner from './Spinner';
+import { updateTeam } from '@/apiUtils/apiTeams';
 
 export default function SettingsGroup() {
   const router = useRouter();
@@ -31,15 +32,7 @@ export default function SettingsGroup() {
     if (updateName === "") return;
     dispatch(setIsLoading(true));
     try {
-      const { error } = await supabase
-        .from("teams")
-        .update({ name: `${updateName}` })
-        .eq("id", teamId)
-        .select();
-      if (error) {
-        console.error(error);
-        throw new Error("Team could not be renamed");
-      }
+      await updateTeam(teamId, { name: updateName });
     } catch (error) {
       console.error("Error renaming Team:", error);
     } finally {
