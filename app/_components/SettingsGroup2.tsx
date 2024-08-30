@@ -8,6 +8,7 @@ import { useAppSelector } from "../../store/store";
 import { deleteTeamById } from "../../store/groupSlice";
 import { supabase } from "../_services/supabase";
 import { useParams, useRouter } from "next/navigation";
+import { removeUserFromTeam } from "@/apiUtils/apiTeams_members";
 export default function SettingsGroup() {
   const params = useParams();
   const router = useRouter();
@@ -21,14 +22,17 @@ export default function SettingsGroup() {
   teamToSet?.members.map((member) => membersArr.push(member.username));
 
   async function removeMe(teamId: number, userId: number) {
-    const { error } = await supabase
-      .from("teams_members")
-      .delete()
-      .eq("team_id", teamId)
-      .eq("user_id", userId);
+    try {
+      await  removeUserFromTeam(teamId, userId)         
+    } catch (error) {
+      console.error("Error removing uder from team:", error);
+    }
+    
     dispatch(deleteTeamById(teamId));
     router.push("/dashboard");
+  
   }
+
   return (
     <div className="settings">
       <div style={{ backgroundColor: "beige", borderRadius: "7px" }}>
