@@ -1,17 +1,13 @@
 "use client"
 
 import { useParams } from 'next/navigation';
-
-//import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
-//import supabase from "../services/supabase";
 import { setIsLoading } from "../../store/userSlice";
 import { useState } from "react";
-import { supabase } from "../_services/supabase";
 import { useRouter } from "next/navigation";
 import Spinner from './Spinner';
-import { updateTeam } from '@/apiUtils/apiTeams';
+import { deleteTeam, updateTeam } from '@/apiUtils/apiTeams';
 
 export default function SettingsGroup() {
   const router = useRouter();
@@ -43,11 +39,7 @@ export default function SettingsGroup() {
   async function deleteGroup(teamId: number) {
     dispatch(setIsLoading(true));
     try {
-      const { error } = await supabase.from("teams").delete().eq("id", teamId);
-      if (error) {
-        console.error(error);
-        throw new Error("Team could not be deleted");
-      }
+      await  deleteTeam(teamId)      
     } catch (error) {
       console.error("Error deleting team:", error);
     } finally {

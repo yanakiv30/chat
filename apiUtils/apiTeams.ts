@@ -49,6 +49,5 @@ export async function deleteTeam(id: number) {
     const errorData = await response.json();
     throw new Error(errorData.error || 'Failed to delete team');
   }
-
-  return response.json();
+//  return response.json();
 }
