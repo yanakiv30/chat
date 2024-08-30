@@ -1,14 +1,13 @@
-import { NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import type { Database } from '@/types/supabase';
+import { NextResponse } from "next/server";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import type { Database } from "@/types/supabase";
+import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
+
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const loggedInUserId = searchParams.get('userId');
-  if (!loggedInUserId) {
-    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
-  }
+  const loggedInUserId = await getUserIdFromAuth();
+
   const supabase = createRouteHandlerClient<Database>({ cookies });
   try {
     // Helper functions
@@ -73,7 +72,7 @@ export async function GET(request: Request) {
     }));
     return NextResponse.json(teamsWithMembers);
   } catch (error) {
-    console.error('Error in getTeams:', error);
+    console.error("Error in getTeams:", error);
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
   }
 }
@@ -82,10 +81,16 @@ export async function POST(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
   try {
     const newTeam = await request.json();
-    const { data, error } = await supabase.from("teams").insert(newTeam).select();
+    const { data, error } = await supabase
+      .from("teams")
+      .insert(newTeam)
+      .select();
 
     if (error) {
-      return NextResponse.json({ error: "New group could not be created: " + error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: "New group could not be created: " + error.message },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(data);
@@ -99,10 +104,17 @@ export async function PUT(request: Request) {
 
   try {
     const { id, ...updateData } = await request.json();
-    const { data, error } = await supabase.from("teams").update(updateData).eq('id', id).select();
+    const { data, error } = await supabase
+      .from("teams")
+      .update(updateData)
+      .eq("id", id)
+      .select();
 
     if (error) {
-      return NextResponse.json({ error: "Team could not be updated: " + error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: "Team could not be updated: " + error.message },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(data);
@@ -116,10 +128,13 @@ export async function DELETE(request: Request) {
 
   try {
     const { id } = await request.json();
-    const { error } = await supabase.from("teams").delete().eq('id', id);
+    const { error } = await supabase.from("teams").delete().eq("id", id);
 
     if (error) {
-      return NextResponse.json({ error: "Team could not be deleted: " + error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: "Team could not be deleted: " + error.message },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ message: "Team deleted successfully" });
