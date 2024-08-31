@@ -7,8 +7,13 @@ import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
 
 export async function GET() {
   const loggedInUserId = await getUserIdFromAuth();
+  
+  if (!loggedInUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const supabase = createRouteHandlerClient<Database>({ cookies });
+
   try {
     // Helper functions
     const getTeamsIds = async () => {
@@ -19,32 +24,42 @@ export async function GET() {
       if (error) throw new Error("teams_members could not be loaded");
       return data.map((x) => x.team_id);
     };
-    const getMembersInTeams = async () => {
-      const { data, error } = await supabase.from("teams_members").select();
+
+    const getMembersInTeams = async (teamIds: number[]) => {
+      const { data, error } = await supabase
+        .from("teams_members")
+        .select()
+        .in("team_id", teamIds);
       if (error) throw new Error("Team Members could not be loaded");
       return data;
     };
-    const getMessagesInTeams = async () => {
+
+    const getMessagesInTeams = async (teamIds: number[]) => {
       const { data, error } = await supabase
         .from("messages")
         .select()
+        .in("team_id", teamIds)
         .order("created_at", { ascending: true });
       if (error) throw new Error("Team Messages could not be loaded");
       return data;
     };
-    const getUsers = async () => {
+
+    const getUsers = async (userIds: number[]) => {
       const { data, error } = await supabase
         .from("users")
-        .select("username,id,avatar,status,created_at");
+        .select("username,id,avatar,status,created_at")
+        .in("id", userIds);
       if (error) throw new Error("Users could not be loaded");
       return data;
     };
+
     // Helper function
     const getHourDayDate = (date: Date) => ({
       hour: date.getHours(),
       day: date.getDate(),
       date: date.toISOString(),
     });
+
     // Main logic
     const teamsIds = await getTeamsIds();
     const { data: teamsData, error } = await supabase
@@ -52,14 +67,25 @@ export async function GET() {
       .select("*")
       .in("id", teamsIds);
     if (error) throw new Error("Teams could not be loaded");
-    const membersInTeams = await getMembersInTeams();
-    const messagesInTeams = await getMessagesInTeams();
-    const users = await getUsers();
+
+    const membersInTeams = await getMembersInTeams(teamsIds);
+    const messagesInTeams = await getMessagesInTeams(teamsIds);
+    
+    const userIds = [...new Set(membersInTeams.map(m => m.user_id))];
+    const users = await getUsers(userIds);
+
     const teamsWithMembers = teamsData.map((team) => ({
       ...team,
       members: membersInTeams
         .filter((tm) => tm.team_id === team.id)
-        .map((tm) => users.find((user) => user.id === tm.user_id)!),
+        .map((tm) => users.find((user) => user.id === tm.user_id)!)
+        .map(user => ({
+          id: user.id,
+          username: user.username,
+          avatar: user.avatar,
+          status: user.status,
+          // Omit other sensitive information
+        })),
       messages: messagesInTeams
         .filter((row) => row.team_id === team.id)
         .map((row) => ({
@@ -70,12 +96,14 @@ export async function GET() {
           ...getHourDayDate(new Date(row.created_at!)),
         })),
     }));
+
     return NextResponse.json(teamsWithMembers);
   } catch (error) {
     console.error("Error in getTeams:", error);
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
   }
 }
+
 
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
@@ -85,7 +113,7 @@ export async function POST(request: Request) {
       .from("teams")
       .insert(newTeam)
       .select();
-    
+
     if (error) {
       return NextResponse.json(
         { error: "New group could not be created: " + error.message },
