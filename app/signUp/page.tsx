@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setLoggedInUser } from "../../store/userSlice";
 import { useEffect, useState } from "react";
-import { handleSignUp } from './signupActions';
+//import { handleSignUp } from './signupActions';
 
 export default function SignUp(incomingUserProp: any) {
   const incomingUser = incomingUserProp.incomingUser;

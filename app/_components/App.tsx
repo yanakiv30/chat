@@ -34,7 +34,7 @@ function App({ initialUsers }: AppProps) {
 
   const loadTeams = useCallback(() => {
     if (!loggedInUser) return;
-    fetchTeams(+loggedInUser.id)
+    fetchTeams()
       .then((data) => dispatch(setTeams(data)))
       .catch((error) => console.error("Error fetching teams", error));
   }, [dispatch, loggedInUser]);

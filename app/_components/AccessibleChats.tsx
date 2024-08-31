@@ -38,7 +38,7 @@ function AccessibleChats() {
         loggedInUser!.id,
         userId,
       ]);
-      fetchTeams(+loggedInUser!.id)
+      fetchTeams()
         .then((data) => {
           dispatch(setTeams(data));
           router.push(`/messages/${doubleViewGroupId}`);

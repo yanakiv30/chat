@@ -1,17 +1,17 @@
-import { Message } from "../../store/groupSlice";
-import { getHourDayDate } from "../utils/messageUtils";
-import { supabase } from "./supabase";
+// import { Message } from "../../store/groupSlice";
+// import { getHourDayDate } from "../utils/messageUtils";
+// import { supabase } from "./supabase";
 
-export async function getUsers() {
-  const { data, error } = await supabase
-    .from("users")
-    .select("username,id,avatar,status,created_at"); 
-  if (error) {
-    console.error(error);
-    throw new Error("Users could not be loaded");
-  }
-  return data;
-}
+// export async function getUsers() {
+//   const { data, error } = await supabase
+//     .from("users")
+//     .select("username,id,avatar,status,created_at"); 
+//   if (error) {
+//     console.error(error);
+//     throw new Error("Users could not be loaded");
+//   }
+//   return data;
+// }
 
 // export async function getTeams(loggedInUserId: number) {
 //   const teamsIds = await getTeamsIds();
