@@ -1,10 +1,24 @@
-export async function fetchTeams(loggedInUserId: number) {
-  const response = await fetch(`/api/teams?userId=${loggedInUserId}`);
+// export async function fetchTeams(loggedInUserId: number) {
+//   const response = await fetch(`/api/teams?userId=${loggedInUserId}`);
+//   if (!response.ok) {
+//     throw new Error('Failed to fetch teams');
+//   }
+//   return response.json();
+// }
+export async function fetchTeams() {
+  const response = await fetch('/api/teams', {
+    method: 'GET',
+    credentials: 'include', // This is important for including cookies in the request
+  });
   if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error('Unauthorized: Please log in to fetch teams');
+    }
     throw new Error('Failed to fetch teams');
   }
   return response.json();
 }
+
 
 export async function createTeam(newTeam: { name: string }) {
   const response = await fetch('/api/teams', {

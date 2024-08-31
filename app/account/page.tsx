@@ -6,15 +6,15 @@ import SignUp from '../../app/signup/page';
 import { redirect } from 'next/navigation';
 
 async function Page() {
+  
   const session = await auth();
-  
-  const sessionImage = session?.user?.image;
-  const userFromGoogle = session?.user?.name;
-  const emailFromGoogle = session?.user?.email;
-  
-  if (!emailFromGoogle) {
-    throw new Error("Email from Google is missing");
+  if (!session || !session.user) {
+    redirect('/login');
   }
+  const { user } = session;
+  const emailFromGoogle = user.email;
+  const userFromGoogle = user.name;
+  const sessionImage = user.image;
   
   const { data: existingUser, error: fetchError } = await supabase
     .from("users")

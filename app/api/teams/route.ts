@@ -5,7 +5,7 @@ import type { Database } from "@/types/supabase";
 import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
 
 
-export async function GET(request: Request) {
+export async function GET() {
   const loggedInUserId = await getUserIdFromAuth();
 
   const supabase = createRouteHandlerClient<Database>({ cookies });
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
       .from("teams")
       .insert(newTeam)
       .select();
-
+    
     if (error) {
       return NextResponse.json(
         { error: "New group could not be created: " + error.message },
