@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import type { Database } from '@/types/supabase';
+import { getUserIdFromAuth } from '@/app/utils/getUserIdFromAuth';
 
 export async function GET(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
@@ -69,18 +70,35 @@ export async function PUT(request: Request) {
   }
 }
 
+
 export async function DELETE(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
+    const authUserId = await getUserIdFromAuth();
+    if (!authUserId) {
+      return NextResponse.json({ error: "User not authenticated" }, { status: 401 });
+    }
     const { id } = await request.json();
-    const { error } = await supabase
+    const { data: message, error: fetchError } = await supabase
+      .from("messages")
+      .select("id, sender_id")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !message) {
+      return NextResponse.json({ error: "Message not found" }, { status: 404 });
+    }
+        if (message.sender_id !==authUserId) {
+      return NextResponse.json({ error: "You are not authorized to delete this message" }, { status: 403 });
+    }
+    const { error: deleteError } = await supabase
       .from("messages")
       .delete()
       .eq("id", id);
 
-    if (error) {
-      return NextResponse.json({ error: "Message could not be deleted: " + error.message }, { status: 500 });
+    if (deleteError) {
+      return NextResponse.json({ error: "Message could not be deleted: " + deleteError.message }, { status: 500 });
     }
 
     return NextResponse.json({ message: "Message deleted successfully" });
@@ -89,3 +107,25 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
   }
 }
+
+
+// export async function DELETE(request: Request) {
+//   const supabase = createRouteHandlerClient<Database>({ cookies });
+
+//   try {
+//     const { id } = await request.json();
+//     const { error } = await supabase
+//       .from("messages")
+//       .delete()
+//       .eq("id", id);
+
+//     if (error) {
+//       return NextResponse.json({ error: "Message could not be deleted: " + error.message }, { status: 500 });
+//     }
+
+//     return NextResponse.json({ message: "Message deleted successfully" });
+//   } catch (error) {
+//     console.error('Error in deleteMessage:', error);
+//     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
+//   }
+// }
