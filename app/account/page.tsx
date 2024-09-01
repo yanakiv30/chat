@@ -4,6 +4,7 @@ import { auth } from "../_services/auth";
 import { supabase } from "../_services/supabase";
 import SignUp from '../../app/signup/page';
 import { redirect } from 'next/navigation';
+import { fetchUserByEmailServer, insertNewUserServer } from "@/apiUtils/apiUsersServer";
 
 async function Page() {
   
@@ -16,13 +17,12 @@ async function Page() {
   const userFromGoogle = user.name;
   const sessionImage = user.image;
   
-  const { data: existingUser, error: fetchError } = await supabase
-    .from("users")
-    .select("*")
-    .eq("email", emailFromGoogle)
-    .single();
-  
-  console.log("Supabase response: ", { existingUser, fetchError });
+  const { existingUser, fetchError } = await fetchUserByEmailServer(emailFromGoogle!);  
+  if (fetchError) {
+    console.error('Error fetching user:', fetchError);
+  } else {
+    console.log('Fetched user:', existingUser);
+  }
 
   if (fetchError && fetchError.code !== 'PGRST116') {
     throw new Error(fetchError.message);
@@ -57,15 +57,10 @@ async function Page() {
   };
 
   try {
-    const { data, error } = await supabase
-      .from("users")
-      .insert([newUser])
-      .select();
-    
+    const { data, error } = await insertNewUserServer(newUser);
     if (error) {
-      throw new Error(error.message);
+      console.error('Error inserting user:', error);
     }
-    
     const userWithId = data[0];
     console.log("New User created: ", userWithId);
     

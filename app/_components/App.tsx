@@ -15,7 +15,7 @@ import { toast } from "react-toastify";
 import { supabase } from "../_services/supabase";
 import { redirect } from "next/navigation";
 import Empty from "./Empty";
-import { fetchUsersClient } from "@/apiUtils/apiUsers";
+import { fetchUsersClient } from "@/apiUtils/apiUsersClient";
 import { fetchTeams } from "@/apiUtils/apiTeams";
 type UserSup = {
   username: string;
