@@ -35,20 +35,28 @@ export default function GroupMessages() {
   
   async function handleSendGroupMessage(message: string, imagePath?: string) {
     if (message.trim() !== "" || imagePath) {
-      const newGroupMessageObject = {
-        sender_id: loggedInUser!.id,
-        team_id: groupInListId,
-        type: imagePath ? "image" : "text",
-        message: message,
-        image_path: imagePath || null,
-      };
       dispatch(setIsLoading(true));
       try {
-       await createMessage(newGroupMessageObject)
+        const response = await fetch('/api/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            team_id: groupInListId,
+            message: message.trim(),
+            image_path: imagePath,
+          }),
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to create message');
+        }
+  
+        const data = await response.json();
+        // Handle the successful message creation (e.g., update local state)
       } catch (error) {
-        const errorMessage = "Error creating Group message: " + error;
-        console.error(errorMessage);
-        alert(errorMessage);
+        console.error("Error creating Group message:", error);
+        alert("Error creating Group message: " + error);
       } finally {
         dispatch(setIsLoading(false));
       }

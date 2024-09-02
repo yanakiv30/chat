@@ -27,11 +27,52 @@ export async function GET(request: Request) {
   }
 }
 
+// export async function POST(request: Request) {
+//   const supabase = createRouteHandlerClient<Database>({ cookies });
+
+//   try {
+//     const newGroupMessageObject = await request.json();
+//     const { data, error } = await supabase
+//       .from("messages")
+//       .insert(newGroupMessageObject)
+//       .select();
+
+//     if (error) {
+//       return NextResponse.json({ error: "Message could not be created: " + error.message }, { status: 500 });
+//     }
+
+//     return NextResponse.json(data);
+//   } catch (error) {
+//     console.error('Error in createMessage:', error);
+//     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
+//   }
+// }
+
+
+
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
-    const newGroupMessageObject = await request.json();
+    const authUserId = await getUserIdFromAuth();
+    if (!authUserId) {
+      return NextResponse.json({ error: "User not authenticated" }, { status: 401 });
+    }
+    const { team_id, message, image_path } = await request.json();    // Validate required fields
+    if (!team_id || (!message && !image_path)) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const newGroupMessageObject = {
+      sender_id: authUserId,
+      team_id,
+      type: image_path ? "image" : "text",
+      message: message || '',
+      image_path: image_path || null,
+      created_at: new Date().toISOString(),
+    };
+
+    // Insert the new message into the database
     const { data, error } = await supabase
       .from("messages")
       .insert(newGroupMessageObject)
@@ -47,6 +88,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
   }
 }
+
 
 export async function PUT(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
