@@ -36,9 +36,7 @@ function Avatar({ name }: AvatarProps) {
 
   const handleImageLoad = () => {
     setIsLoading(false); // Set loading to false once the image is loaded
-  };
-
-  console.log("name= ", name);
+  };  
 
   return (
     <>

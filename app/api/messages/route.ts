@@ -50,9 +50,24 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
-
+  
   try {
+    const authUserId = await getUserIdFromAuth();
     const { id, message } = await request.json();
+
+    const { data: row, error: fetchError } = await supabase
+    .from("messages")
+    .select("id, sender_id")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !row) {
+    return NextResponse.json({ error: "Message not found" }, { status: 404 });
+  }
+      if (row.sender_id !==authUserId) {
+    return NextResponse.json({ error: "You are not authorized to update this message" }, { status: 403 });
+  }
+
     const { data, error } = await supabase
       .from("messages")
       .update({ message })
