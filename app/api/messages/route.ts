@@ -6,48 +6,26 @@ import { cookies } from 'next/headers';
 import type { Database } from '@/types/supabase';
 import { getUserIdFromAuth } from '@/app/utils/getUserIdFromAuth';
 
-export async function GET(request: Request) {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
-
-  try {
-    const { data, error } = await supabase
-      .from("messages")
-      .select()
-      .order("created_at", { ascending: true });
-
-    if (error) {
-      console.error(error);
-      return NextResponse.json({ error: "Team Messages could not be loaded" }, { status: 500 });
-    }
-    
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error in getMessages:', error);
-    return NextResponse.json({ error: "An error occurred" }, { status: 500 });
-  }
-}
-
-// export async function POST(request: Request) {
+// export async function GET(request: Request) {
 //   const supabase = createRouteHandlerClient<Database>({ cookies });
 
 //   try {
-//     const newGroupMessageObject = await request.json();
 //     const { data, error } = await supabase
 //       .from("messages")
-//       .insert(newGroupMessageObject)
-//       .select();
+//       .select()
+//       .order("created_at", { ascending: true });
 
 //     if (error) {
-//       return NextResponse.json({ error: "Message could not be created: " + error.message }, { status: 500 });
+//       console.error(error);
+//       return NextResponse.json({ error: "Team Messages could not be loaded" }, { status: 500 });
 //     }
-
+    
 //     return NextResponse.json(data);
 //   } catch (error) {
-//     console.error('Error in createMessage:', error);
+//     console.error('Error in getMessages:', error);
 //     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
 //   }
 // }
-
 
 
 export async function POST(request: Request) {
