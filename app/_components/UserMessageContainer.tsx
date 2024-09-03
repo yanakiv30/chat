@@ -6,7 +6,8 @@ import { rightMessage } from "../utils/messageUtils";
 import { setIsEdit, setMesContent, setMessageId } from "../../store/userSlice";
 import { useAppSelector } from "../../store/store";
 import { Message } from "../../store/groupSlice";
-import { deleteImage, getImageUrl } from "../api/images/route";
+import { deleteImage, getImageUrl } from "@/apiUtils/apiImages";
+
 
 export default function UserMessagesContainer({
   loggedInUser,

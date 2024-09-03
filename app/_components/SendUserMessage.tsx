@@ -1,7 +1,8 @@
 "use client";
 
+import { uploadImage } from "@/apiUtils/apiImages";
 import React, { useState, ChangeEvent, useRef } from "react";
-import { uploadImage } from "../api/images/route";
+
 
 interface SendUserMessageProps {
   newMessage: string;
