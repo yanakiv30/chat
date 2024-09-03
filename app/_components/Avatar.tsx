@@ -1,33 +1,8 @@
-// "use client";
-// interface AvatarProps {
-//   name: string | undefined;
-// }
-
-// function Avatar({ name }: AvatarProps) {
-//   const firstLetter = name ? name[0].toUpperCase() : "Z";
- 
-// console.log("name= ",name);
-//   return (
-//     <>
-//       {name?.startsWith("http") ? (
-//         <img
-//           src={name}
-//           alt="Profile"
-//           style={{ width: "7%", height: "90%", borderRadius: "50%" }}
-//         />
-//       ) : (
-//         <div className="avatar">{firstLetter}</div>
-//       )}
-//     </>
-//   );
-// }
-// export default Avatar;
-
- "use client";
+"use client";
 
 import { useState } from "react";
 
- interface AvatarProps {
+interface AvatarProps {
   name: string | undefined;
 }
 function Avatar({ name }: AvatarProps) {
@@ -36,7 +11,7 @@ function Avatar({ name }: AvatarProps) {
 
   const handleImageLoad = () => {
     setIsLoading(false); // Set loading to false once the image is loaded
-  };  
+  };
 
   return (
     <>

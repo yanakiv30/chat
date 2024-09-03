@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 //         const passwordMatch = await bcrypt.compare(password, data.password);
   
 //         if (passwordMatch) {
-//           console.log("User found:", data);
+//          
 //           return { success: true, redirectTo: "/dashboard", data: data };
 //         } else {
 //           return {

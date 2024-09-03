@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link";
-//import { NavLink } from "react-router-dom";
+
 import { setLoggedInUser } from "../../store/userSlice";
 import { useDispatch } from "react-redux";
 export default function LogoLogout() {

@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
-//import { useNavigate, useParams } from "react-router-dom";
+
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
-//import supabase from "../services/supabase";
+
 import { deleteTeamById } from "../../store/groupSlice";
 import { supabase } from "../_services/supabase";
 import { useParams, useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ export default function SettingsGroup() {
   const dispatch = useDispatch();
   const { localTeams } = useAppSelector((store) => store.group);
   const { loggedInUser } = useAppSelector((store) => store.user);
-  if(!loggedInUser)router.push("/");
+  if (!loggedInUser) router.push("/");
   const idSettings = +params.groupId!;
   const teamToSet = localTeams.find((team) => team.id === idSettings)!;
   let membersArr: any = [];
@@ -23,14 +23,13 @@ export default function SettingsGroup() {
 
   async function removeMe(teamId: number, userId: number) {
     try {
-      await  removeUserFromTeam(teamId, userId)         
+      await removeUserFromTeam(teamId, userId);
     } catch (error) {
       console.error("Error removing uder from team:", error);
     }
-    
+
     dispatch(deleteTeamById(teamId));
     router.push("/dashboard");
-  
   }
 
   return (
