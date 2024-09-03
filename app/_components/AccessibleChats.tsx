@@ -7,8 +7,11 @@ import { setTeams } from "../../store/groupSlice";
 import { createTeamWithMembers } from "../utils/createTeam";
 import { useRouter } from "next/navigation";
 import { fetchTeams } from "@/apiUtils/apiTeams";
+import { useState } from "react";
 
 function AccessibleChats() {
+  const [disabledUserId, setDisabledUserId] = useState<number | null>(null);
+
   const { searchQuery, users, loggedInUser } = useAppSelector(
     (store) => store.user
   );
@@ -28,6 +31,9 @@ function AccessibleChats() {
     );
   }
   async function handleUserClicked(userId: number) {
+    if (disabledUserId === userId) return; 
+    setDisabledUserId(userId); 
+
     const doubleViewGroup = localTeams.find(
       (team) =>
         team.name === "" && team.members.some((user) => user.id === userId)
@@ -45,6 +51,10 @@ function AccessibleChats() {
         })
         .catch((error) => console.error("Error fetching teams", error));
     }
+    setTimeout(() => {
+      setDisabledUserId(null); // Re-enable the button
+    }, 4000);
+
   }
 
   return (
@@ -60,7 +70,8 @@ function AccessibleChats() {
             <li key={user.id}>
               <div style={{ display: "flex", gap: "5px" }}>
                 <Avatar name={user.avatar} />
-                <button onClick={() => handleUserClicked(user.id)}>
+                <button onClick={() => handleUserClicked(user.id)}
+                  disabled={disabledUserId === user.id} >
                   {user.username}
                 </button>
               </div>
