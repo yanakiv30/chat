@@ -31,31 +31,33 @@ function AccessibleChats() {
     );
   }
   async function handleUserClicked(userId: number) {
-    if (disabledUserId === userId) return; 
-    setDisabledUserId(userId); 
+    if (disabledUserId === userId) return;
+    setDisabledUserId(userId);
 
-    const doubleViewGroup = localTeams.find(
-      (team) =>
-        team.name === "" && team.members.some((user) => user.id === userId)
-    );
-    if (doubleViewGroup) router.push(`/messages/${doubleViewGroup.id}`);
-    else {
-      const doubleViewGroupId = await createTeamWithMembers("", [
-        loggedInUser!.id,
-        userId,
-      ]);
-      fetchTeams()
-        .then((data) => {
-          dispatch(setTeams(data));
-          router.push(`/messages/${doubleViewGroupId}`);
-        })
-        .catch((error) => console.error("Error fetching teams", error));
+    try {
+        const doubleViewGroup = localTeams.find(
+            (team) =>
+                team.name === "" && team.members.some((user) => user.id === userId)
+        );
+
+        if (doubleViewGroup) {
+            router.push(`/messages/${doubleViewGroup.id}`);
+        } else {
+            const doubleViewGroupId = await createTeamWithMembers("", [
+                loggedInUser!.id,
+                userId,
+            ]);
+            const data = await fetchTeams();
+            dispatch(setTeams(data));
+            router.push(`/messages/${doubleViewGroupId}`);
+        }
+    } catch (error) {
+        console.error("Error occurred:", error);
+    } finally {        
+        setDisabledUserId(null);
     }
-    setTimeout(() => {
-      setDisabledUserId(null); // Re-enable the button
-    }, 4000);
+}
 
-  }
 
   return (
     <ul>
