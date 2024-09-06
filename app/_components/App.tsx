@@ -34,13 +34,13 @@ function App({ initialUsers }: AppProps) {
 
   const loadTeams = useCallback(() => {
     if (!loggedInUser) return;
-    fetchTeams()
+   return fetchTeams()
       .then((data) => dispatch(setTeams(data)))
       .catch((error) => console.error("Error fetching teams", error));
   }, [dispatch, loggedInUser]);
 
   const loadUsers = useCallback(() => {
-    fetchUsersClient()
+    return fetchUsersClient()
       .then((data) => {
         dispatch(setUsers(data));
       })
@@ -53,98 +53,22 @@ function App({ initialUsers }: AppProps) {
   }, [initialUsers, dispatch, loadTeams]);
 
   useEffect(() => {
-    const findTeamNameById = (id: number, senderId: number) => {
-      const team = localTeams.find((team) => team.id === id);
-      if (!team) return "Unknown/Empty team";
-      if (team.name === "")
-        return team.members.find((member) => member.id !== loggedInUser?.id)
-          ?.username;
-      return team.name;
+   
+    let pollingRequestFinish= true;
+       const interval= setInterval(async()=>{
+          if(!pollingRequestFinish) return;
+          console.log("polling");
+          pollingRequestFinish = false;
+          await loadUsers();
+          await loadTeams();
+          pollingRequestFinish = true;
+        },4000)
+    
+    return () => {
+      
+      clearInterval(interval);
     };
-
-    function findReceivers(id: number, senderId: number) {
-      const team = localTeams.find((team) => team.id === id);
-      const receivers = team?.members.filter(
-        (member) => member.id !== senderId
-      );
-      return receivers;
-    }
-
-    const messageSubscription = supabase
-      .channel("messages")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
-        (payload) => {
-          if (
-            findReceivers(payload.new.team_id, payload.new.sender_id)?.map(
-              (receiver) => {
-                receiver.id === loggedInUser?.id &&
-                  toast.success(
-                    `New message from "${findTeamNameById(
-                      payload.new.team_id,
-                      payload.new.sender_id
-                    )}"`
-                  );
-                return null;
-              }
-            )
-          )
-            dispatch(setIsDeleteTeam(false));
-          dispatch(setTeamWithNewMessage(payload.new));
-          loadTeams();
-        }
-      )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "messages" },
-        (payload) => {
-          loadTeams();
-        }
-      )
-      .on(
-        "postgres_changes",
-        { event: "DELETE", schema: "public", table: "messages" },
-        (payload) => {
-          loadTeams();
-        }
-      )
-      .subscribe();
-
-    const userSubscription = supabase
-      .channel("users")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "users" },
-        (payload) => {
-          try {
-            loadUsers();
-            loadTeams();
-          } catch (error) {
-            console.error("Error updating users or teams", error);
-          }
-        }
-      )
-      .subscribe();
-
-    const teamsSubscription = supabase
-      .channel("teams")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "teams" },
-        loadTeams
-      )
-      .subscribe();
-
-    const teamsMembersSubscription = supabase
-      .channel("teams_members")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "teams_members" },
-        loadTeams
-      )
-      .subscribe();
-  }, [dispatch, loadTeams, loadUsers, localTeams, loggedInUser]);
+  }, [loadTeams, loadUsers]);
 
   if (!loggedInUser) {
     redirect("/login");
