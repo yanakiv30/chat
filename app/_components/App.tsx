@@ -28,47 +28,12 @@ interface AppProps {
   initialUsers: UserSup[];
 }
 function App({ initialUsers }: AppProps) {
-  const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user);
-  const { localTeams } = useAppSelector((store) => store.group);
-
-  const loadTeams = useCallback(() => {
-    if (!loggedInUser) return;
-   return fetchTeams()
-      .then((data) => dispatch(setTeams(data)))
-      .catch((error) => console.error("Error fetching teams", error));
-  }, [dispatch, loggedInUser]);
-
-  const loadUsers = useCallback(() => {
-    return fetchUsersClient()
-      .then((data) => {
-        dispatch(setUsers(data));
-      })
-      .catch((error) => console.error("Error fetching users", error));
-  }, [dispatch]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(setUsers(initialUsers));
-    loadTeams();
-  }, [initialUsers, dispatch, loadTeams]);
-
-  useEffect(() => {
-   
-    let pollingRequestFinish= true;
-       const interval= setInterval(async()=>{
-          if(!pollingRequestFinish) return;
-          console.log("polling");
-          pollingRequestFinish = false;
-          await loadUsers();
-          await loadTeams();
-          pollingRequestFinish = true;
-        },4000)
-    
-    return () => {
-      
-      clearInterval(interval);
-    };
-  }, [loadTeams, loadUsers]);
+  }, [initialUsers, dispatch]);
 
   if (!loggedInUser) {
     redirect("/login");
