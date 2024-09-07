@@ -16,7 +16,7 @@ function ChatMembersList() {
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const { localTeams } = useAppSelector((store) => store.group);
-  const lastFetchedTeamsRef = useRef(localTeams);
+  const lastFetchedTeamsRef = useRef<Team[]>(localTeams);
 
   const findTeamNameById = useCallback((id: number, senderId: number) => {
     const team = localTeams.find((team) => team.id === id);
@@ -32,7 +32,7 @@ function ChatMembersList() {
   }, [localTeams]);
 
   const loadTeams = useCallback(() => {
-    if (!loggedInUser) return Promise.resolve();
+    if (!loggedInUser) return Promise.resolve<Team[]>([]);
     return fetchTeams()
       .then((data) => {
         dispatch(setTeams(data));
@@ -66,22 +66,30 @@ function ChatMembersList() {
         const oldTeam = lastFetchedTeamsRef.current.find(t => t.id === newTeam.id);
         if (oldTeam && newTeam.messages.length > oldTeam.messages.length) {
           const newMessage = newTeam.messages[newTeam.messages.length - 1];
+          // console.log("newTeam",newTeam);
+          // console.log("newMessage",newMessage);
           if (newMessage.senderId !== loggedInUser?.id) {
-            toast.success(`New message from "${findTeamNameById(newTeam.id, newMessage.senderId)}"`);
-            dispatch(setIsDeleteTeam(false));
-            dispatch(setTeamWithNewMessage(newMessage));
+            const receivers = findReceivers(newTeam.id, newMessage.senderId);
+            if (receivers?.some(receiver => receiver.id === loggedInUser?.id)) {
+              toast.success(`New message from "${findTeamNameById(newTeam.id, newMessage.senderId)}"`);
+              dispatch(setIsDeleteTeam(false));
+              dispatch(setTeamWithNewMessage({ 
+                team_id: newTeam.id,
+                sender_id: newMessage.senderId
+              }));
+            }
           }
         }
       });
 
       lastFetchedTeamsRef.current = newTeams;
       pollingRequestFinish = true;
-    }, 2000);
+    }, 4000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [loadTeams, loadUsers, findTeamNameById, loggedInUser, dispatch]);
+  }, [loadTeams, loadUsers, findTeamNameById, findReceivers, loggedInUser, dispatch]);
   return (
     <div className="user-list-container">
       <LogoLogout />

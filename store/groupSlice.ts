@@ -16,7 +16,7 @@ export type Team = {
   messages: Message[];
 };
 export type Flash = { [key: string]: boolean };
-export type Payload = {
+export type Payload = { 
   team_id: number;
   sender_id: number;
 };
