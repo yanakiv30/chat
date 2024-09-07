@@ -23,7 +23,7 @@ export default function GroupList() {
   const { localTeams, teamWithNewMessage, isDeleteTeam } = useAppSelector(
     (store) => store.group
   );
-// console.log("teamWithNewMessage", teamWithNewMessage)
+
   const [flashedTeamsIdsLog, setFlashedTeamsIdsLog] = useState(
     {} as { [key: number]: number }
   );
@@ -65,7 +65,7 @@ export default function GroupList() {
       ? router.push(`/groups/${team.id}`)
       : router.push(`/messages/${team.id}`);
   }
-  console.log("flashedTeamsIdsLog", flashedTeamsIdsLog)
+  
   return (
     <div>
       {isLoading && <Spinner />}
