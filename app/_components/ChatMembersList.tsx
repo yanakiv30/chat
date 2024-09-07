@@ -1,13 +1,12 @@
-"use client";
-
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
+import { toast } from "react-toastify";
 import LogoLogout from "./LogoLogout";
 import IconAndSearch from "./IconAndSearch";
 import AccessibleChats from "./AccessibleChats";
 import GroupList from "./GroupList";
 import { fetchTeams } from "@/apiUtils/apiTeams";
 import { fetchUsersClient } from "@/apiUtils/apiUsersClient";
-import { setTeams } from "@/store/groupSlice";
+import { setTeams, setIsDeleteTeam, setTeamWithNewMessage, Team } from "@/store/groupSlice";
 import { useAppSelector } from "@/store/store";
 import { setUsers } from "@/store/userSlice";
 import { useDispatch } from "react-redux";
@@ -16,12 +15,33 @@ function ChatMembersList() {
   const [isNewChatOpen, setIsNewChatOpen] = useState(false);
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user);
+  const { localTeams } = useAppSelector((store) => store.group);
+  const lastFetchedTeamsRef = useRef(localTeams);
+
+  const findTeamNameById = useCallback((id: number, senderId: number) => {
+    const team = localTeams.find((team) => team.id === id);
+    if (!team) return "Unknown/Empty team";
+    if (team.name === "")
+      return team.members.find((member) => member.id !== loggedInUser?.id)?.username;
+    return team.name;
+  }, [localTeams, loggedInUser]);
+
+  const findReceivers = useCallback((id: number, senderId: number) => {
+    const team = localTeams.find((team) => team.id === id);
+    return team?.members.filter((member) => member.id !== senderId);
+  }, [localTeams]);
 
   const loadTeams = useCallback(() => {
-    if (!loggedInUser) return;
+    if (!loggedInUser) return Promise.resolve();
     return fetchTeams()
-      .then((data) => dispatch(setTeams(data)))
-      .catch((error) => console.error("Error fetching teams", error));
+      .then((data) => {
+        dispatch(setTeams(data));
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error fetching teams", error);
+        return [];
+      });
   }, [dispatch, loggedInUser]);
 
   const loadUsers = useCallback(() => {
@@ -33,24 +53,35 @@ function ChatMembersList() {
   }, [dispatch]);
 
   useEffect(() => {
-    loadTeams();
-  }, [loadTeams]);
-
-  useEffect(() => {
     let pollingRequestFinish = true;
     const interval = setInterval(async () => {
       if (!pollingRequestFinish) return;
       console.log("polling");
       pollingRequestFinish = false;
       await loadUsers();
-      await loadTeams();
+      const newTeams = await loadTeams();
+      
+      // Check for new messages
+      newTeams.forEach((newTeam: Team) => {
+        const oldTeam = lastFetchedTeamsRef.current.find(t => t.id === newTeam.id);
+        if (oldTeam && newTeam.messages.length > oldTeam.messages.length) {
+          const newMessage = newTeam.messages[newTeam.messages.length - 1];
+          if (newMessage.senderId !== loggedInUser?.id) {
+            toast.success(`New message from "${findTeamNameById(newTeam.id, newMessage.senderId)}"`);
+            dispatch(setIsDeleteTeam(false));
+            dispatch(setTeamWithNewMessage(newMessage));
+          }
+        }
+      });
+
+      lastFetchedTeamsRef.current = newTeams;
       pollingRequestFinish = true;
     }, 2000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [loadTeams, loadUsers]);
+  }, [loadTeams, loadUsers, findTeamNameById, loggedInUser, dispatch]);
   return (
     <div className="user-list-container">
       <LogoLogout />
