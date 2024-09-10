@@ -54,3 +54,4 @@ export const deleteImage = async (path: string): Promise<boolean> => {
     return false;
   }
 };
+
