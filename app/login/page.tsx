@@ -1,6 +1,5 @@
 
 import { Metadata } from "next";
-import { supabase } from "../_services/supabase";
 import LoginForm from "../_components/LoginForm";
 
 export const metadata: Metadata = {
@@ -8,80 +7,8 @@ export const metadata: Metadata = {
   description: "Login to chat",
 };
 
-// export default function Login({
-//   searchParams,
-//  }: {
-//   searchParams: { message: string };
-//  }) {
-//   const message = searchParams.message;
 
-//   async function handleLogin(formData: FormData) {
-//     "use server";
-//     const username = formData.get("username") as string;
-//     const password = formData.get("password") as string;
-//     const bcrypt = await import('bcrypt');
-  
-//     try {
-//       const { data, error } = await supabase
-//         .from("users")
-//         .select()
-//         .eq("username", username)
-//         .single();
-  
-//       if (error) {
-//         return {
-//           success: false,
-//           error: "Error querying the database: " + error.message,
-//         };
-//       }
-  
-//       if (data) {
-//         // Check if the user's email is verified
-//         if (!data.is_verified) {
-//           return {
-//             success: false,
-//             error: "Please verify your email before logging in.",
-//           };
-//         }
-  
-//         // Compare the provided password with the stored hash
-//         const passwordMatch = await bcrypt.compare(password, data.password);
-  
-//         if (passwordMatch) {
-//          
-//           return { success: true, redirectTo: "/dashboard", data: data };
-//         } else {
-//           return {
-//             success: false,
-//             error: "Invalid credentials",
-//           };
-//         }
-//       } else {
-//         return {
-//           success: false,
-//           error: "User not found",
-//         };
-//       }
-//     } catch (error: any) {
-//       return {
-//         success: false,
-//         error: "Error logging in user: " + error.message,
-//       };
-//     }
-//   }
-
-
-//   return (
-//     <div>
-//       {message && <p style={{ color: 'blue' ,fontSize:"30px"}}>{decodeURIComponent(message)}</p>}
-//       <br></br><br></br>
-//       <LoginForm handleLogin={handleLogin} />
-//     </div>
-//   );
-// }
-
-export default function Login() {
-  
+export default function Login() {  
   return (    
       <LoginForm />    
   );

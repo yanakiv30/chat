@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
 
 import { deleteTeamById } from "../../store/groupSlice";
-import { supabase } from "../_services/supabase";
+
 import { useParams, useRouter } from "next/navigation";
 import { removeUserFromTeam } from "@/apiUtils/apiTeams_members";
 export default function SettingsGroup() {

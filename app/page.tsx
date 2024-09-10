@@ -1,6 +1,3 @@
-
-
-
 import { Metadata } from "next";
 import Link from "next/link";
 import GoogleSignInButton from "./_components/GoogleSignInButton";
@@ -23,15 +20,9 @@ export default async function HomePage() {
             gap: "40px",
           }}
         >
-          {/* <Link href="/login">
-            <button style={{ fontSize: "20px" }}>Go to Login</button>
-          </Link>
-          <span style={{ fontSize: "20px" }}> or </span> */}
-          <GoogleSignInButton px={20}/>        
+          <GoogleSignInButton px={20} />
         </div>
       </div>
     </div>
   );
 }
-
-
