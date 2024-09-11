@@ -5,7 +5,7 @@ import { supabase } from "../_services/supabase";
 export async function getUserIdFromAuth() {
   const session = await auth();
   if (!session || !session.user) {
-    redirect("/login");
+    redirect("/");
   }
   const { user } = session;
   const emailFromGoogle = user.email;

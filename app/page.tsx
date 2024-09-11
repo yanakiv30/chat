@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import GoogleSignInButton from "./_components/GoogleSignInButton";
+import GithubSignInButton from "./_components/GithubSignInButton";
 export const metadata: Metadata = {
   title: "Home",
   description: "Welcome to chatSPA",
@@ -21,6 +22,7 @@ export default async function HomePage() {
           }}
         >
           <GoogleSignInButton px={20} />
+          <GithubSignInButton px={20} />
         </div>
       </div>
     </div>

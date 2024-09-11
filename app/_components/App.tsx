@@ -29,7 +29,7 @@ function App({ initialUsers }: AppProps) {
   }, [initialUsers, dispatch]);
 
   if (!loggedInUser) {
-    redirect("/login");
+    redirect("/");
   }
   return <Empty />;
 }

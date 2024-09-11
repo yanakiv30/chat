@@ -9,7 +9,7 @@ import {
 async function Page() {
   const session = await auth();
   if (!session || !session.user) {
-    redirect("/login");
+    redirect("/");
   }
   const { user } = session;
   const emailFromGoogle = user.email;
@@ -36,7 +36,7 @@ async function Page() {
       );
     } else {
       redirect(
-        "/login?message=" +
+        "/?message=" +
           encodeURIComponent(
             "An account with your Google email already exists. Please log in your existing account using this form."
           )
