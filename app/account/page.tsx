@@ -12,12 +12,12 @@ async function Page() {
     redirect("/");
   }
   const { user } = session;
-  const emailFromGoogle = user.email;
-  const userFromGoogle = user.name;
+  const emailFromProvider = user.email;
+  const userFromProvider = user.name;
   const sessionImage = user.image;
 
   const { existingUser, fetchError } = await fetchUserByEmailServer(
-    emailFromGoogle!
+    emailFromProvider!
   );
   if (fetchError) {
     console.error("Error fetching user:", fetchError);
@@ -28,7 +28,7 @@ async function Page() {
   }
 
   if (existingUser) {
-    if (existingUser.is_google_user) {
+    if (existingUser.is_provider_user) {
       return (
         <div className="background-login">
           <SignUp incomingUser={existingUser} />
@@ -45,12 +45,12 @@ async function Page() {
   }
 
   const newUser = {
-    username: userFromGoogle,
-    full_name: userFromGoogle,
+    username: userFromProvider,
+    full_name: userFromProvider,
     avatar: sessionImage,
     status: "new",
-    email: emailFromGoogle,
-    is_google_user: true,
+    email: emailFromProvider,
+    is_provider_user: true,
   };
 
   try {
