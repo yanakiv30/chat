@@ -17,7 +17,10 @@ export default function SignUp(incomingUserProp: any) {
       dispatch(setLoggedInUser(incomingUser));
       router.push("/dashboard");
     }
-    if (incomingUser) signWithProvider();
+    if (incomingUser) {
+      signWithProvider();
+      
+    }
   }, [incomingUser, dispatch, router]);
 
   if (loggedInUser) return null;
