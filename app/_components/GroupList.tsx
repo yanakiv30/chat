@@ -3,13 +3,12 @@
 import { FaCog } from "react-icons/fa";
 import Avatar from "./Avatar";
 import { useAppSelector } from "../../store/store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setIsDeleteTeam, Team } from "../../store/groupSlice";
 import FlashingDot from "./FlashingDots";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import Spinner from "./Spinner";
 
 export default function GroupList() {
   const { groupId } = useParams();
@@ -65,10 +64,9 @@ export default function GroupList() {
       ? router.push(`/groups/${team.id}`)
       : router.push(`/messages/${team.id}`);
   }
-  
+
   return (
     <div>
-      {isLoading && <Spinner />}
       <ul>
         {searchedTeams.map((team) => (
           <li key={team.id}>

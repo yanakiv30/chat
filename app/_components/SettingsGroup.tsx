@@ -1,57 +1,51 @@
-"use client"
+"use client";
 
-import { useParams } from 'next/navigation';
+import { useParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
-import { setIsLoading } from "../../store/userSlice";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Spinner from './Spinner';
-import { deleteTeam, updateTeam } from '@/apiUtils/apiTeams';
+
+import { deleteTeam, updateTeam } from "@/apiUtils/apiTeams";
 
 export default function SettingsGroup() {
   const router = useRouter();
-  const { groupId } = useParams();   
-  const idSettings = +groupId!; 
+  const { groupId } = useParams();
+  const idSettings = +groupId!;
   const [updateName, setUpdateName] = useState("");
- 
-  const dispatch = useDispatch();
+
   const { localTeams } = useAppSelector((store) => store.group);
-  const { isLoading } = useAppSelector((store) => store.user);
+
   const { loggedInUser } = useAppSelector((store) => store.user);
-  if(!loggedInUser)router.push("/");
+  if (!loggedInUser) router.push("/");
   const teamToSet = localTeams.find((team) => team.id === idSettings)!;
   let membersArr: any = [];
   teamToSet?.members.map((member) => membersArr.push(member.username));
 
   async function changeGroupName(teamId: number) {
     if (updateName === "") return;
-    dispatch(setIsLoading(true));
+
     try {
       await updateTeam(teamId, { name: updateName });
     } catch (error) {
       console.error("Error renaming Team:", error);
     } finally {
-      dispatch(setIsLoading(false));
     }
   }
 
   async function deleteGroup(teamId: number) {
-    dispatch(setIsLoading(true));
     try {
-      await  deleteTeam(teamId)      
+      await deleteTeam(teamId);
     } catch (error) {
       console.error("Error deleting team:", error);
     } finally {
-      dispatch(setIsLoading(false));
     }
     router.push("/dashboard");
   }
-  
 
   return (
     <div className="settings">
-      {isLoading && <Spinner />}
       <div style={{ backgroundColor: "beige", borderRadius: "7px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           Team: {teamToSet?.name}

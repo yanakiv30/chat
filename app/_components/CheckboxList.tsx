@@ -3,18 +3,16 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-
 import { useAppSelector } from "../../store/store";
 
 import { setIsLoading } from "../../store/userSlice";
 import { createTeamWithMembers } from "../utils/createTeam";
 import { useRouter } from "next/navigation";
-import Spinner from "./Spinner";
 
 function CheckboxList() {
   const [groupName, setGroupName] = useState("");
   const [checkedItems, setCheckedItems] = useState({} as CheckedItems);
-  const dispatch = useDispatch();
+
   const router = useRouter();
   let { users, loggedInUser, isLoading } = useAppSelector(
     (store) => store.user
@@ -34,7 +32,6 @@ function CheckboxList() {
       console.error("Missing necessary data for group creation.");
       return;
     }
-    dispatch(setIsLoading(true));
 
     try {
       await createTeamWithMembers(groupName, checkedIds);
@@ -42,7 +39,6 @@ function CheckboxList() {
     } catch (error) {
       console.error("Error creating new group:", error);
     } finally {
-      dispatch(setIsLoading(false));
     }
   }
 
@@ -64,7 +60,6 @@ function CheckboxList() {
       style={{ backgroundColor: " rgb(234, 229, 225)", height: "fit-content" }}
       className="wrapper"
     >
-      {isLoading && <Spinner />}
       <div
         className="set"
         style={{ border: "1px solid #ccc", borderRadius: "7px" }}
