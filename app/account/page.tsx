@@ -1,10 +1,11 @@
 import { auth } from "../_services/auth";
-import SignUp from "../../app/signup/page";
+
 import { redirect } from "next/navigation";
 import {
   fetchUserByEmailServer,
   insertNewUserServer,
 } from "@/apiUtils/apiUsersServer";
+import App from "../_components/App";
 
 async function Page() {
   const session = await auth();
@@ -31,7 +32,7 @@ async function Page() {
     if (existingUser.is_provider_user) {
       return (
         <div className="background-login">
-          <SignUp incomingUser={existingUser} />
+          <App incomingUser={existingUser} />
         </div>
       );
     } else {
@@ -59,10 +60,11 @@ async function Page() {
       console.error("Error inserting user:", error);
     }
     const userWithId = data[0];
+    existingUser;
 
     return (
       <div className="background-login">
-        <SignUp incomingUser={userWithId} />
+        <App incomingUser={userWithId} />
       </div>
     );
   } catch (error: any) {

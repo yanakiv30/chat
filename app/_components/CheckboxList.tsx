@@ -35,7 +35,7 @@ function CheckboxList() {
 
     try {
       await createTeamWithMembers(groupName, checkedIds);
-      router.push("/dashboard");
+      router.push("/empty");
     } catch (error) {
       console.error("Error creating new group:", error);
     } finally {
@@ -66,7 +66,7 @@ function CheckboxList() {
       >
         <p style={{ display: "flex", justifyContent: "space-between" }}>
           <span>Create Group </span>
-          <button onClick={() => router.push("/dashboard")}>X</button>
+          <button onClick={() => router.push("/empty")}>X</button>
         </p>
         <input
           style={{ width: "fit-content" }}

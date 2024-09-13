@@ -29,7 +29,7 @@ export default function SettingsGroup() {
     }
 
     dispatch(deleteTeamById(teamId));
-    router.push("/dashboard");
+    router.push("/empty");
   }
 
   return (
@@ -37,7 +37,7 @@ export default function SettingsGroup() {
       <div style={{ backgroundColor: "beige", borderRadius: "7px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           Team: {teamToSet?.name}
-          <button onClick={() => router.push("/dashboard")}>X</button>
+          <button onClick={() => router.push("/empty")}>X</button>
         </div>
         <p> members: {membersArr.join(", ")}</p>
       </div>
