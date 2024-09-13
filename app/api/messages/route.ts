@@ -1,14 +1,11 @@
-
-
 import { NextResponse } from "next/server";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { Database } from "@/types/supabase";
 import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
+import { supabase } from "@/app/_services/supabase";
 
 export async function POST(request: Request) {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
-
   try {
     const authUserId = await getUserIdFromAuth();
     if (!authUserId) {
@@ -17,7 +14,7 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
-    const { team_id, message, image_path } = await request.json(); 
+    const { team_id, message, image_path } = await request.json();
     if (!team_id || (!message && !image_path)) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -34,7 +31,6 @@ export async function POST(request: Request) {
       created_at: new Date().toISOString(),
     };
 
-    
     const { data, error } = await supabase
       .from("messages")
       .insert(newGroupMessageObject)
@@ -55,8 +51,6 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
-
   try {
     const authUserId = await getUserIdFromAuth();
     const { id, message } = await request.json();
@@ -98,8 +92,6 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
-
   try {
     const authUserId = await getUserIdFromAuth();
     if (!authUserId) {

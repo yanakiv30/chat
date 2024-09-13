@@ -1,13 +1,12 @@
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
-import { NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import type { Database } from '@/types/supabase';
+import { NextResponse } from "next/server";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import type { Database } from "@/types/supabase";
+import { supabase } from "@/app/_services/supabase";
 
 export async function GET() {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
-
   try {
     const { data, error } = await supabase
       .from("users")
@@ -15,12 +14,15 @@ export async function GET() {
 
     if (error) {
       console.error(error);
-      return NextResponse.json({ error: "Users could not be loaded" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Users could not be loaded" },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error in getUsers:', error);
+    console.error("Error in getUsers:", error);
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
   }
 }

@@ -3,16 +3,14 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import type { Database } from "@/types/supabase";
 import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
-
+import { supabase } from "@/app/_services/supabase";
 
 export async function GET() {
   const loggedInUserId = await getUserIdFromAuth();
-  
+
   if (!loggedInUserId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  const supabase = createRouteHandlerClient<Database>({ cookies });
 
   try {
     // Helper functions
@@ -70,8 +68,8 @@ export async function GET() {
 
     const membersInTeams = await getMembersInTeams(teamsIds);
     const messagesInTeams = await getMessagesInTeams(teamsIds);
-    
-    const userIds = [...new Set(membersInTeams.map(m => m.user_id))];
+
+    const userIds = [...new Set(membersInTeams.map((m) => m.user_id))];
     const users = await getUsers(userIds);
 
     const teamsWithMembers = teamsData.map((team) => ({
@@ -79,7 +77,7 @@ export async function GET() {
       members: membersInTeams
         .filter((tm) => tm.team_id === team.id)
         .map((tm) => users.find((user) => user.id === tm.user_id)!)
-        .map(user => ({
+        .map((user) => ({
           id: user.id,
           username: user.username,
           avatar: user.avatar,
@@ -104,9 +102,7 @@ export async function GET() {
   }
 }
 
-
 export async function POST(request: Request) {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
   try {
     const newTeam = await request.json();
     const { data, error } = await supabase
@@ -128,8 +124,6 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
-
   try {
     const { id, ...updateData } = await request.json();
     const { data, error } = await supabase
@@ -152,8 +146,6 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
-
   try {
     const { id } = await request.json();
     const { error } = await supabase.from("teams").delete().eq("id", id);

@@ -1,11 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import type { Database } from '@/types/supabase';
+import { NextRequest, NextResponse } from "next/server";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import type { Database } from "@/types/supabase";
+import { supabase } from "@/app/_services/supabase";
 
 export async function POST(request: NextRequest) {
-  const supabase = createRouteHandlerClient<Database>({ cookies });
-
   try {
     const { email } = await request.json();
 
@@ -21,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ data: existingUser, error: fetchError });
   } catch (error) {
-    console.error('Error in fetchUserByEmail:', error);
+    console.error("Error in fetchUserByEmail:", error);
     return NextResponse.json({ error: "An error occurred" }, { status: 500 });
   }
 }
