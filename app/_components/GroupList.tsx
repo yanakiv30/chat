@@ -3,12 +3,13 @@
 import { FaCog } from "react-icons/fa";
 import Avatar from "./Avatar";
 import { useAppSelector } from "../../store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setIsDeleteTeam, Team } from "../../store/groupSlice";
 import FlashingDot from "./FlashingDots";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 export default function GroupList() {
   const { groupId } = useParams();
@@ -27,7 +28,15 @@ export default function GroupList() {
     {} as { [key: number]: number }
   );
 
-  if (!loggedInUser) return null;
+  useEffect(() => {
+    if (!loggedInUser) {     
+      signOut({ callbackUrl: "/" })
+        .catch((error) => {
+          console.error('Sign out failed:', error);
+        });
+    }
+  }, [loggedInUser]);
+  
   const searchedTeams =
     searchQuery.length > 0
       ? localTeams.filter(
@@ -87,7 +96,7 @@ export default function GroupList() {
                     )?.username
                   : team.name}
               </button>
-              {team.members[0]!.id === loggedInUser!.id ? (
+              {team.members[0]?.id === loggedInUser?.id ? (
                 <Link href={`/settingsGroup/${team.id}`}>
                   <span style={{ fontSize: "8px" }}>
                     <FaCog />

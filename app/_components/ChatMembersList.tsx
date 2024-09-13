@@ -66,7 +66,7 @@ function ChatMembersList() {
 
   useQuery('teams', fetchTeams, {
     enabled: !!loggedInUser,
-    refetchInterval: 2000,
+    refetchInterval: 1000,
     onSuccess: (data) => {
       if (JSON.stringify(data) !== JSON.stringify(lastFetchedTeamsRef.current)) {
         memoizedSetTeams(data);

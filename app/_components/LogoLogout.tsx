@@ -1,9 +1,8 @@
-"use client"
+"use client";
 
 import Link from "next/link";
-
-import { setLoggedInUser } from "../../store/userSlice";
 import { useDispatch } from "react-redux";
+import { signOut } from "next-auth/react";
 export default function LogoLogout() {
   const dispatch = useDispatch();
   return (
@@ -16,7 +15,7 @@ export default function LogoLogout() {
         Create new group
       </Link>
       <button
-        onClick={() => dispatch(setLoggedInUser(undefined))}
+        onClick={() => signOut({ callbackUrl: "/" })}
         style={{ border: "1px solid #ccc", borderRadius: "7px" }}
       >
         Logout
