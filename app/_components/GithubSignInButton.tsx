@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 
-const GithubSignInButton = ({ px }: { px: number }) => {
+const GithubSignInButton = ({ px, onClick }: { px: number; onClick: () => void }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    onClick(); // Call the passed onClick function
     try {
       await signIn('github', { callbackUrl: '/account' });
     } catch (error) {
