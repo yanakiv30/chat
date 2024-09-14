@@ -1,9 +1,6 @@
-import { NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import type { Database } from "@/types/supabase";
-import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
 import { supabase } from "@/app/_services/supabase";
+import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
