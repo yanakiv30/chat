@@ -1,58 +1,47 @@
-"use client"
+"use client";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
-//import supabase from "../services/supabase";
-import { setIsLoading } from "../../store/userSlice";
+
 import { useState } from "react";
-import { supabase } from "../_services/supabase";
+import { useRouter } from "next/navigation";
+
+import { deleteTeam, updateTeam } from "@/apiUtils/apiTeams";
+
 export default function SettingsGroup() {
-  const params = useParams();
+  const router = useRouter();
+  const { groupId } = useParams();
+  const idSettings = +groupId!;
   const [updateName, setUpdateName] = useState("");
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+
   const { localTeams } = useAppSelector((store) => store.group);
+
   const { loggedInUser } = useAppSelector((store) => store.user);
-  const idSettings = +params.groupId!;
+  if (!loggedInUser) router.push("/");
   const teamToSet = localTeams.find((team) => team.id === idSettings)!;
   let membersArr: any = [];
   teamToSet?.members.map((member) => membersArr.push(member.username));
 
   async function changeGroupName(teamId: number) {
     if (updateName === "") return;
-    dispatch(setIsLoading(true));
+
     try {
-      const { error } = await supabase
-        .from("teams")
-        .update({ name: `${updateName}` })
-        .eq("id", teamId)
-        .select();
-      if (error) {
-        console.error(error);
-        throw new Error("Team could not be renamed");
-      }
+      await updateTeam(teamId, { name: updateName });
     } catch (error) {
       console.error("Error renaming Team:", error);
     } finally {
-      dispatch(setIsLoading(false));
     }
   }
 
   async function deleteGroup(teamId: number) {
-    dispatch(setIsLoading(true));
     try {
-      const { error } = await supabase.from("teams").delete().eq("id", teamId);
-      if (error) {
-        console.error(error);
-        throw new Error("Team could not be deleted");
-      }
+      await deleteTeam(teamId);
     } catch (error) {
       console.error("Error deleting team:", error);
     } finally {
-      dispatch(setIsLoading(false));
     }
-    navigate("/");
+    router.push("/empty");
   }
 
   return (
@@ -60,7 +49,7 @@ export default function SettingsGroup() {
       <div style={{ backgroundColor: "beige", borderRadius: "7px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           Team: {teamToSet?.name}
-          <button onClick={() => navigate("/")}>X</button>
+          <button onClick={() => router.push("empty")}>X</button>
         </div>
         <p> members: {membersArr.join(", ")}</p>
       </div>

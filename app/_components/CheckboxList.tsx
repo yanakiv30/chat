@@ -1,21 +1,24 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../store/store";
 
 import { setIsLoading } from "../../store/userSlice";
-import { createTeamWithMembers } from "./createTeam";
-
+import { createTeamWithMembers } from "../utils/createTeam";
+import { useRouter } from "next/navigation";
 
 function CheckboxList() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  let { users, loggedInUser } = useAppSelector((store) => store.user);
   const [groupName, setGroupName] = useState("");
+  const [checkedItems, setCheckedItems] = useState({} as CheckedItems);
+
+  const router = useRouter();
+  let { users, loggedInUser, isLoading } = useAppSelector(
+    (store) => store.user
+  );
+  if (!loggedInUser) router.push("/");
+
   const usersWithoutLoggedIn = users.filter(
     (user) => user.id !== loggedInUser?.id
   );
@@ -23,18 +26,19 @@ function CheckboxList() {
   type CheckedItems = {
     [key: string]: boolean;
   };
-  const [checkedItems, setCheckedItems] = useState({} as CheckedItems);
 
   async function handleSetGroups() {
-    dispatch(setIsLoading(true));
+    if (!loggedInUser || !groupName) {
+      console.error("Missing necessary data for group creation.");
+      return;
+    }
 
     try {
       await createTeamWithMembers(groupName, checkedIds);
-      navigate("/");
+      router.push("/empty");
     } catch (error) {
       console.error("Error creating new group:", error);
     } finally {
-      dispatch(setIsLoading(false));
     }
   }
 
@@ -45,11 +49,11 @@ function CheckboxList() {
     }));
   }
   const checkedIds = [
-    +loggedInUser!.id,
+    loggedInUser?.id,
     ...Object.keys(checkedItems)
       .filter((key: string) => checkedItems[key] === true)
       .map((key) => +key),
-  ];
+  ].filter((id): id is number => id !== undefined);
 
   return (
     <div
@@ -62,7 +66,7 @@ function CheckboxList() {
       >
         <p style={{ display: "flex", justifyContent: "space-between" }}>
           <span>Create Group </span>
-          <button onClick={() => navigate("/")}>X</button>
+          <button onClick={() => router.push("/empty")}>X</button>
         </p>
         <input
           style={{ width: "fit-content" }}

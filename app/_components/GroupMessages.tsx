@@ -1,78 +1,71 @@
-"use client"
+"use client";
 
+import React, { useState } from "react";
 
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
 import { searchedGroupMessagesFunc } from "../utils/messageUtils";
-import { setIsLoading } from "../../store/userSlice";
+
 import Empty from "./Empty";
-import { supabase } from "../_services/supabase";
 import Avatar from "./Avatar";
 import SearchInMessage from "./SearchInMessage";
 import UserMessagesContainer from "./UserMessageContainer";
 import SendUserMessage from "./SendUserMessage";
 import EditUserMessage from "./EditUserMessage";
+import { redirect, useParams } from "next/navigation";
+
+import { deleteMessage } from "@/apiUtils/apiMessages";
 
 export default function GroupMessages() {
-  const { loggedInUser, searchMessage, isEdit } = useAppSelector(
+  const { loggedInUser, searchMessage, isEdit, isLoading } = useAppSelector(
     (store) => store.user
   );
   const { localTeams } = useAppSelector((store) => store.group);
   const [newGroupMessage, setNewGroupMessage] = useState("");
-  const params = useParams();
-  const groupInListId = +params.groupId!;
-  const dispatch = useDispatch();
+  const { groupId } = useParams();
+  const groupInListId = +groupId!;
   const team = localTeams.find((x) => x.id === groupInListId);
+
   if (!team) return <Empty />;
-  const hiddenName = team.members.find(
+  if (!loggedInUser) redirect("/");
+  const otherMember = team.members.find(
     (member) => member.id !== loggedInUser!.id
-  )?.username;
+  );
 
   async function handleSendGroupMessage(message: string, imagePath?: string) {
     if (message.trim() !== "" || imagePath) {
-      const newGroupMessageObject = {
-        sender_id: loggedInUser!.id,
-        team_id: groupInListId,
-        type: imagePath ? "image" : "text",
-        message: message,
-        image_path: imagePath || null,
-      };
       try {
-        const { data, error } = await supabase
-          .from("messages")
-          .insert(newGroupMessageObject)
-          .select();
-        if (error) {
-          throw new Error(error.message);
+        const response = await fetch("/api/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            team_id: groupInListId,
+            message: message.trim(),
+            image_path: imagePath,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to create message");
         }
+
+        const data = await response.json();
+        // Handle the successful message creation (e.g., update local state)
       } catch (error) {
-        const errorMessage = "Error creating Group message: " + error;
-        console.error(errorMessage);
-        alert(errorMessage);
+        console.error("Error creating Group message:", error);
+        alert("Error creating Group message: " + error);
       } finally {
-        // dispatch(setIsLoading(false));
       }
       setNewGroupMessage("");
     }
   }
 
   async function handleDeleteGroupMessages(idForDelete: string) {
-    dispatch(setIsLoading(true));
     try {
-      const { error } = await supabase
-        .from("messages")
-        .delete()
-        .eq("id", idForDelete);
-      if (error) {
-        console.error(error);
-        throw new Error("Group Messages could not be deleted");
-      }
+      await deleteMessage(idForDelete);
     } catch (error) {
       console.error("Error deleting group message:", error);
     } finally {
-      dispatch(setIsLoading(false));
     }
   }
 
@@ -83,13 +76,17 @@ export default function GroupMessages() {
 
   return (
     <div className="profile-wrapper">
+     
       <div className="user-profile-container">
         <div className="chat-with">
           <div>
             <div style={{ display: "flex", gap: "5px" }}>
+              {team.name === "" && <Avatar name={otherMember?.avatar} />}
               {team.name !== "" && <Avatar name={team.name || ""} />}
               <h4>
-                {team.name === "" ? `Chat with ${hiddenName}` : team.name}{" "}
+                {team.name === ""
+                  ? `Chat with  ${otherMember?.username}`
+                  : team.name}{" "}
               </h4>
             </div>
             {team.name !== "" && (

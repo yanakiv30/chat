@@ -1,34 +1,28 @@
-"use client"
+"use client";
 
 import { useDispatch } from "react-redux";
-import { setIsEdit, setIsLoading } from "../../store/userSlice";
+import { setIsEdit } from "../../store/userSlice";
 import { useAppSelector } from "../../store/store";
 import { useState } from "react";
-import { supabase } from "../_services/supabase";
+
+import { updateMessage } from "@/apiUtils/apiMessages";
 
 export default function EditUserMessage() {
   const dispatch = useDispatch();
-  const { messageId, mesContent } = useAppSelector((store) => store.user);
+  const { messageId, mesContent, isLoading } = useAppSelector(
+    (store) => store.user
+  );
 
   const [updateContent, setUpdateContent] = useState("");
 
   async function handleEditMessage(idForEdit: number) {
     dispatch(setIsEdit(true));
-    dispatch(setIsLoading(true));
+
     try {
-      const { error } = await supabase
-        .from("messages")
-        .update({ message: updateContent })
-        .eq("id", idForEdit)
-        .select();
-      if (error) {
-        console.error(error);
-        throw new Error("Message could not be edited");
-      }
+      await updateMessage(idForEdit, updateContent);
     } catch (error) {
       console.error("Error editing message:", error);
     } finally {
-      dispatch(setIsLoading(false));
     }
   }
 

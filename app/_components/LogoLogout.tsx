@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { NavLink } from "react-router-dom";
-import { setLoggedInUser } from "../../store/userSlice";
+import Link from "next/link";
 import { useDispatch } from "react-redux";
+import { signOut } from "next-auth/react";
 export default function LogoLogout() {
   const dispatch = useDispatch();
   return (
     <div className="button-link">
       <p>🗣️ChatSpa</p>
-      <NavLink
-        to={"/groups/createGroups"}
+      <Link
+        href={"/groups/createGroups"}
         style={{ border: "2px solid #ccc", borderRadius: "7px" }}
       >
         Create new group
-      </NavLink>
+      </Link>
       <button
-        onClick={() => dispatch(setLoggedInUser(null))}
+        onClick={() => signOut({ callbackUrl: "/" })}
         style={{ border: "1px solid #ccc", borderRadius: "7px" }}
       >
         Logout

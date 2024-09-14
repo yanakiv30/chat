@@ -1,18 +1,22 @@
-"use client"
-import { useNavigate } from "react-router-dom";
+"use client";
+
 import { useAppSelector } from "../../store/store";
 import { useDispatch } from "react-redux";
 import Avatar from "./Avatar";
 import { setTeams } from "../../store/groupSlice";
-import { getTeams } from "../_services/apiGroups";
-import { createTeamWithMembers } from "./createTeam";
+import { createTeamWithMembers } from "../utils/createTeam";
+import { useRouter } from "next/navigation";
+import { fetchTeams } from "@/apiUtils/apiTeams";
+import { useState } from "react";
 
 function AccessibleChats() {
+  const [disabledUserId, setDisabledUserId] = useState<number | null>(null);
+
   const { searchQuery, users, loggedInUser } = useAppSelector(
     (store) => store.user
   );
   const { localTeams } = useAppSelector((store) => store.group);
-  const navigate = useNavigate();
+  const router = useRouter();
   const dispatch = useDispatch();
   const searchedUsers =
     searchQuery.length > 0
@@ -27,24 +31,33 @@ function AccessibleChats() {
     );
   }
   async function handleUserClicked(userId: number) {
-    const doubleViewGroup = localTeams.find(
-      (team) =>
-        team.name === "" && team.members.some((user) => user.id === userId)
-    );
-    if (doubleViewGroup) navigate(`/messages/${doubleViewGroup.id}`);
-    else {
-      const doubleViewGroupId = await createTeamWithMembers("", [
-        loggedInUser!.id,
-        userId,
-      ]);
-      getTeams(+loggedInUser!.id)
-        .then((data) => {
-          dispatch(setTeams(data));
-          navigate(`/messages/${doubleViewGroupId}`);
-        })
-        .catch((error) => console.error("Error fetching teams", error));
+    if (disabledUserId === userId) return;
+    setDisabledUserId(userId);
+
+    try {
+        const doubleViewGroup = localTeams.find(
+            (team) =>
+                team.name === "" && team.members.some((user) => user.id === userId)
+        );
+
+        if (doubleViewGroup) {
+            router.push(`/messages/${doubleViewGroup.id}`);
+        } else {
+            const doubleViewGroupId = await createTeamWithMembers("", [
+                loggedInUser!.id,
+                userId,
+            ]);
+            const data = await fetchTeams();
+            dispatch(setTeams(data));
+            router.push(`/messages/${doubleViewGroupId}`);
+        }
+    } catch (error) {
+        console.error("Error occurred:", error);
+    } finally {        
+        setDisabledUserId(null);
     }
-  }
+}
+
 
   return (
     <ul>
@@ -58,8 +71,9 @@ function AccessibleChats() {
           .map((user) => (
             <li key={user.id}>
               <div style={{ display: "flex", gap: "5px" }}>
-                <Avatar name={user.username} />
-                <button onClick={() => handleUserClicked(user.id)}>
+                <Avatar name={user.avatar} />
+                <button onClick={() => handleUserClicked(user.id)}
+                  disabled={disabledUserId === user.id} >
                   {user.username}
                 </button>
               </div>

@@ -1,7 +1,8 @@
-"use client"
+"use client";
 
+import { uploadImage } from "@/apiUtils/apiImages";
 import React, { useState, ChangeEvent, useRef } from "react";
-import uploadImage from "../utils/uploadImage";
+
 
 interface SendUserMessageProps {
   newMessage: string;
@@ -23,7 +24,6 @@ const SendUserMessage: React.FC<SendUserMessageProps> = ({
 
       const filePath = await uploadImage(selectedFile);
       if (filePath) {
-        console.log("File uploaded successfully:", filePath);
         handleSendMessage(newMessage, filePath);
         setNewMessage("");
         setFileInputKey(Date.now());

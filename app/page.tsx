@@ -1,20 +1,20 @@
-
 import { Metadata } from "next";
-import Link from 'next/link';
+import InteractiveHomeContent from "./_components/InteractiveHomeContent";
+
+
 export const metadata: Metadata = {
   title: "Home",
   description: "Welcome to chatSPA",
 };
-export default async function HomePage() {
+
+export default function HomePage() {
   return (
     <div className="app-container" style={{ position: "relative" }}>
-      <p style={{fontSize:"50px"}}>Welcome to Chat</p>
-      <Link href="/login">
-        <button >
-          Go to Login
-        </button>
-      </Link>
-      
+      <div>
+        <p style={{ fontSize: "70px" }}>Welcome to Chat</p>
+        <br />
+        <InteractiveHomeContent />
+      </div>
     </div>
   );
 }
