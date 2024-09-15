@@ -1,22 +1,22 @@
 "use client";
 
-import { FaCog } from "react-icons/fa";
-import Avatar from "./Avatar";
-import { useAppSelector } from "../../store/store";
+import { signOut } from "next-auth/react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FaCog } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { setIsDeleteTeam, Team } from "../../store/groupSlice";
+import { useAppSelector } from "../../store/store";
+import Avatar from "./Avatar";
 import FlashingDot from "./FlashingDots";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { signOut } from "next-auth/react";
 
-export default function GroupList() {
+export default function MyChatsList() {
   const { groupId } = useParams();
   const actualGroupId = groupId as string;
   const router = useRouter();
   const dispatch = useDispatch();
-  const { loggedInUser, searchQuery, isLoading } = useAppSelector(
+  const { loggedInUser, searchQuery } = useAppSelector(
     (store) => store.user
   );
 
@@ -29,14 +29,13 @@ export default function GroupList() {
   );
 
   useEffect(() => {
-    if (!loggedInUser) {     
-      signOut({ callbackUrl: "/" })
-        .catch((error) => {
-          console.error('Sign out failed:', error);
-        });
+    if (!loggedInUser) {
+      signOut({ callbackUrl: "/" }).catch((error) => {
+        console.error("Sign out failed:", error);
+      });
     }
   }, [loggedInUser]);
-  
+
   const searchedTeams =
     searchQuery.length > 0
       ? localTeams.filter(

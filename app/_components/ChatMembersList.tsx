@@ -1,22 +1,22 @@
-import React, { useCallback, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import LogoLogout from "./LogoLogout";
-import IconAndSearch from "./IconAndSearch";
-import AccessibleChats from "./AccessibleChats";
-import GroupList from "./GroupList";
 import { fetchTeams } from "@/apiUtils/apiTeams";
 import { fetchUsersClient } from "@/apiUtils/apiUsersClient";
 import {
-  setTeams,
   setIsDeleteTeam,
+  setTeams,
   setTeamWithNewMessage,
   Team,
 } from "@/store/groupSlice";
 import { useAppSelector } from "@/store/store";
 import { setUsers, User } from "@/store/userSlice";
-import { useDispatch } from "react-redux";
-import { useQuery, QueryClient, QueryClientProvider } from "react-query";
 import Image from "next/image";
+import { useCallback, useRef, useState } from "react";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import AvailableChats from "./AvailableChats";
+import MyChatsList from "./MyChatsList";
+import MenuHeader from "./MenuHeader";
+import UserAndSearch from "./UserAndSearch";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +29,7 @@ function ChatMembersList() {
   const previousUsersRef = useRef<User[]>([]);
 
   const findTeamNameById = useCallback(
-    (id: number, senderId: number) => {
+    (id: number) => {
       const team = localTeams.find((team) => team.id === id);
       if (!team) return "Unknown/Empty team";
       if (team.name === "")
@@ -62,10 +62,7 @@ function ChatMembersList() {
               receivers?.some((receiver) => receiver.id === loggedInUser?.id)
             ) {
               toast.success(
-                `New message from "${findTeamNameById(
-                  newTeam.id,
-                  newMessage.senderId
-                )}"`
+                `New message from "${findTeamNameById(newTeam.id)}"`
               );
               dispatch(setIsDeleteTeam(false));
               dispatch(
@@ -127,9 +124,9 @@ function ChatMembersList() {
 
   return (
     <div className="user-list-container">
-      <LogoLogout />
+      <MenuHeader />
       <br></br>
-      <IconAndSearch />
+      <UserAndSearch />
       <br></br>
       <button
         onClick={() => setIsNewChatOpen(!isNewChatOpen)}
@@ -137,10 +134,10 @@ function ChatMembersList() {
       >
         Available Chats
       </button>
-      {isNewChatOpen && <AccessibleChats />}
+      {isNewChatOpen && <AvailableChats />}
       <br></br>
       <p>My Chats</p>
-      <GroupList />
+      <MyChatsList />
 
       <Image
         src="/cheerful.jpg"

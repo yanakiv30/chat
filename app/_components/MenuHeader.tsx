@@ -1,9 +1,9 @@
 "use client";
 
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { signOut } from "next-auth/react";
-export default function LogoLogout() {
+export default function MenuHeader() {
   const dispatch = useDispatch();
   return (
     <div className="button-link">
