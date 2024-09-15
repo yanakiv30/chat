@@ -1,20 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "../../store/store";
 
-import { setIsLoading } from "../../store/userSlice";
-import { createTeamWithMembers } from "../utils/createTeam";
 import { useRouter } from "next/navigation";
+import { createTeamWithMembers } from "../utils/createTeam";
 
 function CheckboxList() {
   const [groupName, setGroupName] = useState("");
   const [checkedItems, setCheckedItems] = useState({} as CheckedItems);
 
   const router = useRouter();
-  let { users, loggedInUser, isLoading } = useAppSelector(
+  let { users, loggedInUser } = useAppSelector(
     (store) => store.user
   );
   if (!loggedInUser) router.push("/");

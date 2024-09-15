@@ -1,15 +1,14 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { deleteTeam, updateTeam } from "@/apiUtils/apiTeams";
 
-export default function SettingsGroup() {
+export default function CreatorGroupSettings() {
   const router = useRouter();
   const { groupId } = useParams();
   const idSettings = +groupId!;

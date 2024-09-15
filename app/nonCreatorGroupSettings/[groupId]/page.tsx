@@ -1,4 +1,4 @@
-import SettingsGroup2 from "@/app/_components/SettingsGroup2"
+import SettingsGroup2 from "@/app/_components/NonCreatorGroupSettings"
  function page() {
     return <SettingsGroup2/>    
  }

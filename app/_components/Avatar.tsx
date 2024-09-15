@@ -17,7 +17,6 @@ function Avatar({ name }: AvatarProps) {
     <>
       {name?.startsWith("http") ? (
         <>
-          {isLoading && <div>Loading...</div>} {/* Display loading message */}
           <img
             src={name}
             alt="Profile"

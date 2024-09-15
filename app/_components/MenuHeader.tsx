@@ -2,9 +2,7 @@
 
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
 export default function MenuHeader() {
-  const dispatch = useDispatch();
   return (
     <div className="button-link">
       <p>🗣️ChatSpa</p>

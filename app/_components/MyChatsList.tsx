@@ -16,9 +16,7 @@ export default function MyChatsList() {
   const actualGroupId = groupId as string;
   const router = useRouter();
   const dispatch = useDispatch();
-  const { loggedInUser, searchQuery } = useAppSelector(
-    (store) => store.user
-  );
+  const { loggedInUser, searchQuery } = useAppSelector((store) => store.user);
 
   const { localTeams, teamWithNewMessage, isDeleteTeam } = useAppSelector(
     (store) => store.group
@@ -96,13 +94,13 @@ export default function MyChatsList() {
                   : team.name}
               </button>
               {team.members[0]?.id === loggedInUser?.id ? (
-                <Link href={`/settingsGroup/${team.id}`}>
+                <Link href={`/creatorGroupSettings/${team.id}`}>
                   <span style={{ fontSize: "8px" }}>
                     <FaCog />
                   </span>
                 </Link>
               ) : (
-                <Link href={`/settingsGroup2/${team.id}`}>
+                <Link href={`/nonCreatorGroupSettings/${team.id}`}>
                   <span style={{ fontSize: "8px" }}>
                     <FaCog />
                   </span>

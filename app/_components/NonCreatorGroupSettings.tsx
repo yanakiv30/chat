@@ -9,7 +9,7 @@ import { deleteTeamById } from "../../store/groupSlice";
 
 import { useParams, useRouter } from "next/navigation";
 import { removeUserFromTeam } from "@/apiUtils/apiTeams_members";
-export default function SettingsGroup() {
+export default function NonCreatorGroupSettings() {
   const params = useParams();
   const router = useRouter();
   const dispatch = useDispatch();
