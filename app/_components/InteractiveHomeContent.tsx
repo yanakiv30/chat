@@ -9,14 +9,14 @@ const InteractiveHomeContent = () => {
   const [showButtons, setShowButtons] = useState(true);
   const [showSpinner, setShowSpinner] = useState(false);
 
-  const handleButtonClick = () => {
+  const hideButtonsAndShowSpinner = () => {
     setShowButtons(false);
     setShowSpinner(true);
 
     setTimeout(() => {
       setShowSpinner(false);
       setShowButtons(true);
-    }, 8000);
+    }, 20000);
   };
 
   return (
@@ -31,8 +31,8 @@ const InteractiveHomeContent = () => {
     >
       {showButtons ? (
         <>
-          <GoogleSignInButton px={20} onClick={handleButtonClick} />
-          <GithubSignInButton px={20} onClick={handleButtonClick} />
+          <GoogleSignInButton px={20} onClick={hideButtonsAndShowSpinner} />
+          <GithubSignInButton px={20} onClick={hideButtonsAndShowSpinner} />
         </>
       ) : null}
       {showSpinner ? <Spinner /> : null}
