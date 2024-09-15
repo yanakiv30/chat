@@ -93,7 +93,7 @@ export default function MyChatsList() {
                     )?.username
                   : team.name}
               </button>
-              {team.members[0]?.id === loggedInUser?.id ? (
+              {team.members[0]?.id === loggedInUser?.id && team.name !== "" ? (
                 <Link href={`/creatorGroupSettings/${team.id}`}>
                   <span style={{ fontSize: "8px" }}>
                     <FaCog />
