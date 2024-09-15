@@ -1,24 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useAppSelector } from "../../store/store";
 import { searchedGroupMessagesFunc } from "../utils/messageUtils";
 
-import Empty from "./Empty";
-import Avatar from "./Avatar";
-import SearchInMessage from "./SearchInMessage";
-import UserMessagesContainer from "./UserMessageContainer";
-import SendUserMessage from "./SendUserMessage";
-import EditUserMessage from "./EditUserMessage";
 import { redirect, useParams } from "next/navigation";
+import Avatar from "./Avatar";
+import EditUserMessage from "./EditUserMessage";
+import Empty from "./Empty";
+import SearchInMessage from "./SearchInMessage";
+import SendUserMessage from "./SendUserMessage";
+import UserMessagesContainer from "./UserMessageContainer";
 
 import { deleteMessage } from "@/apiUtils/apiMessages";
 
 export default function GroupMessages() {
-  const { loggedInUser, searchMessage, isEdit, isLoading } = useAppSelector(
-    (store) => store.user
-  );
+  const {
+    loggedInUser,
+    searchMessage,
+    isEditingMessage: isEdit,
+    isLoading,
+  } = useAppSelector((store) => store.user);
   const { localTeams } = useAppSelector((store) => store.group);
   const [newGroupMessage, setNewGroupMessage] = useState("");
   const { groupId } = useParams();
@@ -76,7 +79,6 @@ export default function GroupMessages() {
 
   return (
     <div className="profile-wrapper">
-     
       <div className="user-profile-container">
         <div className="chat-with">
           <div>
