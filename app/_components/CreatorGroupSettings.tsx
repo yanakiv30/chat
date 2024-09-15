@@ -1,15 +1,15 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { deleteTeam, updateTeam } from "@/apiUtils/apiTeams";
+import Link from "next/link";
 
-export default function SettingsGroup() {
+export default function CreatorGroupSettings() {
   const router = useRouter();
   const { groupId } = useParams();
   const idSettings = +groupId!;
@@ -49,7 +49,9 @@ export default function SettingsGroup() {
       <div style={{ backgroundColor: "beige", borderRadius: "7px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           Team: {teamToSet?.name}
-          <button onClick={() => router.push("empty")}>X</button>
+          <Link href="/empty" as="/empty">
+            <button>X</button>
+          </Link>
         </div>
         <p> members: {membersArr.join(", ")}</p>
       </div>

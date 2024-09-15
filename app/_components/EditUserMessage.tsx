@@ -1,22 +1,24 @@
 "use client";
 
-import { useDispatch } from "react-redux";
-import { setIsEdit } from "../../store/userSlice";
-import { useAppSelector } from "../../store/store";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../../store/store";
+import { setIsEditingMessage } from "../../store/userSlice";
 
 import { updateMessage } from "@/apiUtils/apiMessages";
 
 export default function EditUserMessage() {
   const dispatch = useDispatch();
-  const { messageId, mesContent, isLoading } = useAppSelector(
-    (store) => store.user
-  );
+  const {
+    editedMessageId: messageId,
+    editedMessageContent: mesContent,
+    isLoading,
+  } = useAppSelector((store) => store.user);
 
   const [updateContent, setUpdateContent] = useState("");
 
   async function handleEditMessage(idForEdit: number) {
-    dispatch(setIsEdit(true));
+    dispatch(setIsEditingMessage(true));
 
     try {
       await updateMessage(idForEdit, updateContent);
@@ -28,7 +30,7 @@ export default function EditUserMessage() {
 
   function edit(id: number) {
     handleEditMessage(id);
-    dispatch(setIsEdit(false));
+    dispatch(setIsEditingMessage(false));
   }
 
   return (

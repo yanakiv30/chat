@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { rightMessage } from "../utils/messageUtils";
-import { setIsEdit, setMesContent, setMessageId } from "../../store/userSlice";
-import { useAppSelector } from "../../store/store";
 import { Message } from "../../store/groupSlice";
+import { useAppSelector } from "../../store/store";
+import {
+  setEditedMessageContent,
+  setEditedMessageId,
+  setIsEditingMessage,
+} from "../../store/userSlice";
+import { rightMessage } from "../utils/messageUtils";
 
 export default function UserMessagesContainer({
   loggedInUser,
@@ -14,7 +18,9 @@ export default function UserMessagesContainer({
   searchedMessages,
 }: any) {
   const dispatch = useDispatch();
-  const { messageId, users } = useAppSelector((store) => store.user);
+  const { editedMessageId: messageId, users } = useAppSelector(
+    (store) => store.user
+  );
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
 
@@ -24,7 +30,7 @@ export default function UserMessagesContainer({
     )?.content;
 
     if (messageContent !== undefined) {
-      dispatch(setMesContent(messageContent));
+      dispatch(setEditedMessageContent(messageContent));
     }
   }, [messageId, searchedMessages, dispatch]);
 
@@ -34,7 +40,9 @@ export default function UserMessagesContainer({
       for (const message of searchedMessages) {
         if (message.image_path) {
           try {
-            const response = await fetch(`/api/images?path=${encodeURIComponent(message.image_path)}`);
+            const response = await fetch(
+              `/api/images?path=${encodeURIComponent(message.image_path)}`
+            );
             if (response.ok) {
               const data = await response.json();
               newImageUrls[message.image_path] = data.url;
@@ -60,11 +68,14 @@ export default function UserMessagesContainer({
   ) {
     if (imagePath) {
       try {
-        const response = await fetch(`/api/images?path=${encodeURIComponent(imagePath)}`, {
-          method: 'DELETE',
-        });
+        const response = await fetch(
+          `/api/images?path=${encodeURIComponent(imagePath)}`,
+          {
+            method: "DELETE",
+          }
+        );
         if (!response.ok) {
-          throw new Error('Failed to delete image');
+          throw new Error("Failed to delete image");
         }
       } catch (error) {
         console.error("Error deleting image:", error);
@@ -75,8 +86,8 @@ export default function UserMessagesContainer({
   }
 
   function editOnId(messageId: number) {
-    dispatch(setMessageId(messageId));
-    dispatch(setIsEdit(true));
+    dispatch(setEditedMessageId(messageId));
+    dispatch(setIsEditingMessage(true));
   }
 
   const handleImageClick = (imagePath: string) => {
@@ -133,7 +144,11 @@ export default function UserMessagesContainer({
                 }}
               >
                 <p style={{ color: "blue" }}>
-                  {users.find((user: any) => user.id === message.senderId)?.username}:
+                  {
+                    users.find((user: any) => user.id === message.senderId)
+                      ?.username
+                  }
+                  :
                 </p>
                 <p>{message.content}</p>
                 <br />

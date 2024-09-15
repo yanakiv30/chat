@@ -1,10 +1,7 @@
 import { auth } from "../_services/auth";
 
+import { fetchUserByEmail, insertNewUser } from "@/apiUtils/apiUsersServer";
 import { redirect } from "next/navigation";
-import {
-  fetchUserByEmailServer,
-  insertNewUserServer,
-} from "@/apiUtils/apiUsersServer";
 import App from "../_components/App";
 
 async function Page() {
@@ -17,7 +14,7 @@ async function Page() {
   const userFromProvider = user.name;
   const sessionImage = user.image;
 
-  const { existingUser, fetchError } = await fetchUserByEmailServer(
+  const { existingUser, fetchError } = await fetchUserByEmail(
     emailFromProvider!
   );
   if (fetchError) {
@@ -29,20 +26,11 @@ async function Page() {
   }
 
   if (existingUser) {
-    if (existingUser.is_provider_user) {
-      return (
-        <div className="background-login">
-          <App incomingUser={existingUser} />
-        </div>
-      );
-    } else {
-      redirect(
-        "/?message=" +
-          encodeURIComponent(
-            "An account with your Google email already exists. Please log in your existing account using this form."
-          )
-      );
-    }
+    return (
+      <div className="background-login">
+        <App incomingUser={existingUser} />
+      </div>
+    );
   }
 
   const newUser = {
@@ -51,11 +39,10 @@ async function Page() {
     avatar: sessionImage,
     status: "new",
     email: emailFromProvider,
-    is_provider_user: true,
   };
 
   try {
-    const { data, error } = await insertNewUserServer(newUser);
+    const { data, error } = await insertNewUser(newUser);
     if (error) {
       console.error("Error inserting user:", error);
     }

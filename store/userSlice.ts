@@ -5,33 +5,31 @@ export type User = { id: number; username: string; avatar: string };
 const initialState = {
   isRegister: false,
   isLoading: false,
-  isEdit: false,
-  messageId: -1,
-  mesContent: "",
+  isEditingMessage: false,
+  editedMessageId: -1,
+  editedMessageContent: "",
   users: [] as User[],
   loggedInUser: null as User | null,
   // messages: [] as Message[],
   searchQuery: "",
-  searchMessage: "",  
-  
+  searchMessage: "",
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    
     setIsLoading(state, action) {
       state.isLoading = action.payload;
     },
-    setMesContent(state, action) {
-      state.mesContent = action.payload;
+    setEditedMessageContent(state, action) {
+      state.editedMessageContent = action.payload;
     },
-    setMessageId(state, action) {
-      state.messageId = action.payload;
+    setEditedMessageId(state, action) {
+      state.editedMessageId = action.payload;
     },
-    setIsEdit(state, action) {
-      state.isEdit = action.payload;
+    setIsEditingMessage(state, action) {
+      state.isEditingMessage = action.payload;
     },
     setIsRegister(state, action) {
       state.isRegister = action.payload;
@@ -62,13 +60,13 @@ const userSlice = createSlice({
 export const {
   setLoggedInUser,
   setUsers,
-  addUser,  
+  addUser,
   setSearchQuery,
   setSearchMessage,
   setIsRegister,
   setIsLoading,
-  setIsEdit,
-  setMessageId,
-  setMesContent,
+  setIsEditingMessage,
+  setEditedMessageId,
+  setEditedMessageContent,
 } = userSlice.actions;
 export default userSlice.reducer;
