@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { deleteTeam, updateTeam } from "@/apiUtils/apiTeams";
+import Link from "next/link";
 
 export default function CreatorGroupSettings() {
   const router = useRouter();
@@ -48,7 +49,9 @@ export default function CreatorGroupSettings() {
       <div style={{ backgroundColor: "beige", borderRadius: "7px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           Team: {teamToSet?.name}
-          <button onClick={() => router.push("empty")}>X</button>
+          <Link href="/empty" as="/empty">
+            <button>X</button>
+          </Link>
         </div>
         <p> members: {membersArr.join(", ")}</p>
       </div>
