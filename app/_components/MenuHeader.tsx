@@ -6,12 +6,20 @@ import Link from "next/link";
 export default function MenuHeader() {
 
 async function removeMe(){
-const {error}= await deleteUser() ;
-if (error) {
-  console.error("Error deleting user:", error);
-} else {  
-  signOut({ callbackUrl: "/" });
-}
+  const confirmDelete = window.confirm("Are you sure you want to delete your account?");
+  
+  if (confirmDelete) {
+    try {
+      const { error } = await deleteUser();
+      if (error) {
+        console.error("Error deleting user:", error);
+      } else {
+        signOut({ callbackUrl: "/" });
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  } 
 }
 
   return (
@@ -33,7 +41,7 @@ if (error) {
         onClick={removeMe}
         style={{ border: "1px solid #ccc", borderRadius: "7px" }}
       >
-        RemoveMe
+        Remove Account
       </button>
     </div>
   );
