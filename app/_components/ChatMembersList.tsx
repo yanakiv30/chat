@@ -1,5 +1,5 @@
 import { fetchTeams } from "@/apiUtils/apiTeams";
-import { fetchUsersClient } from "@/apiUtils/apiUsersClient";
+import { deleteUser, fetchUsersClient } from "@/apiUtils/apiUsersClient";
 import {
   setIsDeleteTeam,
   setTeams,
@@ -17,8 +17,26 @@ import AvailableChats from "./AvailableChats";
 import MyChatsList from "./MyChatsList";
 import MenuHeader from "./MenuHeader";
 import UserAndSearch from "./UserAndSearch";
+import { signOut } from "next-auth/react";
 
 const queryClient = new QueryClient();
+async function removeMe(){
+  const confirmDelete = window.confirm("Are you sure you want to delete your account?");
+  
+  if (confirmDelete) {
+    try {
+      const { error } = await deleteUser();
+      if (error) {
+        console.error("Error deleting user:", error);
+      } else {
+        signOut({ callbackUrl: "/" });
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  } 
+}
+
 
 function ChatMembersList() {
   const [isNewChatOpen, setIsNewChatOpen] = useState(false);
@@ -146,7 +164,14 @@ function ChatMembersList() {
         height={600}
         layout="responsive"
       />
+      <button
+         onClick={removeMe}
+        style={{ border: "1px solid #ccc", borderRadius: "7px" }}
+      >
+        Delete My Account
+      </button>
     </div>
+
   );
 }
 export default function WrappedChatMembersList() {
