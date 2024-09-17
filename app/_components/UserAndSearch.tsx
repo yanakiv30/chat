@@ -11,8 +11,8 @@ function UserAndSearch() {
 
   return (
     <div className="icon-and-search">
-      {loggedInUser && <Avatar name={loggedInUser.avatar} />}
-      <p>{loggedInUser && loggedInUser.username}</p>
+      
+      <Avatar name={loggedInUser?.avatar} />{loggedInUser?.username}
 
       <input
         style={{ width: "60%", borderRadius: "7px" }}

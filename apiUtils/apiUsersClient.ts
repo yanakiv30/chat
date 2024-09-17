@@ -13,3 +13,18 @@
     }
     return response.json();
   }
+
+  
+
+  export async function deleteUser() { 
+    
+    const response = await fetch("/api/users/delete", {
+      method: "DELETE",     
+    });  
+    const result = await response.json();
+  
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to delete user');
+    }  
+    return result;
+  }
