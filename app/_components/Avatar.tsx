@@ -17,6 +17,7 @@ function Avatar({ name }: AvatarProps) {
     <>
       {name?.startsWith("http") ? (
         <>
+        {isLoading&&<span style={{color:"beige"}}>***</span>}
           <img
             src={name}
             alt="Profile"

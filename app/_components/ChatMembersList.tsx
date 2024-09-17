@@ -8,21 +8,22 @@ import {
 } from "@/store/groupSlice";
 import { useAppSelector } from "@/store/store";
 import { setUsers, User } from "@/store/userSlice";
-import Image from "next/image";
+import { signOut } from "next-auth/react";
 import { useCallback, useRef, useState } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import AvailableChats from "./AvailableChats";
-import MyChatsList from "./MyChatsList";
 import MenuHeader from "./MenuHeader";
+import MyChatsList from "./MyChatsList";
 import UserAndSearch from "./UserAndSearch";
-import { signOut } from "next-auth/react";
 
 const queryClient = new QueryClient();
-async function removeMe(){
-  const confirmDelete = window.confirm("Are you sure you want to delete your account?");
-  
+async function removeMe() {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete your account?"
+  );
+
   if (confirmDelete) {
     try {
       const { error } = await deleteUser();
@@ -34,9 +35,8 @@ async function removeMe(){
     } catch (error) {
       console.error("Error deleting user:", error);
     }
-  } 
+  }
 }
-
 
 function ChatMembersList() {
   const [isNewChatOpen, setIsNewChatOpen] = useState(false);
@@ -157,21 +157,18 @@ function ChatMembersList() {
       <p>My Chats</p>
       <MyChatsList />
 
-      <Image
+      <img
+        style={{ maxWidth: "70%" }}
         src="/cheerful.jpg"
         alt="Two cheerful young girls using smartphone while sitting at cafe outdoors"
-        width={900}
-        height={600}
-        layout="responsive"
       />
       <button
-         onClick={removeMe}
+        onClick={removeMe}
         style={{ border: "1px solid #ccc", borderRadius: "7px" }}
       >
         Delete My Account
       </button>
     </div>
-
   );
 }
 export default function WrappedChatMembersList() {

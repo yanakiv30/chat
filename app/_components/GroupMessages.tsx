@@ -100,8 +100,8 @@ export default function GroupMessages() {
           <SearchInMessage />
           <img
             style={{ maxWidth: "13%" }}
-            src="https://img.freepik.com/premium-photo/two-cheerful-young-girls-using-smartphone-while-sitting-cafe-outdoors_650366-3065.jpg?w=900"
-            alt="some cabin"
+            src="/cheerful.jpg"
+            alt="Two young girls..."
           />
         </div>
         <UserMessagesContainer
