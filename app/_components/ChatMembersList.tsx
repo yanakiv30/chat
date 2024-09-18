@@ -39,7 +39,7 @@ async function removeMe() {
 }
 
 function ChatMembersList() {
-  const [isNewChatOpen, setIsNewChatOpen] = useState(false);
+  const [isNewChatOpen, setIsNewChatOpen] = useState(true);
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const { localTeams } = useAppSelector((store) => store.group);
