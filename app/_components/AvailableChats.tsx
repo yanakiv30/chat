@@ -78,22 +78,7 @@ function AvailableChats() {
 
   return (
     <div>
-      <ul>
-        {currentUsers.map((user) => (
-          <li key={user.id}>
-            <div style={{ display: "flex", gap: "5px" }}>
-              <Avatar name={user.avatar} />
-              <button
-                onClick={() => handleUserClicked(user.id)}
-                disabled={disabledUserId === user.id}
-              >
-                {user.username}
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-      <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
+<div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
@@ -110,6 +95,24 @@ function AvailableChats() {
           Next
         </button>
       </div>
+
+
+      <ul>
+        {currentUsers.map((user) => (
+          <li key={user.id}>
+            <div style={{ display: "flex", gap: "5px" }}>
+              <Avatar name={user.avatar} />
+              <button
+                onClick={() => handleUserClicked(user.id)}
+                disabled={disabledUserId === user.id}
+              >
+                {user.username}
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+      
     </div>
   );
 }
