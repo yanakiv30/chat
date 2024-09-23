@@ -2,8 +2,24 @@ import { supabase } from "@/app/_services/supabase";
 import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
 import { NextResponse } from "next/server";
 
+const rateLimitStore = new Map<string, number>();
+
+async function checkRateLimit(request: Request): Promise<NextResponse | null> {
+  const ip = request.headers.get('x-forwarded-for') || 'unknown';
+  const now = Date.now();
+  const lastRequest = rateLimitStore.get(ip) || 0;  
+  if (now - lastRequest < 2000) { 
+    return NextResponse.json({ error: 'Too Many Requests' }, { status: 429 });
+  }  
+  rateLimitStore.set(ip, now);
+  return null;
+}
+
 export async function POST(request: Request) {
   try {
+    const rateLimitResponse = await checkRateLimit(request);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const authUserId = await getUserIdFromAuth();
     if (!authUserId) {
       return NextResponse.json(
@@ -49,6 +65,7 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
+    
     const authUserId = await getUserIdFromAuth();
     const { id, message } = await request.json();
 
