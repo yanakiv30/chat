@@ -1,9 +1,21 @@
 // app/api/teams_members/route.ts
 
+import checkRateLimit from "@/apiUtils/checkRateLimit";
 import { supabase } from "@/app/_services/supabase";
+import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
+  const rateLimitResponse = await checkRateLimit(request);
+  if (rateLimitResponse) return rateLimitResponse;
+  const authUserId = await getUserIdFromAuth();
+  if (!authUserId) {
+    return NextResponse.json(
+      { error: "User not authenticated" },
+      { status: 401 }
+    );
+  }
+
   try {
     const { teamId, membersIds } = await request.json();
 
@@ -35,6 +47,14 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
+  const authUserId = await getUserIdFromAuth();
+  if (!authUserId) {
+    return NextResponse.json(
+      { error: "User not authenticated" },
+      { status: 401 }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get("userId");
 
@@ -65,6 +85,14 @@ export async function GET(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const authUserId = await getUserIdFromAuth();
+  if (!authUserId) {
+    return NextResponse.json(
+      { error: "User not authenticated" },
+      { status: 401 }
+    );
+  }
+
   try {
     const { teamId, userId } = await request.json();
 

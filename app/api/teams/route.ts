@@ -1,10 +1,11 @@
+import checkRateLimit from "@/apiUtils/checkRateLimit";
 import { supabase } from "@/app/_services/supabase";
 import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
 import { NextResponse } from "next/server";
 
 export async function GET() {
+  
   const loggedInUserId = await getUserIdFromAuth();
-
   if (!loggedInUserId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -100,6 +101,13 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+
+const rateLimitResponse = await checkRateLimit(request);
+    if (rateLimitResponse) return rateLimitResponse;
+  const loggedInUserId = await getUserIdFromAuth();
+  if (!loggedInUserId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   try {
     const newTeam = await request.json();
     const { data, error } = await supabase
@@ -121,6 +129,13 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const rateLimitResponse = await checkRateLimit(request);
+  if (rateLimitResponse) return rateLimitResponse;
+const loggedInUserId = await getUserIdFromAuth();
+if (!loggedInUserId) {
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
+
   try {
     const { id, ...updateData } = await request.json();
     const { data, error } = await supabase
@@ -143,6 +158,10 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const loggedInUserId = await getUserIdFromAuth();
+if (!loggedInUserId) {
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
   try {
     const { id } = await request.json();
     const { error } = await supabase.from("teams").delete().eq("id", id);

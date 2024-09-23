@@ -1,19 +1,9 @@
+import checkRateLimit from "@/apiUtils/checkRateLimit";
 import { supabase } from "@/app/_services/supabase";
 import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
 import { NextResponse } from "next/server";
 
-const rateLimitStore = new Map<string, number>();
 
-async function checkRateLimit(request: Request): Promise<NextResponse | null> {
-  const ip = request.headers.get('x-forwarded-for') || 'unknown';
-  const now = Date.now();
-  const lastRequest = rateLimitStore.get(ip) || 0;  
-  if (now - lastRequest < 2000) { 
-    return NextResponse.json({ error: 'Too Many Requests' }, { status: 429 });
-  }  
-  rateLimitStore.set(ip, now);
-  return null;
-}
 
 export async function POST(request: Request) {
   try {
@@ -65,10 +55,17 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    
+    const rateLimitResponse = await checkRateLimit(request);
+    if (rateLimitResponse) return rateLimitResponse;
     const authUserId = await getUserIdFromAuth();
-    const { id, message } = await request.json();
+    if (!authUserId) {
+      return NextResponse.json(
+        { error: "User not authenticated" },
+        { status: 401 }
+      );
+    }
 
+    const { id, message } = await request.json();
     const { data: row, error: fetchError } = await supabase
       .from("messages")
       .select("id, sender_id")

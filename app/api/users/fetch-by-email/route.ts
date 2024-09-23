@@ -1,7 +1,11 @@
+import checkRateLimit from "@/apiUtils/checkRateLimit";
 import { supabase } from "@/app/_services/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
+  const rateLimitResponse = await checkRateLimit(request);
+  if (rateLimitResponse) return rateLimitResponse;  
+  
   try {
     const { email } = await request.json();
 
