@@ -1,59 +1,74 @@
-import { headers } from "next/headers";
+import { supabase } from "@/app/_services/supabase";
 
-// Helper function to get the base URL
-function getBaseUrl() {
-  const host = headers().get("host") || "localhost:3000";
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-  return `${protocol}://${host}`;
-}
-
-// Fetch all users
 export async function fetchUsers() {
-  const fullUrl = `${getBaseUrl()}/api/users`;
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("username,id,avatar,status,created_at");
 
-  const response = await fetch(fullUrl);
-  if (!response.ok) {
-    throw new Error("Failed to fetch users");
+    if (error) {
+      console.error("Error fetching users:", error);
+      throw new Error("Failed to fetch users");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in fetchUsers:", error);
+    throw error;
   }
-  return response.json();
 }
 
 // Fetch a user by email
 export async function fetchUserByEmail(email: string) {
-  const fullUrl = `${getBaseUrl()}/api/users/fetch-by-email`;
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", email)
+      .single();
 
-  const response = await fetch(fullUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  });
-
-  const result = await response.json();
-
-  return {
-    existingUser: result.data,
-    fetchError: result.error,
-  };
+    return {
+      existingUser: data,
+      fetchError: error,
+    };
+  } catch (unexpectedError) {
+    console.error("Unexpected error in fetchUserByEmail:", unexpectedError);
+    return {
+      existingUser: null,
+      fetchError: {
+        message: "An unexpected error occurred",
+        details:
+          unexpectedError instanceof Error
+            ? unexpectedError.message
+            : String(unexpectedError),
+      },
+    };
+  }
 }
 
 // Insert a new user
 export async function insertNewUser(newUser: any) {
-  const fullUrl = `${getBaseUrl()}/api/users/insert`;
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .insert([newUser])
+      .select();
 
-  const response = await fetch(fullUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newUser),
-  });
-
-  const result = await response.json();
-
-  return {
-    data: result.data,
-    error: result.error,
-  };
+    return {
+      data: data,
+      error: error,
+    };
+  } catch (unexpectedError) {
+    console.error("Unexpected error in insertNewUser:", unexpectedError);
+    return {
+      data: null,
+      error: {
+        message: "An unexpected error occurred",
+        details:
+          unexpectedError instanceof Error
+            ? unexpectedError.message
+            : String(unexpectedError),
+      },
+    };
+  }
 }

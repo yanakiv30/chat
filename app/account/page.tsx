@@ -19,11 +19,7 @@ async function Page() {
   );
   if (fetchError) {
     console.error("Error fetching user:", fetchError);
-  }
-
-  if (fetchError && fetchError.code !== "PGRST116") {
-    throw new Error(fetchError.message);
-  }
+  }  
 
   if (existingUser) {
     return (
@@ -46,8 +42,10 @@ async function Page() {
     if (error) {
       console.error("Error inserting user:", error);
     }
-    const userWithId = data[0];
-    existingUser;
+    if (!data || data.length === 0) {
+      throw new Error("No user data returned after insertion");
+    }
+    const userWithId = data[0];    
 
     return (
       <div className="background-login">
