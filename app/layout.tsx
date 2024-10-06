@@ -1,10 +1,11 @@
 "use client";
 
-import { Provider } from "react-redux";
 import store, { useAppSelector } from "@/store/store";
+import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import ChatMembersList from "./_components/ChatMembersList";
+import LeftSidebar from "./_components/LeftSidebar";
 
 function AppContent({ children }: { children: React.ReactNode }) {
   const { loggedInUser } = useAppSelector((store) => store.user);
@@ -12,6 +13,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-container" style={{ position: "relative" }}>
       <div className="main-container">
+        <LeftSidebar></LeftSidebar>
         {loggedInUser && <ChatMembersList />}
         {children}
         <ToastContainer

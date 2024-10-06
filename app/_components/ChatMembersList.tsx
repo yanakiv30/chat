@@ -1,5 +1,5 @@
 import { fetchTeams } from "@/apiUtils/apiTeams";
-import { deleteUser, fetchUsersClient } from "@/apiUtils/apiUsersClient";
+import { fetchUsersClient } from "@/apiUtils/apiUsersClient";
 import {
   setIsDeleteTeam,
   setTeams,
@@ -8,38 +8,17 @@ import {
 } from "@/store/groupSlice";
 import { useAppSelector } from "@/store/store";
 import { setUsers, User } from "@/store/userSlice";
-import { signOut } from "next-auth/react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import AvailableChats from "./AvailableChats";
-import MenuHeader from "./MenuHeader";
 import MyChatsList from "./MyChatsList";
 import UserAndSearch from "./UserAndSearch";
 
 const queryClient = new QueryClient();
-async function removeMe() {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete your account?"
-  );
-
-  if (confirmDelete) {
-    try {
-      const { error } = await deleteUser();
-      if (error) {
-        console.error("Error deleting user:", error);
-      } else {
-        signOut({ callbackUrl: "/" });
-      }
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    }
-  }
-}
 
 function ChatMembersList() {
-  const [isNewChatOpen, setIsNewChatOpen] = useState(true);
   const dispatch = useDispatch();
   const { loggedInUser } = useAppSelector((store) => store.user);
   const { localTeams } = useAppSelector((store) => store.group);
@@ -142,32 +121,9 @@ function ChatMembersList() {
 
   return (
     <div className="user-list-container">
-      <MenuHeader />
-      <br></br>
       <UserAndSearch />
-      <br></br>
-      <button
-        onClick={() => setIsNewChatOpen(!isNewChatOpen)}
-        style={{ background: "purple", color: "white" }}
-      >
-        Available Chats
-      </button>
-      {isNewChatOpen && <AvailableChats />}
-      <br></br>
-      <p>My Chats</p>
+      <AvailableChats />
       <MyChatsList />
-
-      <img
-        style={{ maxWidth: "70%" }}
-        src="/cheerful.jpg"
-        alt="Two cheerful young girls using smartphone while sitting at cafe outdoors"
-      />
-      <button
-        onClick={removeMe}
-        style={{ border: "1px solid #ccc", borderRadius: "7px" }}
-      >
-        Delete My Account
-      </button>
     </div>
   );
 }

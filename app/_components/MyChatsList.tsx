@@ -37,15 +37,14 @@ export default function MyChatsList() {
   const searchedTeams =
     searchQuery.length > 0
       ? localTeams.filter(
-          (team) => (team.name.includes(searchQuery)|| team.name===""&&(team.members.find(
-            (member) => +member.id !== loggedInUser?.id
-          )?.username)?.includes(searchQuery))
+          (team) =>
+            team.name.includes(searchQuery) ||
+            (team.name === "" &&
+              team.members
+                .find((member) => +member.id !== loggedInUser?.id)
+                ?.username?.includes(searchQuery))
         )
       : localTeams;
-
-
-      
-  console.log("searchQuery from MyChatsList ", searchQuery);
 
   const updateFlashedTeamsIdsLog = (teamId: number, senderId: number) => {
     setFlashedTeamsIdsLog((prev) => ({ ...prev, [teamId]: senderId }));
@@ -79,7 +78,8 @@ export default function MyChatsList() {
 
   return (
     <div>
-      <ul>
+      <p style={{ marginBottom: "10px" }}>My Chats</p>
+      <ul style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
         {searchedTeams.map((team) => (
           <li key={team.id}>
             <div style={{ display: "flex", gap: "5px" }}>

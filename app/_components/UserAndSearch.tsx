@@ -3,7 +3,6 @@
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../store/store";
 import { setSearchQuery } from "../../store/userSlice";
-import Avatar from "./Avatar";
 
 function UserAndSearch() {
   const dispatch = useDispatch();
@@ -11,14 +10,11 @@ function UserAndSearch() {
 
   return (
     <div className="icon-and-search">
-      
-      <Avatar name={loggedInUser?.avatar} />{loggedInUser?.username}
-
       <input
-        style={{ width: "60%", borderRadius: "7px" }}
+        style={{ width: "100%", borderRadius: "7px", borderWidth: "1px" }}
         value={searchQuery}
         onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-        placeholder=" 🔍 Search in chats"
+        placeholder=" Search in chats"
       />
     </div>
   );

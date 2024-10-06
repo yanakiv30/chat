@@ -1,9 +1,15 @@
+import checkRateLimit from "@/apiUtils/checkRateLimit";
 import { supabase } from "@/app/_services/supabase";
 import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
 import { NextResponse } from "next/server";
 
+
+
 export async function POST(request: Request) {
   try {
+    const rateLimitResponse = await checkRateLimit(request);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const authUserId = await getUserIdFromAuth();
     if (!authUserId) {
       return NextResponse.json(
@@ -49,9 +55,17 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
+    const rateLimitResponse = await checkRateLimit(request);
+    if (rateLimitResponse) return rateLimitResponse;
     const authUserId = await getUserIdFromAuth();
-    const { id, message } = await request.json();
+    if (!authUserId) {
+      return NextResponse.json(
+        { error: "User not authenticated" },
+        { status: 401 }
+      );
+    }
 
+    const { id, message } = await request.json();
     const { data: row, error: fetchError } = await supabase
       .from("messages")
       .select("id, sender_id")

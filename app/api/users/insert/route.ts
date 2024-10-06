@@ -1,7 +1,17 @@
 import { supabase } from "@/app/_services/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
+const rateLimitStore = new Map<string, number>();
+export async function POST(request: NextRequest) {  
+  const ip = request.headers.get('x-forwarded-for') || 'unknown';
+  const now = Date.now();
+  const lastRequest = rateLimitStore.get(ip) || 0;
+  
+  if (now - lastRequest < 2000) { // 2000=2 seconds
+      return new Response('Too Many Requests', { status: 429 });
+  }  
+  rateLimitStore.set(ip, now);
+  
   try {
     const newUser = await request.json();
 

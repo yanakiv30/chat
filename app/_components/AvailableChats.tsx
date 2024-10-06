@@ -10,6 +10,7 @@ import { createTeamWithMembers } from "../utils/createTeam";
 import Avatar from "./Avatar";
 
 function AvailableChats() {
+  const [isNewChatOpen, setIsNewChatOpen] = useState(true);
   const [disabledUserId, setDisabledUserId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 4;
@@ -78,41 +79,58 @@ function AvailableChats() {
 
   return (
     <div>
-<div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+      <button
+        onClick={() => setIsNewChatOpen(!isNewChatOpen)}
+        style={{ background: "purple", color: "white" }}
+      >
+        Available Chats
+      </button>
+      {isNewChatOpen && (
+        <>
+          <div
+            style={{
+              marginTop: "10px",
+              marginBottom: "10px",
+              display: "flex",
+              justifyContent: "space-arround",
+            }}
+          >
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
 
-
-      <ul>
-        {currentUsers.map((user) => (
-          <li key={user.id}>
-            <div style={{ display: "flex", gap: "5px" }}>
-              <Avatar name={user.avatar} />
-              <button
-                onClick={() => handleUserClicked(user.id)}
-                disabled={disabledUserId === user.id}
-              >
-                {user.username}
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-      
+          <ul>
+            {currentUsers.map((user) => (
+              <li key={user.id}>
+                <div style={{ display: "flex", gap: "5px" }}>
+                  <Avatar name={user.avatar} />
+                  <button
+                    onClick={() => handleUserClicked(user.id)}
+                    disabled={disabledUserId === user.id}
+                  >
+                    {user.username}
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 }
