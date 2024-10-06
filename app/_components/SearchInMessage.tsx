@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import { useDispatch } from "react-redux";
-import { setSearchMessage } from "../../store/userSlice";
 import { useAppSelector } from "../../store/store";
+import { setSearchMessage } from "../../store/userSlice";
 
 function SearchInMessage() {
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ function SearchInMessage() {
       style={{ width: "40%", borderRadius: "7px" }}
       value={searchMessage}
       onChange={(e) => dispatch(setSearchMessage(e.target.value))}
-      placeholder="🔍 Search in messages ..."
+      placeholder=" Search in messages"
     />
   );
 }

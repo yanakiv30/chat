@@ -78,7 +78,8 @@ export default function MyChatsList() {
 
   return (
     <div>
-      <ul>
+      <p style={{ marginBottom: "10px" }}>My Chats</p>
+      <ul style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
         {searchedTeams.map((team) => (
           <li key={team.id}>
             <div style={{ display: "flex", gap: "5px" }}>

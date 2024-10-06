@@ -6,8 +6,8 @@ import { getUserIdFromAuth } from "@/app/utils/getUserIdFromAuth";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const rateLimitResponse = await checkRateLimit(request);
-  if (rateLimitResponse) return rateLimitResponse;
+  // const rateLimitResponse = await checkRateLimit(request);
+  // if (rateLimitResponse) return rateLimitResponse;
   const authUserId = await getUserIdFromAuth();
   if (!authUserId) {
     return NextResponse.json(
