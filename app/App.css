@@ -103,7 +103,7 @@ button:hover {
   padding: 10px;
   max-height: 100%;
   overflow-y: auto;
-  background-color: hsl(27, 18%, 93%);
+  background-color: hsl(30, 9%, 82%);
   width: 50%;
   flex: 0 0 30%;
 }
@@ -112,6 +112,7 @@ button:hover {
 .icon-and-search {
   display: flex;
   gap: 10px;
+  width: 80%;
 }
 
 .user-list-container .set {
