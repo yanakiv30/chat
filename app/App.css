@@ -82,6 +82,13 @@ button:hover {
   box-sizing: border-box;
 }
 
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    width: 100%; /* Optional: to make it take full width on mobile */
+  }
+}
+
 .left-sidebar{
   display:flex;
   flex-direction: column;
