@@ -4,8 +4,8 @@ a {
   all: unset;
 }
 
-body{
-  background-color: #F5F5F5;
+body {
+  background-color: #f5f5f5;
 }
 h2 {
   font-size: 30px;
@@ -24,7 +24,7 @@ ul {
   background-color: #b1ad81;
   border: 2px solid #b285ee;
   border-radius: 10px;
-  height:fit-content;
+  height: fit-content;
   padding: 10px;
 }
 
@@ -75,6 +75,7 @@ button:hover {
 }
 
 .main-container {
+  padding: 10px;
   display: flex;
   width: 80%;
   gap: 0px;
@@ -82,37 +83,21 @@ button:hover {
   box-sizing: border-box;
 }
 
-@media (max-width: 768px) {
-  .main-container {
-    flex-direction: column;
-    width: 100%; /* Optional: to make it take full width on mobile */
-  }
-}
 
-.left-sidebar{
-  display:flex;
+
+.left-sidebar {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  gap:20px;
+  gap: 20px;
   max-height: 100%;
-  background:linear-gradient(#889ed3, #35488e);
-  padding:10px;
-}
-@media (max-width: 768px) {
-  .left-sidebar{
-    display:flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    background:linear-gradient(#889ed3, #35488e);
-    padding:10px;
-  }
-  .left-sidebar button{
-   max-width:30%;
-  }
+  background: linear-gradient(#889ed3, #35488e);
+  padding: 10px;
 }
 
-.left-sidebar button{
-  width:100%;
+
+.left-sidebar button {
+  width: 100%;
 }
 
 .user-list-container {
@@ -129,14 +114,48 @@ button:hover {
 
 @media (max-width: 768px) {
   .main-container {
+    padding: 10px;
     display: flex;
     flex-direction: column;
     width: 100%;
     gap: 0px;
     border-radius: 10px;
     box-sizing: border-box;
-   
   }
+  .user-list-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 10px;
+    max-height: 100%;
+    overflow-y: auto;
+    background-color: hsl(27, 18%, 93%);
+    width: 100%;
+    /* flex: 0 0 30%; */
+  }
+  .left-sidebar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background: linear-gradient(#889ed3, #35488e);
+    padding: 10px;
+  }
+  .left-sidebar button {
+    max-width: 10%;
+  }
+  .user-profile-container .messages-container {
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    gap: 10px;
+    height: 97%;
+    overflow-y: auto;
+  }
+  .icon-and-search {
+    height: 30px;
+  }
+  
 }
 
 
@@ -151,13 +170,12 @@ button:hover {
   width: fit-content;
   padding: 10px;
   border-radius: 10%;
-  
 }
 
 .profile-wrapper {
   /* border: 1px solid #b36b6b; */
   padding: 0px;
-  width: 65%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -176,7 +194,7 @@ button:hover {
   width: 100%;
   font-size: 20px;
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #E0E0E0;
+  background-color: #e0e0e0;
   box-sizing: border-box;
   display: flex;
   gap: 10px;
@@ -225,15 +243,15 @@ button:hover {
 .user-profile-container .message-send {
   display: flex;
   justify-content: space-between;
-  padding-left:20px;
-  padding-right:20px; 
+  padding-left: 20px;
+  padding-right: 20px;
 }
 .user-profile-container .message-send input {
   width: 70%;
 }
 
 .date {
-  color: gray;
+  color: rgb(165, 156, 215);
   font-size: 8px;
   text-align: end;
 }
@@ -252,15 +270,15 @@ button:hover {
   gap: 10px;
 }
 .avatar {
-  width: 20px; 
-  height: 20px; 
-  border-radius: 50%; 
-  background-color: #5b53f0; 
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #5b53f0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px; 
-  color: #fff; 
+  font-size: 15px;
+  color: #fff;
 }
 
 .message-send-container {
