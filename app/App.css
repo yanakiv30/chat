@@ -98,6 +98,18 @@ button:hover {
   background:linear-gradient(#889ed3, #35488e);
   padding:10px;
 }
+@media (max-width: 768px) {
+  .left-sidebar{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background:linear-gradient(#889ed3, #35488e);
+    padding:10px;
+  }
+  .left-sidebar button{
+   max-width:30%;
+  }
+}
 
 .left-sidebar button{
   width:100%;
@@ -114,6 +126,19 @@ button:hover {
   width: 50%;
   flex: 0 0 30%;
 }
+
+@media (max-width: 768px) {
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0px;
+    border-radius: 10px;
+    box-sizing: border-box;
+   
+  }
+}
+
 
 
 .icon-and-search {

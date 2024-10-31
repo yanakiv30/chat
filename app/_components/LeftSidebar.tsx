@@ -11,7 +11,7 @@ export default function LeftSidebar() {
   return (
     loggedInUser && (
       <div className="left-sidebar">
-        <p>ChatApp</p>
+        <p>ПГИТ</p>
         <Avatar name={loggedInUser.avatar} height="60px" width="60px" />
         <p style={{ width: "min-content" }}> {loggedInUser.username}</p>
         <GroupAndLogout />
