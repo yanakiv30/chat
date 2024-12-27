@@ -1,22 +1,22 @@
 import { supabase } from "@/app/_services/supabase";
 
-export async function fetchUsers() {
-  try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("username,id,avatar,status,created_at");
+// export async function fetchUsers() {
+//   try {
+//     const { data, error } = await supabase
+//       .from("users")
+//       .select("username,id,avatar,status,created_at");
 
-    if (error) {
-      console.error("Error fetching users:", error);
-      throw new Error("Failed to fetch users");
-    }
+//     if (error) {
+//       console.error("Error fetching users:", error);
+//       throw new Error("Failed to fetch users");
+//     }
 
-    return data;
-  } catch (error) {
-    console.error("Unexpected error in fetchUsers:", error);
-    throw error;
-  }
-}
+//     return data;
+//   } catch (error) {
+//     console.error("Unexpected error in fetchUsers:", error);
+//     throw error;
+//   }
+// }
 
 // Fetch a user by email
 export async function fetchUserByEmail(email: string) {

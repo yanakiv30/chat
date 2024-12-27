@@ -48,6 +48,7 @@ function AvailableChats() {
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   async function handleUserClicked(userId: number) {
+    console.log("userId = ", userId);
     if (disabledUserId === userId) return;
     setDisabledUserId(userId);
 
