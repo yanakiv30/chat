@@ -1,4 +1,8 @@
 import { supabase } from "@/app/_services/supabase";
+import { Pool } from "@neondatabase/serverless";
+const pool = new Pool({
+  connectionString: process.env.NEON_DATABASE_URL,
+});
 
 // export async function fetchUsers() {
 //   try {
@@ -47,28 +51,60 @@ export async function fetchUserByEmail(email: string) {
 }
 
 // Insert a new user
+// export async function insertNewUser(newUser: any) {
+//   try {
+//     const { data, error } = await supabase
+//       .from("users")
+//       .insert([newUser])
+//       .select();
+
+//     return {
+//       data: data,
+//       error: error,
+//     };
+//   } catch (unexpectedError) {
+//     console.error("Unexpected error in insertNewUser:", unexpectedError);
+//     return {
+//       data: null,
+//       error: {
+//         message: "An unexpected error occurred",
+//         details:
+//           unexpectedError instanceof Error
+//             ? unexpectedError.message
+//             : String(unexpectedError),
+//       },
+//     };
+//   }
+// }
 export async function insertNewUser(newUser: any) {
   try {
-    const { data, error } = await supabase
-      .from("users")
-      .insert([newUser])
-      .select();
-
+    const keys = Object.keys(newUser);
+    const values = Object.values(newUser);
+    const placeholders = keys.map((_, i) => `$${i + 1}`).join(',');
+ 
+    const result = await pool.query(
+      `INSERT INTO users (${keys.join(',')}) 
+       VALUES (${placeholders}) 
+       RETURNING username, id, avatar, status, created_at`,
+      values
+    );
+ 
     return {
-      data: data,
-      error: error,
+      data: result.rows,
+      error: null
     };
+ 
   } catch (unexpectedError) {
     console.error("Unexpected error in insertNewUser:", unexpectedError);
     return {
       data: null,
       error: {
         message: "An unexpected error occurred",
-        details:
-          unexpectedError instanceof Error
-            ? unexpectedError.message
-            : String(unexpectedError),
-      },
+        details: unexpectedError instanceof Error 
+          ? unexpectedError.message 
+          : String(unexpectedError)
+      }
     };
   }
-}
+ }
+
