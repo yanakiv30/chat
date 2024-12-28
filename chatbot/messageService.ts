@@ -5,9 +5,9 @@ import { Message } from './types';
 export class MessageService {
   static async sendMessage(content: string = CHATBOT_CONFIG.DEFAULT_MESSAGE): Promise<void> {
     const message: Message = {
-      content,
+      message: content,
       team_id: CHATBOT_CONFIG.TEAM_ID,
-      user_id: CHATBOT_CONFIG.USER_ID,
+      sender_id: CHATBOT_CONFIG.USER_ID,
     };
 
     const { error } = await supabase

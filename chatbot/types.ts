@@ -1,7 +1,7 @@
 export type Message = {
     id?: string;
-    content: string;
+    message: string;
     created_at?: string;
     team_id: number;
-    user_id: number;
+    sender_id: number;
   }

@@ -6,7 +6,8 @@ export class MessageScheduler {
 
   constructor() {
     // Run every 5 days at 10:00 AM
-    this.job = new CronJob('0 10 */5 * *', async () => {
+    // this.job = new CronJob('0 10 */5 * *', async () => {
+      this.job = new CronJob('*/5 * * * *', async () => {
       try {
         await MessageService.sendMessage();
         console.log('Scheduled message sent successfully');
