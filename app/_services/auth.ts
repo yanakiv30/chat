@@ -56,6 +56,7 @@ const authConfig = {
     async signIn({ user, account, profile, email, credentials }: any) {},
     async error({ error }: { error: Error }) {},
   },
+  trustHost: true,  // Добавете тук
 };
 
 export const {
