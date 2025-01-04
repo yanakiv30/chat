@@ -77,17 +77,22 @@ import { NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
+// const supabase = createClient(
+//   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+//   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// )
+
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export async function POST() {
+export async function GET() {
   try {
     const { data, error } = await supabase
       .from('messages')
       .insert({
-        message: 'Hello Crone 👋',
+        message: 'Hello Crone hhhhhhhh 👋',
         sender_id: '360',
         team_id: '702',      
         created_at: new Date().toISOString()
@@ -99,7 +104,7 @@ export async function POST() {
     return NextResponse.json(
       {
         status: 'ok',
-        message: 'Hello Crone message sentllllllllllll',
+        message: 'Hello Crone message sent',
         timestamp: new Date().toISOString()
       },
       {
